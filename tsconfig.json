@@ -5,8 +5,10 @@
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,
+    "noImplicitAny": true,
     "moduleResolution": "nodenext",
     "sourceMap": true
   },
-  "include": ["src/**/*"]
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*.ts"]
 }

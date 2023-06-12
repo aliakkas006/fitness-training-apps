@@ -2,7 +2,6 @@
   "name": "fitness-training-apps",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +9,7 @@
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ali Akkas",
   "license": "ISC",
   "dependencies": {
     "@types/express": "^4.17.17",
