@@ -1,0 +1,815 @@
+openapi: 3.0.0
+info:
+  version: '1'
+  title: Fitness Training Apps Rest API
+  description: 'This is the first professional rest API project I creating in full-stack army advanced backend course. This is a simple fitness training application where user can see their daily workouts plan and doing CRUD operation on it.They can also create their account and singnin to their existing account.'
+  contact:
+    name: Ali Akkas
+    url: https://aliakkas.com
+    email: help@ali.com
+servers:
+  - description: Dev
+    url: 'http://localhost:4000/api/v1'
+tags:
+  - name: Auth
+    description: Authentication Endpoints (public)
+  - name: Workout plan
+    description: Workout plan Endpoints (public + private)
+  - name: Progress tracking
+    description: Progress tracking Endpoints (private)
+  - name: User
+    description: User Endpoints (only for admin)
+  - name: Profile
+    description: User Profile Endpoints (only for admin)
+paths:
+  '/auth/signup':
+    post:
+      description: create a new account
+      tags: [Auth]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Anisur Rahman
+                email:
+                  type: string
+                  format: email
+                  example: anis@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: Pass123
+              required: [name, email, password]
+      responses:
+        '201':
+          description: Signup Successful
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Signup Successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/auth/signup"
+                      signin:
+                        type: string
+                        example: "/auth/signin"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: '#/components/responses/500'
+  '/auth/signin':
+    post:
+      description: Signin to your account
+      tags: [Auth]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: anis@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: Pass123
+              required: [email, password]
+      responses:
+        '200':
+          description: Signin Successful
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Signin Successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/auth/signin"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: '#/components/responses/500'
+  '/workouts': 
+    get:
+      tags: [Workout plan] 
+      description: Retrieve all workouts plan
+      parameters: 
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Return a list of Workouts data
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            name:
+                              type: string
+                              example: Heavy DT
+                            mode:
+                              type: string
+                              example: 5 Rounds For Time
+                            equipment:
+                                type: string
+                                example: 
+                                  - barbell
+                                  - rope
+                            exercises:
+                                type: string
+                                example: 
+                                  - 9 deadlifts
+                                  - 5 hang power cleans
+                                  - 4 push jerks
+                            trainerTips:
+                                type: string
+                                example: 
+                                  - Aim for unbroken push jerks
+                                  - The first three rounds might feel terrible, but stick to it
+                                  - RX Weights - 205lb/145lb
+                            photo:
+                              type: string
+                              format: url
+                              example: https://s3.aws.com/my-fitness/img.jpg
+                            builder:
+                              $ref: '#/components/schemas/BuilderDTO'
+                            link:
+                              type: string
+                              format: url
+                              example: '/workouts/1'
+                          required: 
+                            - id
+                            - name
+                            - mode
+                            - equipment
+                            - exercises
+                            - trainerTips
+                            - builder
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/workouts?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/workouts?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/workouts?page=1&limit=10'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      operationId: createPost
+      security:
+        - bearerAuth: []
+      tags: [Workout plan]
+      description: Create a new workout plan
+      requestBody:
+        description: To create a new workout plan user must be authenticated and also provide valid data.
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Heavy DT
+                mode:
+                  type: string
+                  example: 5 Rounds For Time
+                equipment:
+                    type: string
+                    example: 
+                      - barbell
+                      - rope
+                exercises:
+                    type: string
+                    example: 
+                      - 9 deadlifts
+                      - 5 hang power cleans
+                      - 4 push jerks
+                trainerTips:
+                    type: string
+                    example: 
+                      - Aim for unbroken push jerks
+                      - The first three rounds might feel terrible, but stick to it
+                      - RX Weights - 205lb/145lb
+                photo:
+                  type: string
+                  format: url
+                  example: https://s3.aws.com/my-fitness/img.jpg
+                status:
+                  type: string
+                  enum: [progress, done]
+                  example: progress
+              required: 
+                - name
+                - mode
+                - equipment
+                - exercises
+                - trainerTips
+      responses:
+        '201':
+          description: Successfully created a new workout plan
+          content:
+            'application/jsom':
+              schema:
+                $ref: '#/components/schemas/WorkoutsCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/workouts/{id}':
+    get:
+      tags: [Workout plan]
+      description: Fetch a Workout plan
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - in: query
+          name: expand
+          description: Expand profile and progress object
+          schema:
+            type: string
+            example: 'profile, progress'
+      responses:
+        '200':
+          description: Single Workout plan view
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Workouts'
+                      - type: object
+                        properties:
+                          builder:
+                            $ref: '#/components/schemas/BuilderDTO'
+                      - type: object
+                        properties:
+                          progress:
+                            $ref: '#/components/schemas/Progress'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: 'workouts/1'
+                      profile:
+                        type: string
+                        format: url
+                        example: 'workouts/1/profile'
+                      progress:
+                        type: string
+                        format: url
+                        example: 'workouts/1/progress'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Workout plan]
+      description: Create or update the entire Workout plan
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  example: 1
+                name: 
+                  type: string
+                  example: Workout name
+                mode: 
+                  type: string
+                  example: Workout mode
+                equipment: 
+                  type: string
+                  example: 
+                    - Equipment-01
+                    - Equipment-02
+                exercises: 
+                  type: string
+                  example: 
+                    - Exercise-01
+                    - Exercise-02
+                    - Exercise-03
+                photo:
+                  type: string
+                  format: url
+                  example: 'https://s3.aws.workouts/3.png'
+                status:
+                  type: string
+                  enum: [progress, done]
+                  example: progress
+              required: 
+                - name
+                - mode
+                - equipment
+                - exercises
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/WorkoutUpdateDTO'
+        '201':
+          description: Successfully created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/WorkoutsCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Workout plan]
+      description: Partially updated a Workout plan
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  example: Workout name
+                mode: 
+                  type: string
+                  example: Workout mode
+                equipment: 
+                  type: string
+                  example: 
+                    - Equipment-01
+                    - Equipment-02
+                exercises: 
+                  type: string
+                  example: 
+                    - Exercise-01
+                    - Exercise-02
+                    - Exercise-03
+                photo:
+                  type: string
+                  format: url
+                  example: 'https://s3.aws.workouts/3.png'
+                status:
+                  type: string
+                  enum: [progress, done]
+                  example: progress
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/WorkoutUpdateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security: 
+        - bearerAuth: []
+      tags: [Workout plan]
+      description: Delete a workout plan by id
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: Workout plan deleted successfully!
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+       
+        
+                  
+              
+                        
+                          
+        
+          
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Workouts:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            builderId:
+              type: integer
+              format: int32
+              example: 1
+            name:
+              type: string
+              example: Heavy DT
+            mode:
+              type: string
+              example: 5 Rounds For Time
+            equipment:
+                type: string
+                example: 
+                  - barbell
+                  - rope
+            exercises:
+                type: string
+                example: 
+                  - 9 deadlifts
+                  - 5 hang power cleans
+                  - 4 push jerks
+            trainerTips:
+                type: string
+                example: 
+                  - Aim for unbroken push jerks
+                  - The first three rounds might feel terrible, but stick to it
+                  - RX Weights - 205lb/145lb
+            photo:
+              type: string
+              format: url
+              example: https://s3.aws.com/my-fitness/img.jpg
+            status:
+              type: string
+              enum: [progress, done]
+              example: progress
+          required:
+            - id
+            - builderId
+            - name
+            - mode
+            - equipment
+            - exercises
+            - trainerTips
+            - status
+        - $ref: '#/components/schemas/Timestamp'
+    WorkoutsCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: 'Workout plan created successfully!'
+        data:
+          $ref: '#/components/schemas/Workouts'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: 'workouts/1'
+            profile:
+              type: string
+              format: url
+              example: 'workouts/1/profile'
+            progress:
+              type: string
+              format: url
+              example: 'workouts/1/progress'
+    WorkoutUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Workout plan updated successfully!
+        data:
+          $ref: '#/components/schemas/Workouts'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: 'workouts/1'
+    Progress:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            builderId:
+              type: integer
+              format: int32
+              example: 1
+            workoutId:
+              type: integer
+              format: int32
+              example: 1
+            workoutSession:
+              type: string
+              example: '3 hours'
+            trackProgress:
+              type: string
+              example: 
+                newHeight: '1.70 meters'
+                newWeight: '65 kg'
+                fitnessLevel: 'medium'
+                isAchievedGoal: true
+            performance:
+              type: string
+              example: 'Very high'
+            status:
+              type: string
+              enum: [public, private]
+              example: public
+          required:
+            - id
+            - builderId
+            - workoutId
+            - workoutSession
+            - trackProgress
+            - performance
+            - status
+        - $ref: '#/components/schemas/Timestamp'
+    Timestamp:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [createdAt, updatedAt]
+    BuilderDTO:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int32
+          example: 101
+        name:
+          type: string
+          example: Ali Akkas
+      required: [id, name]
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 2
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        next:
+          type: integer
+          format: int32
+          example: 3
+        prev:
+          type: integer
+          format: int32
+          example: 1
+        totalPage:
+          type: integer
+          format: int32
+          example: 5
+        totalItems:
+          type: integer
+          format: int32
+          example: 10
+      required:
+        - page
+        - limit
+        - totalPage
+        - totalItems
+  responses:
+    '500':
+      description: 'Internal Server Error'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error!
+              message:
+                type: string
+                example: We are sorry for the inconvenience. Please try again later...
+    '400':
+      description: 'Bad Request'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid email
+                    in:
+                      type: string
+                      enum: [query, body]
+                      example: body
+    '401':
+      description: 'Unauthorized'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized!
+              message:
+                type: string
+                example: You don't have the right permissions!
+    '404':
+      description: 'Resource Not Found'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Page Not Found!
+              message:
+                type: string
+                example: Requested resource not found!
+  parameters:
+    pageParam:
+      in: query
+      name: page
+      description: current page number
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 2
+    limitParam:
+      in: query
+      name: limit
+      description: the number of objects should be returned
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 10
+    sortTypeParam:
+      in: query
+      name: sort_type
+      description: type of sort (asc or dsc)
+      schema:
+        type: string
+        enum: [asc, dsc]
+        example: dsc
+    sortByParam:
+      in: query
+      name: sort_by
+      description: sort key
+      schema:
+        type: string
+        example: updatedAt
+    searchParam:
+      in: query
+      name: search
+      description: the search term
+      schema:
+        type: string
+        example: workout name
+    idPathParam:
+      in: path
+      name: id
+      required: true
+      description: Workout ID
+      schema:
+        type: integer
+        format: int32
+        example: 1
