@@ -28,7 +28,7 @@ paths:
       tags: [Auth]
       requestBody:
         content:
-          "application/json":
+          'application/json':
             schema:
               type: object
               properties:
@@ -48,7 +48,7 @@ paths:
         '201':
           description: Signup Successful
           content:
-            "application/json":
+            'application/json':
               schema:
                 type: object
                 properties:
@@ -64,18 +64,18 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: "/auth/signup"
+                        example: '/auth/signup'
                       signin:
                         type: string
-                        example: "/auth/signin"
+                        example: '/auth/signin'
         '400':
-          $ref: "#/components/responses/400"
+          $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
   '/auth/signin':
@@ -84,7 +84,7 @@ paths:
       tags: [Auth]
       requestBody:
         content:
-          "application/json":
+          'application/json':
             schema:
               type: object
               properties:
@@ -101,7 +101,7 @@ paths:
         '200':
           description: Signin Successful
           content:
-            "application/json":
+            'application/json':
               schema:
                 type: object
                 properties:
@@ -117,22 +117,22 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: "/auth/signin"
+                        example: '/auth/signin'
         '400':
-          $ref: "#/components/responses/400"
+          $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
-  '/workouts': 
+  '/workouts':
     get:
-      tags: [Workout plan] 
+      tags: [Workout plan]
       description: Retrieve all workouts plan
-      parameters: 
+      parameters:
         - $ref: '#/components/parameters/pageParam'
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/sortTypeParam'
@@ -163,22 +163,22 @@ paths:
                               type: string
                               example: 5 Rounds For Time
                             equipment:
-                                type: string
-                                example: 
-                                  - barbell
-                                  - rope
+                              type: string
+                              example:
+                                - barbell
+                                - rope
                             exercises:
-                                type: string
-                                example: 
-                                  - 9 deadlifts
-                                  - 5 hang power cleans
-                                  - 4 push jerks
+                              type: string
+                              example:
+                                - 9 deadlifts
+                                - 5 hang power cleans
+                                - 4 push jerks
                             trainerTips:
-                                type: string
-                                example: 
-                                  - Aim for unbroken push jerks
-                                  - The first three rounds might feel terrible, but stick to it
-                                  - RX Weights - 205lb/145lb
+                              type: string
+                              example:
+                                - Aim for unbroken push jerks
+                                - The first three rounds might feel terrible, but stick to it
+                                - RX Weights - 205lb/145lb
                             photo:
                               type: string
                               format: url
@@ -189,7 +189,7 @@ paths:
                               type: string
                               format: url
                               example: '/workouts/1'
-                          required: 
+                          required:
                             - id
                             - name
                             - mode
@@ -239,22 +239,28 @@ paths:
                   type: string
                   example: 5 Rounds For Time
                 equipment:
+                  type: array
+                  items:
                     type: string
-                    example: 
-                      - barbell
-                      - rope
+                  example:
+                    - barbell
+                    - rope
                 exercises:
+                  type: array
+                  items:
                     type: string
-                    example: 
-                      - 9 deadlifts
-                      - 5 hang power cleans
-                      - 4 push jerks
+                  example:
+                    - 9 deadlifts
+                    - 5 hang power cleans
+                    - 4 push jerks
                 trainerTips:
+                  type: array
+                  items:
                     type: string
-                    example: 
-                      - Aim for unbroken push jerks
-                      - The first three rounds might feel terrible, but stick to it
-                      - RX Weights - 205lb/145lb
+                  example:
+                    - Aim for unbroken push jerks
+                    - The first three rounds might feel terrible, but stick to it
+                    - RX Weights - 205lb/145lb
                 photo:
                   type: string
                   format: url
@@ -263,7 +269,7 @@ paths:
                   type: string
                   enum: [progress, done]
                   example: progress
-              required: 
+              required:
                 - name
                 - mode
                 - equipment
@@ -355,20 +361,20 @@ paths:
                   type: integer
                   format: int32
                   example: 1
-                name: 
+                name:
                   type: string
                   example: Workout name
-                mode: 
+                mode:
                   type: string
                   example: Workout mode
-                equipment: 
+                equipment:
                   type: string
-                  example: 
+                  example:
                     - Equipment-01
                     - Equipment-02
-                exercises: 
+                exercises:
                   type: string
-                  example: 
+                  example:
                     - Exercise-01
                     - Exercise-02
                     - Exercise-03
@@ -380,7 +386,7 @@ paths:
                   type: string
                   enum: [progress, done]
                   example: progress
-              required: 
+              required:
                 - name
                 - mode
                 - equipment
@@ -417,20 +423,20 @@ paths:
             schema:
               type: object
               properties:
-                name: 
+                name:
                   type: string
                   example: Workout name
-                mode: 
+                mode:
                   type: string
                   example: Workout mode
-                equipment: 
+                equipment:
                   type: string
-                  example: 
+                  example:
                     - Equipment-01
                     - Equipment-02
-                exercises: 
+                exercises:
                   type: string
-                  example: 
+                  example:
                     - Exercise-01
                     - Exercise-02
                     - Exercise-03
@@ -458,7 +464,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
     delete:
-      security: 
+      security:
         - bearerAuth: []
       tags: [Workout plan]
       description: Delete a workout plan by id
@@ -473,14 +479,7 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-       
-        
-                  
-              
-                        
-                          
-        
-          
+
 components:
   securitySchemes:
     bearerAuth:
@@ -507,22 +506,22 @@ components:
               type: string
               example: 5 Rounds For Time
             equipment:
-                type: string
-                example: 
-                  - barbell
-                  - rope
+              type: string
+              example:
+                - barbell
+                - rope
             exercises:
-                type: string
-                example: 
-                  - 9 deadlifts
-                  - 5 hang power cleans
-                  - 4 push jerks
+              type: string
+              example:
+                - 9 deadlifts
+                - 5 hang power cleans
+                - 4 push jerks
             trainerTips:
-                type: string
-                example: 
-                  - Aim for unbroken push jerks
-                  - The first three rounds might feel terrible, but stick to it
-                  - RX Weights - 205lb/145lb
+              type: string
+              example:
+                - Aim for unbroken push jerks
+                - The first three rounds might feel terrible, but stick to it
+                - RX Weights - 205lb/145lb
             photo:
               type: string
               format: url
@@ -608,7 +607,7 @@ components:
               example: '3 hours'
             trackProgress:
               type: string
-              example: 
+              example:
                 newHeight: '1.70 meters'
                 newWeight: '65 kg'
                 fitnessLevel: 'medium'
@@ -642,7 +641,7 @@ components:
     BuilderDTO:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           format: int32
           example: 101

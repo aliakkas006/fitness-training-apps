@@ -12,7 +12,7 @@
       "@/routes/*" : ["routes/*"],
       "@/service/*" : ["service/*"],
       "@/utils/*" : ["utils/*"],
-      "@/db/*" : ["db/*"]
+      "@/model/*" : ["model/*"]
     },                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
     "outDir": "dist", 
     "sourceMap": true,                                  /* Specify an output folder for all emitted files. */

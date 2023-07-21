@@ -1,3 +1,12 @@
+/* import mongoose from 'mongoose';
+
+const connectDB = (connectionStr: string) => {
+  return mongoose.connect(connectionStr);
+};
+
+export default connectDB; */
+
+/* 
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -39,3 +48,4 @@ class DBconnection {
 const connection = new DBconnection(path.resolve(process.env.DB_URL as string));
 
 export default connection;
+ */

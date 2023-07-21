@@ -4,7 +4,6 @@ import 'dotenv/config';
 import swaggerUI from 'swagger-ui-express';
 import YAML from 'yamljs';
 import * as OpenApiValidator from 'express-openapi-validator';
-import connection from './db';
 
 const swaggerDoc = YAML.load('./swagger.yaml');
 const app: express.Application = express();
@@ -17,11 +16,30 @@ app.use(
   }),
 );
 
+app.use((req: Request, _res: Response, next: NextFunction) => {
+  req.body.user = {
+    id: 111,
+    name: 'Ali Akkas',
+  };
+  next();
+});
+
 app.get('/health', (_req: Request, res: Response) => {
   res.send({ health: 'Everythig is OK!' });
 });
 
-app.get('/api/v1/workouts', async (req: Request, res: Response) => {
+// register an error handler using express-openapi-validator
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  res.status(err.status || 500).json({
+    message: err.message,
+    errors: err.errors,
+  });
+});
+
+export default app;
+
+/* 
+ app.get('/api/v1/workouts', async (req: Request, res: Response) => {
   // 1. extract query params
   const page: number = +(req.query.page as string) || 1;
   const limit: number = +(req.query.limit as string) || 10;
@@ -103,12 +121,15 @@ app.get('/api/v1/workouts', async (req: Request, res: Response) => {
   res.status(200).json(response);
 });
 
-// register an error handler using express-openapi-validator
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  res.status(err.status || 500).json({
-    message: err.message,
-    errors: err.errors,
-  });
+app.post('/api/v1/workouts', (req: Request, res: Response) => {
+  // step->1: destructure the request body
+  // const {name, mode, equipment, exercises, trainerTips, photo, status} = req.body
+
+  // step->2: invoke the service function
+
+  // step->3: generate response
+
+  res.status(201).json({ message: 'okay' });
 });
 
-export default app;
+*/
