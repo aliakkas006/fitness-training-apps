@@ -21,15 +21,19 @@ interface Progress {
   workout: Types.ObjectId;
 }
 
-const ProgressTrackSchema = new Schema<Progress>(
+const progressTrackSchema = new Schema<Progress>(
   {
-    workoutSession: { type: String, required: true },
-    track: { type: Object, required: true },
-    performance: String,
+    workoutSession: { type: String, required: [true, 'Workout session must be required*'] },
+    track: { type: Object, required: [true, 'User fitness tracking system must be required*'] },
+    performance: {
+      type: String,
+      required: [true, 'User performance track must be required*']
+    },
     status: {
       type: String,
       enum: Object.values(Status),
       default: Status.PUBLIC,
+      required: [true, 'User status must be required*'],
     },
     builder: {
       type: Schema.Types.ObjectId,
@@ -43,6 +47,6 @@ const ProgressTrackSchema = new Schema<Progress>(
   { timestamps: true, id: true },
 );
 
-const ProgressTrack: Model<Progress> = model<Progress>('ProgerssTrack', ProgressTrackSchema);
+const ProgressTrack: Model<Progress> = model<Progress>('ProgerssTrack', progressTrackSchema);
 
 export default ProgressTrack;

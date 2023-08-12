@@ -1,35 +1,19 @@
-import express, { NextFunction, Request, Response } from 'express';
-import cors from 'cors';
-import 'dotenv/config';
-import swaggerUI from 'swagger-ui-express';
-import YAML from 'yamljs';
-import * as OpenApiValidator from 'express-openapi-validator';
+import express, { Application, Response, NextFunction } from 'express';
+import applyMiddleware from './middleware';
+import routes from './routes';
 
-const swaggerDoc = YAML.load('./swagger.yaml');
-const app: express.Application = express();
+// express application
+const app: Application = express();
+applyMiddleware(app);
+app.use(routes);
 
-app.use([express.json(), cors()]);
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: './swagger.yaml',
-  }),
-);
-
-app.use((req: Request, _res: Response, next: NextFunction) => {
-  req.body.user = {
-    id: 111,
-    name: 'Ali Akkas',
-  };
-  next();
-});
-
-app.get('/health', (_req: Request, res: Response) => {
-  res.send({ health: 'Everythig is OK!' });
+app.get('/health', (_req: any, res: Response) => {
+  res.send({ health: 'Everything is OK!' });
 });
 
 // register an error handler using express-openapi-validator
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: any, _req: any, res: Response, _next: NextFunction) => {
+  console.log(err);
   res.status(err.status || 500).json({
     message: err.message,
     errors: err.errors,
@@ -37,6 +21,7 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 export default app;
+
 
 /* 
  app.get('/api/v1/workouts', async (req: Request, res: Response) => {
@@ -132,4 +117,16 @@ app.post('/api/v1/workouts', (req: Request, res: Response) => {
   res.status(201).json({ message: 'okay' });
 });
 
+*/
+
+/* 
+"_moduleAliases": {
+    "@/controller": "dist/controller",
+    "@/utils": "dist/utils",
+    "@/middleware": "dist/middleware",
+    "@/logs": "dist/logs",
+    "@/routes": "dist/routes",
+    "@/service": "dist/service",
+    "@/model": "dist/model"
+  }
 */

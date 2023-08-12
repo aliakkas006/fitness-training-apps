@@ -809,6 +809,5 @@ components:
       required: true
       description: Workout ID
       schema:
-        type: integer
-        format: int32
-        example: 1
+        type: string
+        example: 64d715dd8ef5b49a6953943d

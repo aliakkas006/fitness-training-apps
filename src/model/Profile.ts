@@ -24,24 +24,36 @@ interface IProfile {
   user: Types.ObjectId;
 }
 
-const ProfileSchema = new Schema<IProfile>({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  profilePic: String,
-  age: { type: Number, required: true },
-  weight: { type: Number, required: true },
-  height: { type: Number, required: true },
+const profileSchema = new Schema<IProfile>({
+  firstName: { type: String, required: [true, 'User first name must be required*'] },
+  lastName: { type: String, required: [true, 'User user last name must be required*'] },
+  profilePic: {
+    type: String,
+    validate: {
+      validator: (path: string) => /\.(jpg|jpeg|png)$/i.test(path),
+      message: 'Only JPG, JPEG and PNG images are allowed!',
+    },
+    unique: true,
+  },
+  age: {
+    type: Number,
+    required: [true, 'Age must be required*'],
+    min: [18, 'age must not be under 18 years old'],
+    max: [60, 'age must be under 60 years old'],
+  },
+  weight: { type: Number, required: [true, 'Weight must be required*'] },
+  height: { type: Number, required: [true, 'Height must be required*'] },
   fitnessLevel: {
     type: String,
-    required: true,
+    required: [true, 'Fitness level must be required*'],
     enum: Object.values(FitnessLevel), // Restrict possible values to FitnessLevel enum
     default: FitnessLevel.BEGINNER,
   },
   goal: {
     type: String,
-    required: true,
+    required: [true, 'User goal must be required*'],
     enum: Object.values(Goal), // Restrict possible values to Goal enum
-    default: Goal.MAINTAIN_FITNESS
+    default: Goal.MAINTAIN_FITNESS,
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -49,6 +61,6 @@ const ProfileSchema = new Schema<IProfile>({
   },
 });
 
-const Profile: Model<IProfile> = model<IProfile>('Profile', ProfileSchema);
+const Profile: Model<IProfile> = model<IProfile>('Profile', profileSchema);
 
 export default Profile;

@@ -16,19 +16,25 @@ interface Workout {
   builder: Types.ObjectId;
 }
 
-const WorkoutPlanSchema = new Schema<Workout>(
+const workoutPlanSchema = new Schema<Workout>(
   {
-    name: { type: String, required: true },
-    mode: { type: String, required: true },
-    equipment: { type: [String], required: true },
-    exercises: { type: [String], required: true },
-    trainerTips: { type: [String], required: true },
+    name: { type: String, required: [true, 'Workout name must be required*'] },
+    mode: { type: String, required: [true, 'Workout mode must be required*'] },
+    equipment: { type: [String], required: [true, 'Workout equipments must be required*'] },
+    exercises: { type: [String], required: [true, 'Exercises name must be required*'] },
+    trainerTips: { type: [String], required: [true, 'Trainer tips must be required*'] },
     status: {
       type: String,
       enum: Object.values(Status),
-      default: Status.PROGRESS,
+      default: Status.PROGRESS
     },
-    photo: String,
+    photo: {
+      type: String,
+      validate: {
+        validator: (path: string) => /\.(jpg|jpeg|png)$/i.test(path),
+        message: 'Only JPG, JPEG and PNG images are allowed!',
+      }
+    },
     builder: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -37,6 +43,6 @@ const WorkoutPlanSchema = new Schema<Workout>(
   { timestamps: true, id: true },
 );
 
-const WorkoutPlan: Model<Workout> = model<Workout>('WorkoutPlan', WorkoutPlanSchema);
+const WorkoutPlan: Model<Workout> = model<Workout>('WorkoutPlan', workoutPlanSchema);
 
 export default WorkoutPlan;
