@@ -26,7 +26,7 @@ services:
 #     ports:
 #       - '8081:8081'
 #     depends_on:
-#       - mongodb
+# - mongodb
 volumes:
   my_mongodb_data:
     driver: local

@@ -22,7 +22,7 @@ tags:
   - name: Profile
     description: User Profile Endpoints (only for admin)
 paths:
-  '/auth/signup':
+  '/auth/register':
     post:
       description: create a new account
       tags: [Auth]
@@ -42,11 +42,11 @@ paths:
                 password:
                   type: string
                   format: password
-                  example: Pass123
+                  example: Pass1$23
               required: [name, email, password]
       responses:
         '201':
-          description: Signup Successful
+          description: Account Created Successfully
           content:
             'application/json':
               schema:
@@ -58,7 +58,7 @@ paths:
                     example: 201
                   message:
                     type: string
-                    example: Signup Successful
+                    example: register Successful
                   data:
                     type: object
                     properties:
@@ -70,17 +70,17 @@ paths:
                     properties:
                       self:
                         type: string
-                        example: '/auth/signup'
-                      signin:
+                        example: '/auth/register'
+                      login:
                         type: string
-                        example: '/auth/signin'
+                        example: '/auth/login'
         '400':
           $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
-  '/auth/signin':
+  '/auth/login':
     post:
-      description: Signin to your account
+      description: login to your account
       tags: [Auth]
       requestBody:
         content:
@@ -95,11 +95,11 @@ paths:
                 password:
                   type: string
                   format: password
-                  example: Pass123
+                  example: Pass1$23
               required: [email, password]
       responses:
         '200':
-          description: Signin Successful
+          description: login Successful
           content:
             'application/json':
               schema:
@@ -111,7 +111,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Signin Successful
+                    example: login Successful
                   data:
                     type: object
                     properties:
@@ -123,7 +123,7 @@ paths:
                     properties:
                       self:
                         type: string
-                        example: '/auth/signin'
+                        example: '/auth/login'
         '400':
           $ref: '#/components/responses/400'
         '500':
@@ -296,10 +296,10 @@ paths:
         - $ref: '#/components/parameters/idPathParam'
         - in: query
           name: expand
-          description: Expand profile and progress object
+          description: Expand builder and progressTrack object
           schema:
             type: string
-            example: 'profile, progress'
+            example: 'builder, progressTrack'
       responses:
         '200':
           description: Single Workout plan view
@@ -368,16 +368,29 @@ paths:
                   type: string
                   example: Workout mode
                 equipment:
-                  type: string
+                  type: array
+                  items:
+                    type: string
                   example:
                     - Equipment-01
                     - Equipment-02
+                    - Equipment-03
                 exercises:
-                  type: string
+                  type: array
+                  items:
+                    type: string
                   example:
                     - Exercise-01
                     - Exercise-02
                     - Exercise-03
+                trainerTips:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - Trainer tips-01
+                    - Trainer tips-02
+                    - Trainer tips-03
                 photo:
                   type: string
                   format: url
@@ -391,6 +404,7 @@ paths:
                 - mode
                 - equipment
                 - exercises
+                - trainerTips
       responses:
         '200':
           description: Successfully updated

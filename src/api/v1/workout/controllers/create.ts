@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import workoutPlanService from '../../../../lib/workoutPlan';
 
-const create = async (req: Request, res: Response, next: NextFunction) => {
+const create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   // extract data from client request
   const { name, mode, equipment, exercises, trainerTips, photo, status } = req.body;
 
@@ -18,13 +18,11 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       builder: req.user,
     });
 
-    console.log('Workout plan service data inside create controller:', workout);
-
     // generate response
     const response = {
       code: 201,
       message: 'Workout Plan Created Successfully',
-      data: { ...workout._doc },
+      data: { ...workout },
       links: {
         self: `/workouts/${workout.id}`,
         builder: `/workouts/${workout.id}/builder`,

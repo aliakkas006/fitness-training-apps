@@ -12,17 +12,22 @@ enum Status {
   DECLINED = 'declined',
 }
 
-interface IUser {
+export interface IUser {
   name: string;
   email: string;
   password: string;
-  role: Role;
-  status: Status;
+  role?: Role;
+  status?: Status;
 }
 
 const userSchema = new Schema<IUser>(
   {
-    name: { type: String, required: [true, 'User name must be required*'] },
+    name: {
+      type: String,
+      maxlength: 30,
+      minlength: 5,
+      required: [true, 'User name must be required*'],
+    },
     email: {
       type: String,
       validate: {
@@ -31,20 +36,12 @@ const userSchema = new Schema<IUser>(
         },
         message: (props: { value: string }) => `${props.value} is not a valid email! `,
       },
-      required: [true, 'User email must be required*'],
+      required: [true, 'Email must be required*'],
       unique: true,
     },
     password: {
       type: String,
-      validate: {
-        validator: (password: string) => {
-          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(password);
-        },
-        message:
-          'Password must be at least 6 characters long and contain at least one Uppercase letter, one Lowercase letter, one Digit, and one Special Character!.',
-      },
       required: [true, 'User password must be required*'],
-      unique: true,
     },
     role: {
       type: String,
@@ -57,7 +54,7 @@ const userSchema = new Schema<IUser>(
       default: Status.PENDING,
     },
   },
-  { timestamps: true, id: true },
+  { timestamps: true, id: true }
 );
 
 const User: Model<IUser> = model<IUser>('User', userSchema);

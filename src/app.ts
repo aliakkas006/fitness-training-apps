@@ -1,4 +1,4 @@
-import express, { Application, Response, NextFunction } from 'express';
+import express, { Application, Request, Response } from 'express';
 import applyMiddleware from './middleware';
 import routes from './routes';
 
@@ -7,12 +7,12 @@ const app: Application = express();
 applyMiddleware(app);
 app.use(routes);
 
-app.get('/health', (_req: any, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.send({ health: 'Everything is OK!' });
 });
 
 // register an error handler using express-openapi-validator
-app.use((err: any, _req: any, res: Response, _next: NextFunction) => {
+app.use((err: any, _req: Request, res: Response) => {
   console.log(err);
   res.status(err.status || 500).json({
     message: err.message,
@@ -21,7 +21,6 @@ app.use((err: any, _req: any, res: Response, _next: NextFunction) => {
 });
 
 export default app;
-
 
 /* 
  app.get('/api/v1/workouts', async (req: Request, res: Response) => {

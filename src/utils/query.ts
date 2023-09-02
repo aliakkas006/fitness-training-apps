@@ -1,6 +1,6 @@
 import defaults from '../config/defaults';
 import generateQueryString from './qs';
-import CustomError from './CustomErr';
+import { badRequest } from './CustomError';
 
 // Define data types
 interface Pagination {
@@ -93,7 +93,7 @@ const getHATEOASForAllItems = ({
 
 // get transformed data utils
 const getTransformedItems = ({ items = [], selection = [], path = '/' }: TransformedItemsParam) => {
-  if (!Array.isArray(items) || !Array.isArray(selection)) throw new CustomError('Invalid Arguments!', 400);
+  if (!Array.isArray(items) || !Array.isArray(selection)) throw badRequest('Invalid Arguments!');
 
   if (selection.length === 0) return items.map((item) => ({ ...item, link: `${path}/${item.id}` }));
 

@@ -26,21 +26,21 @@ const workoutPlanSchema = new Schema<Workout>(
     status: {
       type: String,
       enum: Object.values(Status),
-      default: Status.PROGRESS
+      default: Status.PROGRESS,
     },
     photo: {
       type: String,
       validate: {
         validator: (path: string) => /\.(jpg|jpeg|png)$/i.test(path),
         message: 'Only JPG, JPEG and PNG images are allowed!',
-      }
+      },
     },
     builder: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
   },
-  { timestamps: true, id: true },
+  { timestamps: true, id: true }
 );
 
 const WorkoutPlan: Model<Workout> = model<Workout>('WorkoutPlan', workoutPlanSchema);

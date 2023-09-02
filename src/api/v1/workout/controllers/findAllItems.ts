@@ -3,7 +3,7 @@ import defaults from '../../../../config/defaults';
 import workoutPlanService from '../../../../lib/workoutPlan';
 import query from '../../../../utils/query';
 
-const findAll = async (req: Request, res: Response, next: NextFunction) => {
+const findAllItems = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const page: number = parseInt(req.query.page as string) || defaults.page;
   const limit: number = parseInt(req.query.limit as string) || defaults.limit;
   const sortType: string = (req.query.sort_type as string) || defaults.sortType;
@@ -12,10 +12,10 @@ const findAll = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     // data
-    const workouts = await workoutPlanService.findAll({ page, limit, sortType, sortBy, search });
+    const workouts = await workoutPlanService.findAllItems({ page, limit, sortType, sortBy, search });
     const data = query.getTransformedItems({
       items: workouts,
-      selection: ['id', 'name', 'mode', 'equipment', 'exercises', 'builder'],    //my selected properties
+      selection: ['id', 'name', 'mode', 'equipment', 'exercises', 'builder'], //my selected properties
       path: '/workouts',
     });
 
@@ -44,4 +44,4 @@ const findAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default findAll;
+export default findAllItems;
