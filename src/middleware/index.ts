@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import requestIp from 'request-ip';
 import YAML from 'yamljs';
 import swaggerUI from 'swagger-ui-express';
 import { middleware } from 'express-openapi-validator';
@@ -11,6 +12,7 @@ const applyMiddleware = (app: Application) => {
   app.use(express.json());
   app.use(cors());
   app.use(morgan('dev'));
+  app.use(requestIp.mw());
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
   app.use(
     middleware({

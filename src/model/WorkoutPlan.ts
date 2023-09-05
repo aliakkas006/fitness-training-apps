@@ -38,6 +38,7 @@ const workoutPlanSchema = new Schema<Workout>(
     builder: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required: true
     },
   },
   { timestamps: true, id: true }

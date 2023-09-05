@@ -493,6 +493,135 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
+  '/tokens/refresh':
+    post:
+      security:
+       - bearerAuth: []
+      description: Rotate refresh token
+      tags: [Token]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+              required: [token]
+      responses:
+        '201':
+          description: A new Access Token and Refresh Token generated successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Successfully generated a new Access Token and Refresh Token
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                      refresh_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw7Z"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/tokens/refresh"
+        '401':
+          $ref: '#/components/responses/401'
+  '/tokens/revoke':
+    post:
+      security:
+        - bearerAuth: []
+      description: Revoke refresh token
+      tags: [Token]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p"
+              required: [token]
+      responses:
+        '201':
+          description: Revoked Token
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Revoked Token!
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/tokens/revoke"
+        '401':
+          $ref: '#/components/responses/401'
+  '/tokens/validate':
+    post:
+      security:
+        - bearerAuth: []
+      description: Validate refresh token
+      tags: [Token]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p"
+              required: [token]
+      responses:
+        '200':
+          description: Validate Token
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Token is valid!
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/tokens/validate"
+                      refresh:
+                        type: string
+                        example: "/tokens/refresh"
+        '401':
+          $ref: '#/components/responses/401'
 
 components:
   securitySchemes:

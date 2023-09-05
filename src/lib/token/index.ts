@@ -1,16 +1,38 @@
 import jwt from 'jsonwebtoken';
-import {serverError} from '../../utils/CustomError';
+import { addDays } from 'date-fns';
+import RefreshToken from '../../model/RefrershToken';
+import defaults from '../../config/defaults';
+import { serverError } from '../../utils/CustomError';
 
-// TODO: implement refresh token
+enum Role {
+  USER = 'user',
+  ADMIN = 'admin',
+}
+
+interface RefreshTokenParam {
+  userId: string;
+  issuedIp: string;
+  name: string;
+  email: string;
+  role: Role;
+}
 
 class TokenService {
   private accessToken: string;
+  private refreshToken: string;
 
   constructor() {
-    this.accessToken = process.env.ACCESS_TOKEN_SECRET || 'secret-token';
+    this.accessToken = process.env.ACCESS_TOKEN_SECRET || 'secret-access-token';
+    this.refreshToken = process.env.REFRESH_TOKEN_SECRET || 'secret-refresh-token';
   }
 
-  generateToken({ payload, secret = this.accessToken, algorithm = 'HS256', expiresIn = '1h' }: any): string {
+  // generate access token:
+  public generateToken({
+    payload,
+    secret = this.accessToken,
+    algorithm = defaults.algorithm,
+    expiresIn = defaults.expiresIn,
+  }: any): string {
     try {
       return jwt.sign(payload, secret, { algorithm, expiresIn });
     } catch (err) {
@@ -35,6 +57,52 @@ class TokenService {
       console.log('[JWT]', err);
       throw serverError();
     }
+  }
+
+  // generate refresh token:
+  public async generateRefreshToken({
+    userId,
+    issuedIp,
+    name = '',
+    email = '',
+    role = Role.USER,
+  }: RefreshTokenParam) {
+    const refreshToken = new RefreshToken({
+      user: userId,
+      issuedIp,
+      token: '',
+      expiredAt: addDays(new Date(), 30),
+    });
+
+    const payload = {
+      id: refreshToken.id,
+      user: userId,
+      name,
+      email,
+      role,
+    };
+
+    const rToken = this.generateToken({
+      payload,
+      secret: this.refreshToken,
+      expiresIn: '30d',
+    });
+
+    refreshToken.token = rToken;
+    await refreshToken.save();
+
+    return rToken;
+  }
+
+  // find refresh token
+  public findRefreshToken(token: string) {
+    const decoded: any = this.verifyToken({
+      token,
+      secret: process.env.REFRESH_TOKEN_SECRET || 'secret-refresh-token',
+      expiresIn: '30d',
+    });
+
+    return RefreshToken.findById(decoded.id);
   }
 }
 

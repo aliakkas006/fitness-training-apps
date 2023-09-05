@@ -1,15 +1,18 @@
 import userService from '../user';
-import {badRequest} from '../../utils/CustomError';
+import { badRequest } from '../../utils/CustomError';
 import { generateHash, hashMatched } from '../../utils/hashing';
 import tokenService from '../../lib/token';
 
 interface LoginParam {
   email: string;
   password: string;
+  issuedIp: string;
 }
 
-interface RegisterParam extends LoginParam {
+interface RegisterParam {
   name: string;
+  email: string;
+  password: string;
 }
 
 class AuthService {
@@ -26,7 +29,7 @@ class AuthService {
     // TODO: send verification email
   }
 
-  public async login({ email, password }: LoginParam) {
+  public async login({ email, password, issuedIp }: LoginParam) {
     const user: any = await userService.findUserByEmail(email);
     if (!user) throw badRequest('Invalid Credentials!');
 
@@ -40,7 +43,18 @@ class AuthService {
       email: user.email,
       role: user.role,
     };
-    return tokenService.generateToken({payload})
+    const accessToken = tokenService.generateToken({ payload });
+
+    // generate refresh token
+    const refreshToken = await tokenService.generateRefreshToken({
+      userId: user.id,
+      issuedIp,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+
+    return { accessToken, refreshToken };
   }
 }
 
