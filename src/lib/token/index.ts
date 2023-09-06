@@ -3,6 +3,7 @@ import { addDays } from 'date-fns';
 import RefreshToken from '../../model/RefrershToken';
 import defaults from '../../config/defaults';
 import { serverError } from '../../utils/CustomError';
+import logger from '../../config/logger';
 
 enum Role {
   USER = 'user',
@@ -36,7 +37,7 @@ class TokenService {
     try {
       return jwt.sign(payload, secret, { algorithm, expiresIn });
     } catch (err) {
-      console.log('[JWT]', err);
+      logger.error('[JWT]', err);
       throw serverError();
     }
   }
@@ -45,7 +46,7 @@ class TokenService {
     try {
       return jwt.decode(token, algorithm);
     } catch (err) {
-      console.log('[JWT]', err);
+      logger.err('[JWT]', err);
       throw serverError();
     }
   }
@@ -54,7 +55,7 @@ class TokenService {
     try {
       return jwt.verify(token, secret, { algorithms: [algorithm] });
     } catch (err) {
-      console.log('[JWT]', err);
+      logger.error('[JWT]', err);
       throw serverError();
     }
   }
