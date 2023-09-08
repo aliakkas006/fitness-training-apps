@@ -5,7 +5,7 @@ enum Status {
   DONE = 'done',
 }
 
-interface Workout {
+export interface Workout {
   name: string;
   mode: string;
   equipment: Types.Array<string>;

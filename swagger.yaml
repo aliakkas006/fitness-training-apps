@@ -541,7 +541,7 @@ paths:
                         example: "/tokens/refresh"
         '401':
           $ref: '#/components/responses/401'
-  '/tokens/revoke':
+  '/tokens/logout':
     post:
       security:
         - bearerAuth: []
@@ -571,13 +571,13 @@ paths:
                     example: 201
                   message:
                     type: string
-                    example: Revoked Token!
+                    example: Logout successfully
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: "/tokens/revoke"
+                        example: "/tokens/logout"
         '401':
           $ref: '#/components/responses/401'
   '/tokens/validate':

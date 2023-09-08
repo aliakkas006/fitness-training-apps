@@ -16,7 +16,7 @@ class UserService {
   }
 
   public async createAccount({ name, email, password }: IUser) {
-    if (!name || !email || !password) throw badRequest('Invalid Arguments!');
+    if (!name || !email || !password) throw badRequest('Invalid Parameters!');
 
     const user: any = new User({ name, email, password });
     await user.save();

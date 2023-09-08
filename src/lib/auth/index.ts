@@ -56,6 +56,7 @@ class AuthService {
 
     return { accessToken, refreshToken };
   }
+  
 }
 
 const authService = new AuthService();

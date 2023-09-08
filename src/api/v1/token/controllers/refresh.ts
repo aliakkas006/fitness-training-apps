@@ -13,8 +13,8 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
       secret: process.env.REFRESH_TOKEN_SECRET || 'secret-refresh-token',
       expiresIn: '30d',
     });
-
     const oldRefreshToken = await tokenService.findRefreshToken(token);
+    
     if (!oldRefreshToken || !oldRefreshToken.isActive) throw authenticationError('Invalid Token!');
 
     // revoked old refresh token

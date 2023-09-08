@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>(
     name: {
       type: String,
       maxlength: 30,
-      minlength: 5,
+      minlength: 3,
       required: [true, 'User name must be required*'],
     },
     email: {

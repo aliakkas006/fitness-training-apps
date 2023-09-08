@@ -9,10 +9,8 @@ import { middleware } from 'express-openapi-validator';
 const swaggerDoc = YAML.load('./swagger.yaml');
 
 const applyMiddleware = (app: Application) => {
-  app.use(express.json());
-  app.use(cors());
-  app.use(morgan('dev'));
-  app.use(requestIp.mw());
+  app.use([express.json(), cors(), morgan('dev'), requestIp.mw()]);
+  
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
   app.use(
     middleware({

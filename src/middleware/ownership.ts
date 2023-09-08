@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import workoutPlanService from '../lib/workoutPlan';
 import { authorizationError } from '../utils/CustomError';
 
-// TODO: check ownership for progress track, profile, user model
+// TODO: check ownership for progress track, profile, user model using switch case statements
 
 const ownership =
   (model = '') =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, _res: Response, next: NextFunction) => {
     // TODO: use swith case for all model
 
     if (model === 'WorkoutPlan') {
