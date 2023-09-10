@@ -1,11 +1,11 @@
 import { Schema, Model, model } from 'mongoose';
 
-enum Role {
+export enum Role {
   USER = 'user',
   ADMIN = 'admin',
 }
 
-enum Status {
+export enum Status {
   PENDING = 'pending',
   APPROVED = 'approved',
   BLOCKED = 'blocked',

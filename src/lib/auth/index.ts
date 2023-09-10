@@ -18,7 +18,6 @@ interface RegisterParam {
 class AuthService {
   public async register({ name, email, password }: RegisterParam) {
     const hasUser = await userService.userExist(email);
-
     if (hasUser) throw badRequest('User Already Exist');
 
     password = await generateHash(password);

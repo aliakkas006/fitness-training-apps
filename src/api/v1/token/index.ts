@@ -1,9 +1,9 @@
 import refresh from './controllers/refresh';
-import logout from './controllers/logout';
 import validate from './controllers/validate';
+import logout from './controllers/logout';
 
 export default {
   refresh,
-  logout,
   validate,
+  logout,
 };

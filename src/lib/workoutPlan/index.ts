@@ -1,4 +1,4 @@
-import WorkoutPlan from '../../model/WorkoutPlan';
+import WorkoutPlan, { Workout } from '../../model/WorkoutPlan';
 import defaults from '../../config/defaults';
 import { badRequest, notFound } from '../../utils/CustomError';
 
@@ -14,13 +14,13 @@ type Search = {
 
 //TODO: Create interface for workoutplan and payload object
 
-interface FindAllItemsParam {
-  page?: number;
-  limit?: number;
-  sortType?: string;
-  sortBy?: string;
-  search?: string;
-}
+// interface FindAllItemsParam {
+//   page?: number;
+//   limit?: number;
+//   sortType?: string;
+//   sortBy?: string;
+//   search?: string;
+// }
 //TODO:
 // interface FindSingleItemParam {
 //   id: string;
@@ -55,7 +55,7 @@ class WorkoutPlanService {
     sortType = defaults.sortType,
     sortBy = defaults.sortBy,
     search = defaults.search,
-  }: FindAllItemsParam): Promise<any> {
+  }): Promise<any> {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
     const filter = {
       name: { $regex: search, $options: 'i' },
@@ -84,15 +84,16 @@ class WorkoutPlanService {
   // create a new workout plan
   public async create({
     name,
-    mode = '',
-    equipment = [],
-    exercises = [],
-    trainerTips = [],
+    mode,
+    equipment,
+    exercises,
+    trainerTips,
     photo = '',
     status = Status.PROGRESS,
     builder,
   }: CreateOrUpdateParam): Promise<any> {
-    if (!name || !builder) throw badRequest('Invalid Parameters!');
+    if (!name || !mode || !equipment || !exercises || !trainerTips || !builder)
+      throw badRequest('Invalid Parameters!');
 
     const workoutPlan: any = new WorkoutPlan({
       name,
@@ -121,7 +122,7 @@ class WorkoutPlanService {
 
     const workoutPlan: any = await WorkoutPlan.findById(id);
 
-    if (!workoutPlan) throw notFound('Resource not found!');
+    if (!workoutPlan) throw notFound();
 
     if (expand.includes('builder')) {
       await workoutPlan?.populate({ path: 'builder', select: 'name', strictPopulate: false });
@@ -197,7 +198,7 @@ class WorkoutPlanService {
     { name, mode, equipment, exercises, trainerTips, photo, status }: UpdatePropertiesParam
   ): Promise<any> {
     const workoutPlan: any = await WorkoutPlan.findById(id);
-    if (!workoutPlan) throw notFound('Resource not found!');
+    if (!workoutPlan) throw notFound();
 
     const payload: any = { name, mode, equipment, exercises, trainerTips, photo, status };
 
@@ -209,11 +210,36 @@ class WorkoutPlanService {
     return { ...workoutPlan._doc, id: workoutPlan.id };
   }
 
-  // delete the workout plan
+  // Remove the workout plan by id
   public async removeItem(id: string): Promise<any> {
     const workoutPlan: any = await WorkoutPlan.findById(id);
     if (!workoutPlan) throw notFound('Resource not found!');
-    //TODO: Asynchronously delete all associated progress track
+
+    // TODO: Asynchronously delete all associated data (for all remove function) later
+    //TODO: Asynchronously delete all associated progress track later
+    /* 
+      1. // Find all associated progress tracks
+  const progressTracks = await ProgressTrack.find({ workoutPlan: id });
+  // Asynchronously delete all associated progress tracks
+  const deleteProgressTracksPromises = progressTracks.map(async (progressTrack) => {
+    await ProgressTrack.findByIdAndDelete(progressTrack._id);
+  });
+  await Promise.all(deleteProgressTracksPromises);
+  // Finally, delete the workout plan itself
+  const deletedWorkoutPlan = await WorkoutPlan.findByIdAndDelete(id);
+  return deletedWorkoutPlan;
+
+  2. // Find all associated progress tracks
+  const progressTrackIds = await ProgressTrack.find({ workoutPlan: id }).distinct('_id');
+  if (progressTrackIds.length > 0) {
+    // Delete all associated progress tracks in a single query
+    await ProgressTrack.deleteMany({ _id: { $in: progressTrackIds } });
+  }
+  // Delete the workout plan itself
+  const deletedWorkoutPlan = await WorkoutPlan.findByIdAndDelete(id);
+  return deletedWorkoutPlan;
+    */
+
     return WorkoutPlan.findByIdAndDelete(id);
   }
 

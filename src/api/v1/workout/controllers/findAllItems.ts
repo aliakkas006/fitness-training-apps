@@ -11,8 +11,14 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction): Pr
   const search: string = (req.query.search as string) || defaults.search;
 
   try {
-    // data
-    const workouts = await workoutPlanService.findAllItems({ page, limit, sortType, sortBy, search });
+    // data process
+    const workouts = await workoutPlanService.findAllItems({
+      page,
+      limit,
+      sortType,
+      sortBy,
+      search,
+    });
     const data = query.getTransformedItems({
       items: workouts,
       selection: ['id', 'name', 'mode', 'equipment', 'exercises', 'builder'], //my selected properties

@@ -22,11 +22,11 @@ const create = async (req: Request, res: Response, next: NextFunction): Promise<
     const response = {
       code: 201,
       message: 'Workout Plan Created Successfully',
-      data: { ...workout },
+      data: workout,
       links: {
-        self: `/workouts/${workout.id}`,
-        builder: `/workouts/${workout.id}/builder`,
-        progress: `/workouts/${workout.id}/progress`,
+        self: req.url,
+        builder: `${req.url}/builder`,
+        progress: `${req.url}/progress`,
       },
     };
 

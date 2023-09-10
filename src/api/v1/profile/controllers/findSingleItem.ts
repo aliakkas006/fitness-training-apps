@@ -1,19 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import workoutPlanService from '../../../../lib/workoutPlan';
+import profileService from '../../../../lib/profile';
 
 const findSingleItem = async (req: Request, res: Response, next: NextFunction) => {
-  const id = req.params.id;
-  const expand = req.query.expand || '';
+  const { id } = req.params;
 
   try {
-    const workout = await workoutPlanService.findSingleItem({ id, expand });
-
+    const profile = await profileService.findSingleItem(id)
     const response = {
-      data: workout,
+      code: 200,
+      message: 'Successfully fetch a profile',
+      data: profile,
       links: {
         self: req.url,
-        builder: `${req.url}/builder`,
-        progress: `${req.url}/progress`,
       },
     };
 

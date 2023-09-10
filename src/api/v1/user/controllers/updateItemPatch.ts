@@ -1,22 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
-import workoutPlanService from '../../../../lib/workoutPlan';
+import userService from '../../../../lib/user';
 
 const updateItemPatch = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
-    const workoutPlan = await workoutPlanService.updateProperties(id, req.body);
-
+    const user = await userService.updateProperties(id, req.body);
     const response = {
       code: 200,
-      messgage: 'Workout plan updated successfully',
-      data: workoutPlan,
+      message: 'Successfully updated user property',
+      data: user,
       links: {
         self: req.url,
       },
     };
 
-    res.status(200).json(response);
+    res.status(200).json({ response });
   } catch (err) {
     next(err);
   }

@@ -23,7 +23,7 @@ const updateItem = async (req: Request, res: Response, next: NextFunction) => {
       messgage: code === 200 ? 'Workout plan updated successfully' : 'Workout plan creatd successfully',
       data: workoutPlan,
       links: {
-        self: `workouts/${workoutPlan.id}`,
+        self: req.url,
       },
     };
 

@@ -1,6 +1,6 @@
 import { Schema, Model, model, Types } from 'mongoose';
 
-enum Status {
+export enum Status {
   PROGRESS = 'progress',
   DONE = 'done',
 }

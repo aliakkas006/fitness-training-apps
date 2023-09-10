@@ -25,7 +25,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
       },
       links: {
         self: req.url,
-        login: '/auth/login',
+        login: '/api/v1/auth/login',
       },
     };
 

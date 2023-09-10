@@ -55,11 +55,11 @@ describe('Register Controller', () => {
       code: 201,
       message: 'Account Created Successfully',
       data: {
-        access_token: expect.any(String), // further test the structure of the access token
+        access_token: expect.any(String), 
       },
       links: {
-        self: undefined, //  further test the URL format
-        login: '/auth/login',
+        self: req.url, 
+        login: '/api/v1/auth/login',
       },
     });
 

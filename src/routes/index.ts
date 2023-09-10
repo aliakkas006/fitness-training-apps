@@ -1,20 +1,23 @@
 import { Router } from 'express';
-import authControllers from '../api/v1/auth';
 import authenticate from '../middleware/authenticate';
 import authorize from '../middleware/authorize';
 import ownership from '../middleware/ownership';
+import authControllers from '../api/v1/auth';
 import tokenControllers from '../api/v1/token';
 import workoutControllers from '../api/v1/workout';
+import userControllers from '../api/v1/user';
+import profileControllers from '../api/v1/profile';
 
 const router = Router();
 
 // TODO: use and check authenticate, authorize and ownership middleware later based on situation
-
+// TODO: Update ownership middleware based on Model(owner)
 // Auth routes
 router
   .post('/api/v1/auth/register', authControllers.register)
   .post('/api/v1/auth/login', authControllers.login);
 
+// TODO: tokens route will be in the Auth routes (/api/v1/logout)
 // Token routes
 router
   .post('/api/v1/tokens/refresh', [authenticate, authorize()], tokenControllers.refresh)
@@ -26,6 +29,7 @@ router
   .route('/api/v1/workouts')
   .get(workoutControllers.findAllItems)
   .post([authenticate, authorize(['user', 'admin'])], workoutControllers.create);
+
 router
   .route('/api/v1/workouts/:id')
   .get(workoutControllers.findSingleItem)
@@ -37,5 +41,35 @@ router
   );
 
 // User routes (admin only)
+// TODO: do user password hash like auth service
+router
+  .route('/api/v1/users')
+  .get([authenticate, authorize()], userControllers.findAllItems)
+  .post([authenticate, authorize()], userControllers.create);
+
+router
+  .route('/api/v1/users/:id')
+  .get([authenticate, authorize()], userControllers.findSingleItem)
+  .patch([authenticate, authorize()], userControllers.updateItemPatch)
+  .delete([authenticate, authorize()], userControllers.removeItem);
+
+// TODO: do user password hash
+router.patch(
+  '/api/v1/users/:id/password',
+  [authenticate, authorize()],
+  userControllers.changePassword
+);
+
+// Profile routes
+router
+  .route('/api/v1/profiles')
+  .get([authenticate, authorize()], profileControllers.findAllItems)
+  .post([authenticate, authorize(['user', 'admin'])], profileControllers.create);
+
+router
+  .route('/api/v1/profiles/:id')
+  .get([authenticate, authorize(['user', 'admin'])], profileControllers.findSingleItem)
+  .patch([authenticate, authorize(['user', 'admin'])], profileControllers.updateItemPatch)
+  .delete([authenticate, authorize(['user', 'admin'])], profileControllers.removeItem);
 
 export default router;

@@ -35,20 +35,20 @@ main();
 // console.log('User Created!');
 
 // const workoutPlan = new WorkoutPlan({
-    //   name: 'Heavy DT',
-    //   mode: '5 Rounds For Time',
-    //   equipment: ['barbell', 'rope'],
-    //   exercises: ['9 deadlifts', '5 hang power cleans', '4 push jerks'],
-    //   trainerTips: [
-    //     'Aim for unbroken push jerks',
-    //     'The first three rounds might feel terrible, but stick to it',
-    //     'RX Weights - 205lb/145lb',
-    //   ],
-    //   photo: 'https://s3.aws.com/my-fitness/img.jpg',
-    //   builder: {
-    //     id: 101,
-    //     name: 'Ali Akkas',
-    //   },
-    // });
+//   name: 'Heavy DT',
+//   mode: '5 Rounds For Time',
+//   equipment: ['barbell', 'rope'],
+//   exercises: ['9 deadlifts', '5 hang power cleans', '4 push jerks'],
+//   trainerTips: [
+//     'Aim for unbroken push jerks',
+//     'The first three rounds might feel terrible, but stick to it',
+//     'RX Weights - 205lb/145lb',
+//   ],
+//   photo: 'https://s3.aws.com/my-fitness/img.jpg',
+//   builder: {
+//     id: 101,
+//     name: 'Ali Akkas',
+//   },
+// });
 
-    // await workoutPlan.save();
+// await workoutPlan.save();
