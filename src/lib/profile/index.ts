@@ -32,7 +32,7 @@ class ProfileService {
   }) {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
     const filter = {
-      $and: [
+      $or: [
         { firstName: { $regex: firstName, $options: 'i' } },
         { lastName: { $regex: lastName, $options: 'i' } },
         { email: { $regex: email, $options: 'i' } },

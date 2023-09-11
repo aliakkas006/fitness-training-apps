@@ -1,4 +1,4 @@
-import WorkoutPlan, { Workout } from '../../model/WorkoutPlan';
+import WorkoutPlan from '../../model/WorkoutPlan';
 import defaults from '../../config/defaults';
 import { badRequest, notFound } from '../../utils/CustomError';
 
@@ -7,10 +7,6 @@ enum Status {
   PROGRESS = 'progress',
   DONE = 'done',
 }
-
-type Search = {
-  search: string;
-};
 
 //TODO: Create interface for workoutplan and payload object
 
@@ -64,7 +60,7 @@ class WorkoutPlanService {
     const workouts: any = await WorkoutPlan.find(filter)
       .populate({ path: 'builder', select: 'name' })
       .sort(sortStr)
-      .skip(page * limit - limit)
+      .skip((page - 1) * limit)
       .limit(limit);
 
     return workouts.map((workout: any) => ({
@@ -74,7 +70,7 @@ class WorkoutPlanService {
   }
 
   // total workout plan count
-  public async count({ search = defaults.search }: Search): Promise<number> {
+  public async count({ search = defaults.search }): Promise<number> {
     const filter = {
       name: { $regex: search, $options: 'i' },
     };

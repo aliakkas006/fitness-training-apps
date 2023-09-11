@@ -15,8 +15,8 @@ tags:
     description: Authentication Endpoints (public)
   - name: Workout plan
     description: Workout plan Endpoints (public + private)
-  - name: Progress tracking
-    description: Progress tracking Endpoints (private)
+  - name: Progress
+    description: Progress Endpoints (private)
   - name: User
     description: User Endpoints (only for admin)
   - name: Profile
@@ -128,7 +128,7 @@ paths:
           $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
-  
+
   '/workouts':
     get:
       tags: [Workout plan]
@@ -288,7 +288,7 @@ paths:
         '401':
           $ref: '#/components/responses/401'
         '500':
-          $ref: '#/components/responses/500' 
+          $ref: '#/components/responses/500'
   '/workouts/{id}':
     get:
       tags: [Workout plan]
@@ -494,7 +494,283 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-  
+
+  '/progress':
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Progress]
+      description: Users can see a list of their progress and admin can see a list of all progress
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - in: query
+          name: workoutId
+          description: Id of the workout plan
+          schema:
+            type: string
+            example: 64feeb01f731d5ccd1118f5a
+        - in: query
+          name: builderId
+          description: Id of the builder
+          schema:
+            type: string
+            example: 64feeb01f731d5ccd15f
+      responses:
+        '200':
+          description: Return a list of progress data
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            workoutSession:
+                              type: string
+                              example: '50 min'
+                            trackProgress:
+                              type: object
+                              properties:
+                                newHeight:
+                                  type: string
+                                  example: '5.8 feet'
+                                newWeight:
+                                  type: string
+                                  example: '60 kg'
+                                newFitnessLevel:
+                                  type: string
+                                  enum:
+                                    - beginner
+                                    - intermmediate
+                                    - advanced
+                                  example: intermmediate
+                                achievedGoal:
+                                  type: string
+                                  enum:
+                                    - lose_weight
+                                    - build_muscle
+                                    - maintain_fitness
+                                  example: build_muscle
+                            performance:
+                              type: string
+                              example: 'Body Composition coordinated'
+                            status:
+                              type: string
+                              enum: [public, private]
+                              example: public
+                            builder:
+                              $ref: '#/components/schemas/BuilderDTO'
+                            workout:
+                              $ref: '#/components/schemas/WorkoutDTO'
+                          required:
+                            - id
+                            - workoutSession
+                            - trackProgress
+                            - performance
+                            - builder
+                            - workout
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/progress?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/progress?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/progress?page=1&limit=10'
+                      workoutPlan:
+                        type: string
+                        format: url
+                        example: '/progress?workoutId=56645555df'
+                      builder:
+                        type: string
+                        format: url
+                        example: '/progress?builderId=47855555dd'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      operationId: createProgress
+      security:
+        - bearerAuth: []
+      tags: [Progress]
+      description: Create a new progress
+      requestBody:
+        description: To create a new progress user must be authenticated and also provide valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                workoutSession:
+                  type: string
+                  example: '50 min'
+                trackProgress:
+                  type: object
+                  properties:
+                    newHeight:
+                      type: string
+                      example: '5.8 feet'
+                    newWeight:
+                      type: string
+                      example: '60 kg'
+                    newFitnessLevel:
+                      type: string
+                      enum:
+                        - beginner
+                        - intermmediate
+                        - advanced
+                      example: intermmediate
+                    achievedGoal:
+                      type: string
+                      enum:
+                        - lose_weight
+                        - build_muscle
+                        - maintain_fitness
+                      example: build_muscle
+                performance:
+                  type: string
+                  example: 'Body Composition coordinated'
+                workoutId:
+                  type: string
+                  example: 64feeb01f731d5ccd1118f5a
+                status:
+                  type: string
+                  enum: [public, private]
+                  example: public
+              required:
+                - workoutSession
+                - trackProgress
+                - performance
+                - workoutId
+      responses:
+        '201':
+          description: Successfully created a new progress
+          content:
+            'application/jsom':
+              schema:
+                $ref: '#/components/schemas/ProgressCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/progress/{id}':
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Progress]
+      description: Admin can update any progress and authenticate users can update only their progress
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                workoutSession:
+                  type: string
+                  example: '1 hr'
+                trackProgress:
+                  type: object
+                  properties:
+                    newHeight:
+                      type: string
+                      example: '5.8 feet'
+                    newWeight:
+                      type: string
+                      example: '60 kg'
+                    newFitnessLevel:
+                      type: string
+                      enum:
+                        - beginner
+                        - intermmediate
+                        - advanced
+                      example: intermmediate
+                    achievedGoal:
+                      type: string
+                      enum:
+                        - lose_weight
+                        - build_muscle
+                        - maintain_fitness
+                      example: build_muscle
+                performance:
+                  type: string
+                  example: 'Body Composition coordinated'
+                status:
+                  type: string
+                  enum: [public, private]
+                  example: public
+      responses:
+        '200':
+          description: Progress updated successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully updated progress property
+                  data:
+                    $ref: '#/components/schemas/Progress'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: 'progress/1'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'  
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Progress]
+      description: Admin can delete any progress data but authenticate users can delete only their progress data.
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: Progress deleted successfully!
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
   '/users':
     get:
       security:
@@ -857,14 +1133,14 @@ paths:
                               example: beginner
                             goal:
                               type: string
-                              enum: 
-                               - lose_weight
-                               - build_muscle
-                               - maintain_fitness
+                              enum:
+                                - lose_weight
+                                - build_muscle
+                                - maintain_fitness
                               example: maintain_fitness
                             user:
                               $ref: '#/components/schemas/BuilderDTO'
-                          required: 
+                          required:
                             - id
                             - firstName
                             - lastName
@@ -945,10 +1221,10 @@ paths:
                   example: beginner
                 goal:
                   type: string
-                  enum: 
-                   - lose_weight
-                   - build_muscle
-                   - maintain_fitness
+                  enum:
+                    - lose_weight
+                    - build_muscle
+                    - maintain_fitness
                   example: maintain_fitness
               required:
                 - firstName
@@ -1001,7 +1277,7 @@ paths:
                             $ref: '#/components/schemas/BuilderDTO'
         '404':
           $ref: '#/components/responses/404'
-    patch: 
+    patch:
       security:
         - bearerAuth: []
       tags: [Profile]
@@ -1049,42 +1325,42 @@ paths:
                   example: beginner
                 goal:
                   type: string
-                  enum: 
-                   - lose_weight
-                   - build_muscle
-                   - maintain_fitness
+                  enum:
+                    - lose_weight
+                    - build_muscle
+                    - maintain_fitness
                   example: maintain_fitness
-              
+
       responses:
-       '200':
-         description: User Profile property updated successfully
-         content:
-          'application/json':
-            schema:
-              type: object
-              properties:
-                code:
-                  type: integer
-                  format: int32
-                  example: 200
-                message:
-                  type: string
-                  example: Successfully updated
-                data:
-                  $ref: '#/components/schemas/Profile'
-                links:
-                  type: object
-                  properties:
-                    self:
-                      type: string
-                      format: url
-                      example: 'users/1'
-       '400':
+        '200':
+          description: User Profile property updated successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Successfully updated
+                  data:
+                    $ref: '#/components/schemas/Profile'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: 'users/1'
+        '400':
           $ref: '#/components/responses/400'
-       '401':
+        '401':
           $ref: '#/components/responses/401'
-       '404':
-        $ref: '#/components/responses/404'
+        '404':
+          $ref: '#/components/responses/404'
     delete:
       security:
         - bearerAuth: []
@@ -1093,7 +1369,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/idPathParam'
       responses:
-        '204': 
+        '204':
           description: Profile Deleted Successfully!
         '401':
           $ref: '#/components/responses/401'
@@ -1368,10 +1644,10 @@ components:
               example: beginner
             goal:
               type: string
-              enum: 
-               - lose_weight
-               - build_muscle
-               - maintain_fitness
+              enum:
+                - lose_weight
+                - build_muscle
+                - maintain_fitness
               example: maintain_fitness
           required:
             - id
@@ -1384,7 +1660,61 @@ components:
             - weight
             - fitnessLevel
             - goal
-              
+
+        - $ref: '#/components/schemas/Timestamp'
+    Progress:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            builderId:
+              type: integer
+              format: int32
+              example: 1
+            workoutId:
+              type: integer
+              format: int32
+              example: 111
+            workoutSession:
+              type: string
+              example: '50 min'
+            trackProgress:
+              type: object
+              properties:
+                newHeight:
+                  type: string
+                  example: '5.8 feet'
+                newWeight:
+                  type: string
+                  example: '60 kg'
+                newFitnessLevel:
+                  type: string
+                  example: intermmediate
+                achievedGoal:
+                  type: string
+                  enum:
+                    - lose_weight 
+                    - build_muscle
+                    - maintain_fitness
+                  example: build_muscle
+            performance:
+              type: string
+              example: 'Body Composition coordinated'
+            status:
+              type: string
+              enum: [public, private]
+              example: public
+          required:
+            - id
+            - builderId
+            - workoutId
+            - workoutSession
+            - trackProgress
+            - performance
+            - status
         - $ref: '#/components/schemas/Timestamp'
     WorkoutsCreateDTO:
       type: object
@@ -1494,48 +1824,25 @@ components:
               type: string
               format: url
               example: '/users/1/view'
-    Progress:
-      allOf:
-        - type: object
+    ProgressCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: 'Progress created successfully!'
+        data:
+          $ref: '#/components/schemas/Progress'
+        links:
+          type: object
           properties:
-            id:
-              type: integer
-              format: int32
-              example: 1
-            builderId:
-              type: integer
-              format: int32
-              example: 1
-            workoutId:
-              type: integer
-              format: int32
-              example: 1
-            workoutSession:
+            self:
               type: string
-              example: '3 hours'
-            trackProgress:
-              type: string
-              example:
-                newHeight: '1.70 meters'
-                newWeight: '65 kg'
-                fitnessLevel: 'medium'
-                isAchievedGoal: true
-            performance:
-              type: string
-              example: 'Very high'
-            status:
-              type: string
-              enum: [public, private]
-              example: public
-          required:
-            - id
-            - builderId
-            - workoutId
-            - workoutSession
-            - trackProgress
-            - performance
-            - status
-        - $ref: '#/components/schemas/Timestamp'
+              format: url
+              example: 'progress/1'
     Timestamp:
       type: object
       properties:
@@ -1557,7 +1864,18 @@ components:
           type: string
           example: Ali Akkas
       required: [id, name]
-    
+    WorkoutDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 101
+        name:
+          type: string
+          example: Push Jerk
+      required: [id, name]
+
     Pagination:
       type: object
       properties:

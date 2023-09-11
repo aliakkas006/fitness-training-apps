@@ -5,12 +5,14 @@ import ownership from '../middleware/ownership';
 import authControllers from '../api/v1/auth';
 import tokenControllers from '../api/v1/token';
 import workoutControllers from '../api/v1/workout';
+import progressControllers from '../api/v1/progress';
 import userControllers from '../api/v1/user';
 import profileControllers from '../api/v1/profile';
 
 const router = Router();
 
 // TODO: use and check authenticate, authorize and ownership middleware later based on situation
+
 // TODO: Update ownership middleware based on Model(owner)
 // Auth routes
 router
@@ -38,6 +40,21 @@ router
   .delete(
     [authenticate, authorize(['user', 'admin']), ownership('WorkoutPlan')],
     workoutControllers.removeItem
+  );
+
+// Progress routes
+// TODO: Check find all items controller
+router
+  .route('/api/v1/progress')
+  .get([authenticate, authorize()], progressControllers.findAllItems)
+  .post([authenticate, authorize(['user', 'admin'])], progressControllers.create);
+
+router
+  .route('/api/v1/progress/:id')
+  .patch([authenticate, authorize(['user', 'admin'])], progressControllers.updateItemPatch)
+  .delete(
+    [authenticate, authorize(['user', 'admin']), ownership('Progress')],
+    progressControllers.removeItem
   );
 
 // User routes (admin only)

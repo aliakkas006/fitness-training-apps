@@ -1,33 +1,35 @@
 import { Request, Response, NextFunction } from 'express';
 import defaults from '../../../../config/defaults';
-import workoutPlanService from '../../../../lib/workoutPlan';
+import progressService from '../../../../lib/progress';
 import query from '../../../../utils/query';
 
-const findAllItems = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  // extract query params
+const findAllItems = async (req: Request, res: Response, next: NextFunction) => {
+  // extract the query params
   const page: number = parseInt(req.query.page as string) || defaults.page;
   const limit: number = parseInt(req.query.limit as string) || defaults.limit;
   const sortType: string = (req.query.sort_type as string) || defaults.sortType;
   const sortBy: string = (req.query.sort_by as string) || defaults.sortBy;
-  const search: string = (req.query.search as string) || defaults.search;
+  const workoutId: string = (req.query.workoutId as string) || '';
+  const builderId: string = (req.query.builderId as string) || '';
 
   try {
     // data process
-    const workouts = await workoutPlanService.findAllItems({
+    const progresses = await progressService.findAllItems({
       page,
       limit,
       sortType,
       sortBy,
-      search,
+      workoutId,
+      builderId,
     });
     const data = query.getTransformedItems({
-      items: workouts,
-      selection: ['id', 'name', 'mode', 'equipment', 'exercises', 'builder'], //my selected properties
-      path: '/workouts',
+      items: progresses,
+      selection: ['id, workoutSession', 'trackProgress', 'performance', 'builder', 'workout'],
+      path: '/progress',
     });
 
     // pagination
-    const totalItems = await workoutPlanService.count({ search });
+    const totalItems = await progressService.count({ workoutId, builderId });
     const pagination = query.getPagination({ totalItems, limit, page });
 
     // HATEOAS links
@@ -40,12 +42,18 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction): Pr
       hasPrev: !!pagination.prev,
     });
 
-    // response generation
-    res.status(200).json({
+    // generate response
+    const response = {
       data,
       pagination,
-      links,
-    });
+      links: {
+        ...links,
+        workoutPlan: `/progress?workoutId=${workoutId}`,
+        builder: `/progress?builderId=${builderId}`,
+      },
+    };
+
+    res.status(200).json(response);
   } catch (err) {
     next(err);
   }
