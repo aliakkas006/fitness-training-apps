@@ -14,7 +14,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
       email: user.email,
       role: user.role,
     };
-    const accessToken = tokenService.generateToken({ payload });
+    const accessToken = tokenService.generateAccessToken({ payload });
 
     // generate response
     const response = {

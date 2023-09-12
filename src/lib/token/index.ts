@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { addDays } from 'date-fns';
 import RefreshToken from '../../model/RefrershToken';
 import defaults from '../../config/defaults';
-import { serverError } from '../../utils/CustomError';
+import { authenticationError, serverError } from '../../utils/CustomError';
 import logger from '../../config/logger';
 
 enum Role {
@@ -18,6 +18,11 @@ interface RefreshTokenParam {
   role: Role;
 }
 
+interface RotateRefreshTokenParam {
+  token: string;
+  clientIp: string;
+}
+
 class TokenService {
   private accessToken: string;
   private refreshToken: string;
@@ -27,8 +32,7 @@ class TokenService {
     this.refreshToken = process.env.REFRESH_TOKEN_SECRET || 'secret-refresh-token';
   }
 
-  // generate access token:
-  public generateToken({
+  public generateAccessToken({
     payload,
     secret = this.accessToken,
     algorithm = defaults.algorithm,
@@ -42,7 +46,7 @@ class TokenService {
     }
   }
 
-  decodeToken({ token, algorithm = 'HS256' }: any) {
+  decodeToken({ token, algorithm = defaults.algorithm }: any) {
     try {
       return jwt.decode(token, algorithm);
     } catch (err) {
@@ -51,7 +55,7 @@ class TokenService {
     }
   }
 
-  verifyToken({ token, secret = this.accessToken || 'secret-token', algorithm = 'HS256' }: any) {
+  public verifyToken({ token, secret = this.accessToken, algorithm = defaults.algorithm }: any) {
     try {
       return jwt.verify(token, secret, { algorithms: [algorithm] });
     } catch (err) {
@@ -60,14 +64,13 @@ class TokenService {
     }
   }
 
-  // generate refresh token:
   public async generateRefreshToken({
     userId,
     issuedIp,
     name = '',
     email = '',
     role = Role.USER,
-  }: RefreshTokenParam) {
+  }: RefreshTokenParam): Promise<string> {
     const refreshToken = new RefreshToken({
       user: userId,
       issuedIp,
@@ -83,7 +86,7 @@ class TokenService {
       role,
     };
 
-    const rToken = this.generateToken({
+    const rToken = this.generateAccessToken({
       payload,
       secret: this.refreshToken,
       expiresIn: '30d',
@@ -95,15 +98,64 @@ class TokenService {
     return rToken;
   }
 
-  // find refresh token
-  public findRefreshToken(token: string) {
+  private findRefreshToken(token: string) {
     const decoded: any = this.verifyToken({
       token,
-      secret: process.env.REFRESH_TOKEN_SECRET || 'secret-refresh-token',
+      secret: this.refreshToken,
       expiresIn: '30d',
     });
 
     return RefreshToken.findById(decoded.id);
+  }
+
+  // Revoked refresh token
+  public async revokeRefreshToken({ token, clientIp }: RotateRefreshTokenParam) {
+    const refreshToken = await this.findRefreshToken(token);
+    if (!refreshToken || !refreshToken.isActive) throw authenticationError('Invalid Token!');
+
+    refreshToken.revokedAt = new Date();
+    refreshToken.revokedIp = clientIp;
+
+    return refreshToken.save();
+  }
+
+  // Rotate refresh token
+  public async rotateRefreshToken({ token, clientIp }: RotateRefreshTokenParam) {
+    const decoded: any = this.verifyToken({
+      token,
+      secret: this.refreshToken,
+      expiresIn: '30d',
+    });
+
+    // revoked old refresh token
+    await this.revokeRefreshToken({ token, clientIp });
+
+    // generate a new refresh token
+    const refreshToken = await this.generateRefreshToken({
+      userId: decoded.user,
+      issuedIp: clientIp,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role,
+    });
+
+    // generate a new access token
+    const payload = {
+      id: decoded.id,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role,
+    };
+    const accessToken = this.generateAccessToken({ payload, expiresIn: defaults.expiresIn });
+
+    return { accessToken, refreshToken };
+  }
+
+  // Check refresh token validity
+  public async checkRefreshTokenValidity(token: string): Promise<boolean> {
+    const refreshToken = await tokenService.findRefreshToken(token);
+    if (!refreshToken || !refreshToken.isActive) throw authenticationError('Invalid Token');
+    else return true;
   }
 }
 

@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "test": "jest",
     "dev": "npx nodemon",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",

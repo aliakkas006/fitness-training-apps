@@ -19,8 +19,8 @@ router
   .post('/api/v1/auth/register', authControllers.register)
   .post('/api/v1/auth/login', authControllers.login);
 
-// TODO: tokens route will be in the Auth routes (/api/v1/logout)
 // Token routes
+//TODO: Check ownership
 router
   .post('/api/v1/tokens/refresh', [authenticate, authorize()], tokenControllers.refresh)
   .post('/api/v1/tokens/logout', [authenticate, authorize()], tokenControllers.logout)

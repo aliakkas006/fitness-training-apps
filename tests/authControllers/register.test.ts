@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import authService from '../src/lib/auth';
-import authControleer from '../src/api/v1/auth';
-import { badRequest } from '../src/utils/CustomError';
+import authService from '../../src/lib/auth';
+import authControllers from '../../src/api/v1/auth';
+import { badRequest } from '../../src/utils/CustomError';
 
 // Mock the dependencies or functions used within the register function
 jest.mock('../src/lib/auth', () => ({
@@ -42,7 +42,7 @@ describe('Register Controller', () => {
       throw new Error(message);
     });
 
-    await authControleer.register(req, res, next);
+    await authControllers.register(req, res, next);
 
     expect(authService.register).toHaveBeenCalledWith({
       name: 'Ali Akkas',
@@ -55,14 +55,16 @@ describe('Register Controller', () => {
       code: 201,
       message: 'Account Created Successfully',
       data: {
-        access_token: expect.any(String), 
+        access_token: expect.any(String),
       },
       links: {
-        self: req.url, 
+        self: req.url,
         login: '/api/v1/auth/login',
       },
     });
 
     expect(next).not.toHaveBeenCalled();
   });
+
+  
 });

@@ -1,4 +1,4 @@
-import WorkoutPlan from '../../model/WorkoutPlan';
+import WorkoutPlan, { Workout } from '../../model/WorkoutPlan';
 import defaults from '../../config/defaults';
 import { badRequest, notFound } from '../../utils/CustomError';
 

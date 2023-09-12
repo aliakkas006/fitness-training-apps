@@ -42,7 +42,7 @@ class AuthService {
       email: user.email,
       role: user.role,
     };
-    const accessToken = tokenService.generateToken({ payload });
+    const accessToken = tokenService.generateAccessToken({ payload });
 
     // generate refresh token
     const refreshToken = await tokenService.generateRefreshToken({
@@ -55,7 +55,6 @@ class AuthService {
 
     return { accessToken, refreshToken };
   }
-  
 }
 
 const authService = new AuthService();
