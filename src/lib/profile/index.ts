@@ -14,6 +14,11 @@ interface UpdatePropertiesParam {
   goal: Goal;
 }
 
+interface CheckOwnershipParam {
+  resourceId: string;
+  userId: string;
+}
+
 class ProfileService {
   private async findProfileByEmail(email: string): Promise<boolean> {
     const profile = await Profile.findOne({ email });
@@ -159,6 +164,14 @@ class ProfileService {
     if (!profile) throw notFound();
 
     return Profile.findByIdAndDelete(id);
+  }
+
+  // Check ownership of the progress
+  public async checkOwnership({ resourceId, userId }: CheckOwnershipParam): Promise<boolean> {
+    const profile = await Profile.findById(resourceId);
+    if (!profile) throw notFound();
+
+    return profile.user._id.toString() === userId ? true : false;
   }
 }
 

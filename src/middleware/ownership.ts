@@ -1,23 +1,32 @@
 import { Request, Response, NextFunction } from 'express';
 import workoutPlanService from '../lib/workoutPlan';
 import { authorizationError } from '../utils/CustomError';
-
-// TODO: check ownership for progress track, profile, user model using switch case statements
+import progressService from '../lib/progress';
+import profileService from '../lib/profile';
 
 const ownership =
   (model = '') =>
   async (req: Request, _res: Response, next: NextFunction) => {
-    // TODO: use swith case for all model
+    const resourceId = req.params.id;
+    const userId = req.user.id;
+    let isOwner = false;
 
-    if (model === 'WorkoutPlan') {
-      const isOwner = await workoutPlanService.checkOwnership({
-        resourceId: req.params.id,
-        userId: req.user.id,
-      });
+    switch (model) {
+      case 'WorkoutPlan':
+        isOwner = await workoutPlanService.checkOwnership({ resourceId, userId });
+        break;
 
-      if (isOwner) next();
-      else next(authorizationError);
+      case 'Progress':
+        isOwner = await progressService.checkOwnership({ resourceId, userId });
+        break;
+
+      default:
+        isOwner = await profileService.checkOwnership({ resourceId, userId });
+        break;
     }
+
+    if (isOwner) next();
+    else next(authorizationError());
   };
 
 export default ownership;

@@ -7,6 +7,7 @@ const changePassword = async (req: Request, res: Response, next: NextFunction) =
 
   try {
     const user = await userService.changePassword(id, password);
+    
     const response = {
       code: 200,
       message: 'Password Changed Successfully!',

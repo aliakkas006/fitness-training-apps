@@ -240,15 +240,12 @@ class WorkoutPlanService {
   }
 
   // check ownership of the workout plan
-  public async checkOwnership({ resourceId, userId }: CheckOwnershipParam) {
+  public async checkOwnership({ resourceId, userId }: CheckOwnershipParam): Promise<boolean> {
     const workoutPlan = await WorkoutPlan.findById(resourceId);
     if (!workoutPlan) throw notFound();
 
     return workoutPlan.builder._id.toString() === userId ? true : false;
   }
-
-  //TODO: check validation of the workout plan
-  // public checkValidation()
 }
 
 const workoutPlanService = new WorkoutPlanService();

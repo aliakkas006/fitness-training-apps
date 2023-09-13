@@ -121,16 +121,17 @@ class UserService {
     return User.findByIdAndDelete(id);
   }
 
-  // Change password of the user
+  // Change the password of the user
   public async changePassword(id: string, password: string) {
     if (!password) throw badRequest('Password is required!');
 
     const user: any = await User.findById(id);
     if (!user) throw notFound();
 
+    password = await generateHash(password);
     user.password = password ?? user.password;
-    await user.save();
 
+    await user.save();
     return {
       ...user._doc,
       id: user.id,

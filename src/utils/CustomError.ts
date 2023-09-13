@@ -6,7 +6,7 @@ export class CustomError extends Error {
     this.status = status;
   }
 }
-
+// TODO: either file name change or refactor this code
 export const notFound = (msg = 'Resource Not Found') => {
   return new CustomError(msg, 404);
 };

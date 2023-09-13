@@ -18,6 +18,11 @@ interface UpdatePropertiesParam {
   status: Status;
 }
 
+interface CheckOwnershipParam {
+  resourceId: string;
+  userId: string;
+}
+
 class ProgressService {
   // Find all progress data
   public async findAllItems({
@@ -129,6 +134,14 @@ class ProgressService {
     if (!progress) throw notFound();
 
     return Progress.findByIdAndDelete(id);
+  }
+
+  // Check ownership of the progress
+  public async checkOwnership({ resourceId, userId }: CheckOwnershipParam): Promise<boolean> {
+    const progress = await Progress.findById(resourceId);
+    if (!progress) throw notFound();
+
+    return progress.builder._id.toString() === userId ? true : false;
   }
 }
 
