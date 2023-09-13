@@ -9,8 +9,6 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
   const limit: number = parseInt(req.query.limit as string) || defaults.limit;
   const sortType: string = (req.query.sort_type as string) || defaults.sortType;
   const sortBy: string = (req.query.sort_by as string) || defaults.sortBy;
-  const workoutId: string = (req.query.workoutId as string) || '';
-  const builderId: string = (req.query.builderId as string) || '';
 
   try {
     // data process
@@ -19,17 +17,15 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
       limit,
       sortType,
       sortBy,
-      workoutId,
-      builderId,
     });
     const data = query.getTransformedItems({
       items: progresses,
-      selection: ['id, workoutSession', 'trackProgress', 'performance', 'builder', 'workout'],
+      selection: ['id', 'workoutSession', 'trackProgress', 'performance', 'builder', 'workout'],
       path: '/progress',
     });
 
     // pagination
-    const totalItems = await progressService.count({ workoutId, builderId });
+    const totalItems = await progressService.count();
     const pagination = query.getPagination({ totalItems, limit, page });
 
     // HATEOAS links
@@ -46,11 +42,7 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
     const response = {
       data,
       pagination,
-      links: {
-        ...links,
-        workoutPlan: `/progress?workoutId=${workoutId}`,
-        builder: `/progress?builderId=${builderId}`,
-      },
+      links: links,
     };
 
     res.status(200).json(response);

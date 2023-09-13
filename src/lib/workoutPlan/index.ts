@@ -1,14 +1,15 @@
-import WorkoutPlan, { Workout } from '../../model/WorkoutPlan';
+import WorkoutPlan from '../../model/WorkoutPlan';
 import defaults from '../../config/defaults';
 import { badRequest, notFound } from '../../utils/CustomError';
+import Progress from '../../model/Progress';
+
+// TODO: typescript short imports
 
 // Define data types
 enum Status {
   PROGRESS = 'progress',
   DONE = 'done',
 }
-
-//TODO: Create interface for workoutplan and payload object
 
 // interface FindAllItemsParam {
 //   page?: number;
@@ -17,7 +18,7 @@ enum Status {
 //   sortBy?: string;
 //   search?: string;
 // }
-//TODO:
+
 // interface FindSingleItemParam {
 //   id: string;
 //   expand?: string ;
@@ -44,7 +45,6 @@ interface CheckOwnershipParam {
 
 class WorkoutPlanService {
   // find all workout plan
-  //TODO: define the return type
   public async findAllItems({
     page = defaults.page,
     limit = defaults.limit,
@@ -113,7 +113,7 @@ class WorkoutPlanService {
   // find a sigle workout plan
   public async findSingleItem({ id, expand = '' }: any): Promise<any> {
     if (!id) throw badRequest('Id is required');
-    //TODO: check the expand value. is it exist or not?
+    //TODO: progress expand is not working
     expand = expand.split(',').map((item: any) => item.trim());
 
     const workoutPlan: any = await WorkoutPlan.findById(id);
@@ -125,7 +125,7 @@ class WorkoutPlanService {
     }
 
     if (expand.includes('progress')) {
-      await workoutPlan?.populate({ path: 'progress' }, { strictPopulate: false });
+      await workoutPlan?.populate({ path: 'progresses', strictPopulate: false });
     }
 
     return {
@@ -206,35 +206,15 @@ class WorkoutPlanService {
     return { ...workoutPlan._doc, id: workoutPlan.id };
   }
 
-  // Remove the workout plan by id
+  // Delete the workout plan by id and asynchronously delete all associated progress data
   public async removeItem(id: string): Promise<any> {
     const workoutPlan: any = await WorkoutPlan.findById(id);
     if (!workoutPlan) throw notFound('Resource not found!');
 
-    // TODO: Asynchronously delete all associated data (for all remove function) later
-    //TODO: Asynchronously delete all associated progress track later
-    /* 
-      1. // Find all associated progress tracks
-  const progressTracks = await ProgressTrack.find({ workoutPlan: id });
-  // Asynchronously delete all associated progress tracks
-  const deleteProgressTracksPromises = progressTracks.map(async (progressTrack) => {
-    await ProgressTrack.findByIdAndDelete(progressTrack._id);
-  });
-  await Promise.all(deleteProgressTracksPromises);
-  // Finally, delete the workout plan itself
-  const deletedWorkoutPlan = await WorkoutPlan.findByIdAndDelete(id);
-  return deletedWorkoutPlan;
-
-  2. // Find all associated progress tracks
-  const progressTrackIds = await ProgressTrack.find({ workoutPlan: id }).distinct('_id');
-  if (progressTrackIds.length > 0) {
-    // Delete all associated progress tracks in a single query
-    await ProgressTrack.deleteMany({ _id: { $in: progressTrackIds } });
-  }
-  // Delete the workout plan itself
-  const deletedWorkoutPlan = await WorkoutPlan.findByIdAndDelete(id);
-  return deletedWorkoutPlan;
-    */
+    const progressIds = await Progress.find({ workout: id }).distinct('_id');
+    if (progressIds.length > 0) {
+      await Progress.deleteMany({ _id: { $in: progressIds } });
+    }
 
     return WorkoutPlan.findByIdAndDelete(id);
   }

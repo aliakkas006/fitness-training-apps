@@ -1,5 +1,6 @@
 import defaults from '../../config/defaults';
 import Profile, { FitnessLevel, Goal, IProfile } from '../../model/Profile';
+import User from '../../model/User';
 import { badRequest, notFound } from '../../utils/CustomError';
 
 interface UpdatePropertiesParam {
@@ -80,6 +81,8 @@ class ProfileService {
     user,
   }: any): Promise<any> {
     const hasProfile = await this.findProfileByEmail(email);
+    console.log('hasProfile', hasProfile);
+
     if (hasProfile) throw badRequest('Profile already exist!');
 
     if (!firstName || !lastName || !age || !height || !weight || !fitnessLevel || !goal || !user)
@@ -157,12 +160,14 @@ class ProfileService {
     };
   }
 
-  // Remove the profile by id
-  // TODO: Asynchronously delete all data associated with the profle
+  // Remove the profile by id and delete associated user
   public async removeItem(id: string): Promise<IProfile | null> {
     const profile = await Profile.findById(id);
     if (!profile) throw notFound();
 
+    const user: any = await User.findOne({ _id: profile.user });
+
+    await User.findByIdAndDelete(user._id); // Delete the associated user
     return Profile.findByIdAndDelete(id);
   }
 

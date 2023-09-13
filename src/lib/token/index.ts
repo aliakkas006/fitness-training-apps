@@ -153,7 +153,7 @@ class TokenService {
 
   // Check refresh token validity
   public async checkRefreshTokenValidity(token: string): Promise<boolean> {
-    const refreshToken = await tokenService.findRefreshToken(token);
+    const refreshToken = await this.findRefreshToken(token);
     if (!refreshToken || !refreshToken.isActive) throw authenticationError('Invalid Token');
     else return true;
   }

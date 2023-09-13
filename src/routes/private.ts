@@ -28,7 +28,6 @@ privateRouter
   );
 
 // Progress routes
-// TODO: Check find all items controller
 privateRouter
   .route('/api/v1/progress')
   .post([authenticate, authorize(['user', 'admin'])], progressControllers.create);

@@ -14,6 +14,7 @@ export interface Workout {
   status?: Status;
   photo?: string;
   builder: Types.ObjectId;
+  
 }
 
 const workoutPlanSchema = new Schema<Workout>(

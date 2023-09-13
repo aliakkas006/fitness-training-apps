@@ -1,7 +1,12 @@
 import defaults from '../../config/defaults';
+import Profile from '../../model/Profile';
+import Progress from '../../model/Progress';
+import RefreshToken from '../../model/RefrershToken';
 import User, { IUser, Role, Status } from '../../model/User';
+import WorkoutPlan from '../../model/WorkoutPlan';
 import { badRequest, notFound } from '../../utils/CustomError';
 import { generateHash } from '../../utils/hashing';
+import profileService from '../profile';
 
 // TODO: create same interface for all model and service (do it in a interface file)
 
@@ -113,11 +118,21 @@ class UserService {
     };
   }
 
-  // Remove the user by id
+  // Delete the user by id and asynchronously delete all associated data
   public async removeItem(id: string): Promise<IUser | null> {
     const user = await User.findById(id);
     if (!user) throw notFound();
 
+    const workoutPlanIds = await WorkoutPlan.find({ builder: id }).distinct('_id');
+    if (workoutPlanIds.length > 0) await WorkoutPlan.deleteMany({ _id: { $in: workoutPlanIds } });
+
+    const progressIds = await Progress.find({ builder: id }).distinct('_id');
+    if (progressIds.length > 0) await Progress.deleteMany({ _id: { $in: progressIds } });
+
+    const profileId = await Profile.findOne({ user: id }).distinct('_id');
+    await Profile.deleteOne({ _id: { $in: profileId } });
+
+    // await profileService.removeItem(id);
     return User.findByIdAndDelete(id);
   }
 

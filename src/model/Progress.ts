@@ -50,6 +50,6 @@ const progressSchema = new Schema<IProgress>(
   { timestamps: true, id: true }
 );
 
-const Progress: Model<IProgress> = model<IProgress>('Progerss', progressSchema);
+const Progress: Model<IProgress> = model<IProgress>('Progress', progressSchema);
 
 export default Progress;

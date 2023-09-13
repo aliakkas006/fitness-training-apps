@@ -1,5 +1,6 @@
 import defaults from '../../config/defaults';
 import Progress, { IProgress, Status, Track } from '../../model/Progress';
+import WorkoutPlan from '../../model/WorkoutPlan';
 import { badRequest, notFound } from '../../utils/CustomError';
 
 // interface CreateParam {
@@ -30,19 +31,10 @@ class ProgressService {
     limit = defaults.limit,
     sortType = defaults.sortType,
     sortBy = defaults.sortBy,
-    workoutId = '',
-    builderId = '',
   }) {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
-    const filter = {
-      $or: [
-        { workoutId: { $regex: workoutId, $options: 'i' } },
-        { builderId: { $regex: builderId, $options: 'i' } },
-      ],
-    };
 
-    // TODO: update in the documentation(swagger add workout)
-    const progresses: any = await Progress.find(filter)
+    const progresses: any = await Progress.find({})
       .populate([
         { path: 'builder', select: 'name' },
         { path: 'workout', select: 'name' },
@@ -58,15 +50,8 @@ class ProgressService {
   }
 
   // total progress count
-  // TODO: defaults value set later
-  public async count({ workoutId = '', builderId = '' }): Promise<number> {
-    const filter = {
-      $or: [
-        { workoutId: { $regex: workoutId, $options: 'i' } },
-        { builderId: { $regex: builderId, $options: 'i' } },
-      ],
-    };
-    return Progress.count(filter);
+  public async count(): Promise<number> {
+    return Progress.count({});
   }
 
   // create a new workout plan
@@ -80,6 +65,9 @@ class ProgressService {
   }: any) {
     if (!workoutSession || !trackProgress || !performance || !workoutId || !builder)
       throw badRequest('Invalid Parameters!');
+
+    const workoutPlan = await WorkoutPlan.findById(workoutId);
+    if (!workoutPlan) throw notFound();
 
     const progress: any = new Progress({
       workoutSession,

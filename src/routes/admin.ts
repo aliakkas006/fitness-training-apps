@@ -37,7 +37,7 @@ adminRouter
 // Token routes
 adminRouter
   .post('/api/v1/tokens/refresh', [authenticate, authorize()], tokenControllers.refresh)
-  .post('/api/v1/tokens/logout', [authenticate, authorize()], tokenControllers.logout)
+  .post('/api/v1/tokens/revoke', [authenticate, authorize()], tokenControllers.revoke)
   .post('/api/v1/tokens/validate', [authenticate, authorize()], tokenControllers.validate);
 
 export default adminRouter;

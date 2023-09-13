@@ -297,10 +297,10 @@ paths:
         - $ref: '#/components/parameters/idPathParam'
         - in: query
           name: expand
-          description: Expand builder and progressTrack object
+          description: Expand builder and progress object
           schema:
             type: string
-            example: 'builder, progressTrack'
+            example: 'builder, progress'
       responses:
         '200':
           description: Single Workout plan view
@@ -506,18 +506,6 @@ paths:
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/sortTypeParam'
         - $ref: '#/components/parameters/sortByParam'
-        - in: query
-          name: workoutId
-          description: Id of the workout plan
-          schema:
-            type: string
-            example: 64feeb01f731d5ccd1118f5a
-        - in: query
-          name: builderId
-          description: Id of the builder
-          schema:
-            type: string
-            example: 64feeb01f731d5ccd15f
       responses:
         '200':
           description: Return a list of progress data
@@ -753,7 +741,7 @@ paths:
         '401':
           $ref: '#/components/responses/401'
         '404':
-          $ref: '#/components/responses/404'  
+          $ref: '#/components/responses/404'
     delete:
       security:
         - bearerAuth: []
@@ -1424,7 +1412,7 @@ paths:
                         example: '/tokens/refresh'
         '401':
           $ref: '#/components/responses/401'
-  '/tokens/logout':
+  '/tokens/revoke':
     post:
       security:
         - bearerAuth: []
@@ -1454,13 +1442,13 @@ paths:
                     example: 201
                   message:
                     type: string
-                    example: Logout successfully
+                    example: revoke successfully
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: '/tokens/logout'
+                        example: '/tokens/revoke'
         '401':
           $ref: '#/components/responses/401'
   '/tokens/validate':
@@ -1696,7 +1684,7 @@ components:
                 achievedGoal:
                   type: string
                   enum:
-                    - lose_weight 
+                    - lose_weight
                     - build_muscle
                     - maintain_fitness
                   example: build_muscle
