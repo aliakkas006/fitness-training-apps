@@ -1,20 +1,8 @@
-import { Schema, model, Model, Types, Document } from 'mongoose';
+import { Schema, model, Model } from 'mongoose';
 import { isAfter } from 'date-fns';
+import { RefreshTokenDocument } from '../types/interfaces';
 
-export interface IRefreshToken {
-  user: Types.ObjectId;
-  issuedIp: string;
-  token: string;
-  replaceByToken?: string;
-  expiredAt: Date;
-  revokedAt?: Date;
-  revokedIp?: string;
-}
 
-export interface RefreshTokenDocument extends Document, IRefreshToken {
-  isExpired: boolean;
-  isActive: boolean;
-}
 
 const refreshTokenSchema = new Schema<RefreshTokenDocument>(
   {

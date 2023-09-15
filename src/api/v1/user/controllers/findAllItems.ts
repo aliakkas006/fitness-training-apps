@@ -35,7 +35,6 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
       page,
     });
 
-    // generate response
     res.status(200).json({
       data,
       pagination,

@@ -5,6 +5,7 @@ import userControllers from '../api/v1/user';
 import profileControllers from '../api/v1/profile';
 import progressControllers from '../api/v1/progress';
 import tokenControllers from '../api/v1/token';
+import ownership from '../middleware/ownership';
 
 const adminRouter = Router();
 
@@ -32,7 +33,10 @@ adminRouter
 // progress route
 adminRouter
   .route('/api/v1/progress')
-  .get([authenticate, authorize()], progressControllers.findAllItems);
+  .get(
+    [authenticate, authorize(['user', 'admin'])],
+    progressControllers.findAllItems
+  );
 
 // Token routes
 adminRouter

@@ -1,16 +1,16 @@
 import request from 'supertest';
 import express from 'express';
-import findAllItemsController from '../../src/api/v1/workout/controllers/findAllItems';
-import workoutPlanService from '../../src/lib/workoutPlan';
-import query from '../../src/utils/query';
+import findAllItems from '../../../src/api/v1/workout/controllers/findAllItems';
+import workoutPlanService from '../../../src/lib/workoutPlan';
+import query from '../../../src/utils/query';
 
 // Mock the workoutPlanService and query modules
-jest.mock('../../src/lib/workoutPlan', () => ({
+jest.mock('../../../src/lib/workoutPlan', () => ({
   findAllItems: jest.fn(),
   count: jest.fn(),
 }));
 
-jest.mock('../../src/utils/query', () => ({
+jest.mock('../../../src/utils/query', () => ({
   getTransformedItems: jest.fn(),
   getPagination: jest.fn(),
   getHATEOASForAllItems: jest.fn(),
@@ -19,7 +19,7 @@ jest.mock('../../src/utils/query', () => ({
 // Create an Express app and use the controller
 const app = express();
 app.use(express.json());
-app.get('/api/v1/workouts', findAllItemsController);
+app.get('/api/v1/workouts', findAllItems);
 
 describe('Find All Workout Plans Controller', () => {
   it('should return a list of workout plans', async () => {

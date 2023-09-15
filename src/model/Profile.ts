@@ -1,29 +1,8 @@
-import { Schema, Model, model, Types } from 'mongoose';
+import { Schema, Model, model } from 'mongoose';
+import { IProfile } from '../types/interfaces';
+import { FitnessLevel, Goal } from '../types/enums';
 
-export enum FitnessLevel {
-  BEGINNER = 'beginner',
-  INTERMEDIATE = 'intermediate',
-  ADVANCED = 'advanced',
-}
 
-export enum Goal {
-  LOSE_WEIGHT = 'lose_weight',
-  BUILD_MUSCLE = 'build_muscle',
-  MAINTAIN_FITNESS = 'maintain_fitness',
-}
-
-export interface IProfile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  profilePic?: string;
-  age: number;
-  weight: number;
-  height: number;
-  fitnessLevel: FitnessLevel;
-  goal: Goal;
-  user: Types.ObjectId;
-}
 
 const profileSchema = new Schema<IProfile>(
   {

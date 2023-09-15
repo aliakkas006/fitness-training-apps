@@ -1,13 +1,5 @@
-interface Config {
-  totalItems: number;
-  limit: number;
-  page: number;
-  sortType: string;
-  sortBy: string;
-  search: string;
-  algorithm: string;
-  expiresIn: string
-}
+import { Config } from "../types/interfaces";
+
 
 const config: Config = {
   totalItems: 0,

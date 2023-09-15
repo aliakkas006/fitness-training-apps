@@ -1,10 +1,10 @@
 import request from 'supertest';
 import express from 'express';
-import createController from '../../src/api/v1/workout/controllers/create';
-import workoutPlanService from '../../src/lib/workoutPlan';
+import createController from '../../../src/api/v1/workout/controllers/create';
+import workoutPlanService from '../../../src/lib/workoutPlan';
 
 // Mock the workoutPlanService
-jest.mock('../../src/lib/workoutPlan', () => ({
+jest.mock('../../../src/lib/workoutPlan', () => ({
   create: jest.fn(),
 }));
 
@@ -22,7 +22,7 @@ describe('Workout Plan Creation Controller', () => {
       mode: 'Beginner',
       equipment: ['Dumbbells', 'Bench'],
       exercises: ['Push-ups', 'Squats'],
-      trainerTips: 'Start slowly and increase intensity over time.',
+      trainerTips: ['Start slowly and increase intensity over time.'],
       photo: 'workout.jpg',
       status: 'progress',
       builder: { id: 'user123' },
@@ -31,19 +31,17 @@ describe('Workout Plan Creation Controller', () => {
     (workoutPlanService.create as jest.Mock).mockResolvedValue(mockWorkoutPlan);
 
     const requestBody = {
-      name: 'Sample Workout Plan',
+      name: 'Example Workout Plan',
       mode: 'Beginner',
       equipment: ['Dumbbells', 'Bench'],
       exercises: ['Push-ups', 'Squats'],
-      trainerTips: 'Start slowly and increase intensity over time.',
+      trainerTips: ['Start slowly and increase intensity over time.'],
       photo: 'workout.jpg',
       status: 'progress',
     };
-
     const response = await request(app).post('/api/v1/workouts').send(requestBody).expect(201);
 
     // Assertions
-    expect(response.body).toHaveProperty('data');
-    expect(response.body.data).toEqual(mockWorkoutPlan);
+    expect(response.body).toHaveProperty('data', mockWorkoutPlan);
   });
 });

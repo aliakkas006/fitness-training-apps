@@ -2,26 +2,12 @@ import jwt from 'jsonwebtoken';
 import { addDays } from 'date-fns';
 import RefreshToken from '../../model/RefrershToken';
 import defaults from '../../config/defaults';
-import { authenticationError, serverError } from '../../utils/CustomError';
+import { authenticationError, serverError } from '../../utils/error';
 import logger from '../../config/logger';
+import { RefreshTokenParam, RotateRefreshTokenParam } from '../../types/interfaces';
+import { Role } from '../../types/enums';
 
-enum Role {
-  USER = 'user',
-  ADMIN = 'admin',
-}
 
-interface RefreshTokenParam {
-  userId: string;
-  issuedIp: string;
-  name: string;
-  email: string;
-  role: Role;
-}
-
-interface RotateRefreshTokenParam {
-  token: string;
-  clientIp: string;
-}
 
 class TokenService {
   private accessToken: string;

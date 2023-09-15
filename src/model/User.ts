@@ -1,24 +1,6 @@
 import { Schema, Model, model } from 'mongoose';
-
-export enum Role {
-  USER = 'user',
-  ADMIN = 'admin',
-}
-
-export enum Status {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  BLOCKED = 'blocked',
-  DECLINED = 'declined',
-}
-
-export interface IUser {
-  name: string;
-  email: string;
-  password: string;
-  role?: Role;
-  status?: Status;
-}
+import { IUser } from '../types/interfaces';
+import { Role, UStatus } from '../types/enums';
 
 const userSchema = new Schema<IUser>(
   {
@@ -50,8 +32,8 @@ const userSchema = new Schema<IUser>(
     },
     status: {
       type: String,
-      enum: Object.values(Status),
-      default: Status.PENDING,
+      enum: Object.values(UStatus),
+      default: UStatus.PENDING,
     },
   },
   { timestamps: true, id: true }

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { authorizationError } from '../utils/CustomError';
+import { authorizationError } from '../utils/error';
 
 const authorize =
   (roles = ['admin']) =>

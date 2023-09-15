@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import tokenService from '../lib/token';
 import userService from '../lib/user';
-import { authenticationError } from '../utils/CustomError';
-import { IUser } from '../model/User';
+import { authenticationError } from '../utils/error';
+import { User } from '../types/interfaces';
 
-interface User extends IUser {
-  id: string;
-}
+
 
 // Augment the Request type to include the 'user' property
 declare module 'express-serve-static-core' {

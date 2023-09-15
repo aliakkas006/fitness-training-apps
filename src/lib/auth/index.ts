@@ -1,19 +1,8 @@
 import userService from '../user';
-import { badRequest } from '../../utils/CustomError';
+import { badRequest } from '../../utils/error';
 import { generateHash, hashMatched } from '../../utils/hashing';
 import tokenService from '../../lib/token';
-
-interface LoginParam {
-  email: string;
-  password: string;
-  issuedIp: string;
-}
-
-interface RegisterParam {
-  name: string;
-  email: string;
-  password: string;
-}
+import { LoginParam, RegisterParam } from '../../types/interfaces';
 
 class AuthService {
   public async register({ name, email, password }: RegisterParam) {
@@ -24,8 +13,6 @@ class AuthService {
     const user = await userService.createAccount({ name, email, password });
 
     return user;
-
-    // TODO: send verification email
   }
 
   public async login({ email, password, issuedIp }: LoginParam) {

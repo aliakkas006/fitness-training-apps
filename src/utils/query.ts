@@ -1,52 +1,21 @@
 import defaults from '../config/defaults';
 import generateQueryString from './qs';
-import { badRequest } from './CustomError';
+import { badRequest } from './error';
+import {
+  HATEOASLinksParam,
+  Links,
+  Pagination,
+  PaginationParam,
+  TransformedItemsParam,
+} from '../types/interfaces';
 
-// Define data types
-interface Pagination {
-  page: number;
-  limit: number;
-  totalItems: number;
-  totalPage: number;
-  next?: number;
-  prev?: number;
-}
-
-interface Links {
-  self: string;
-  next?: string;
-  prev?: string;
-}
-
-interface PaginationParam {
-  totalItems?: number;
-  limit?: number;
-  page?: number;
-}
-
-interface HATEOASLinksParam {
-  url?: string;
-  path?: string;
-  query?: object;
-  page?: number;
-  hasNext?: boolean;
-  hasPrev?: boolean;
-}
-
-interface TransformedItemsParam {
-  items: Array<any>;
-  selection?: Array<string>;
-  path?: string;
-}
-
-// pagination utils
+// Get pagination
 const getPagination = ({
   totalItems = defaults.totalItems,
   limit = defaults.limit,
   page = defaults.page,
 }: PaginationParam) => {
   const totalPage = Math.ceil(totalItems / limit);
-
   const pagination: Pagination = {
     page,
     limit,
@@ -65,7 +34,7 @@ const getPagination = ({
   return pagination;
 };
 
-// HATEOAS links utils
+// Get HATEOAS links
 const getHATEOASForAllItems = ({
   url = '/',
   path = '',
@@ -91,7 +60,7 @@ const getHATEOASForAllItems = ({
   return links;
 };
 
-// get transformed data utils
+// Get transformed data
 const getTransformedItems = ({ items = [], selection = [], path = '/' }: TransformedItemsParam) => {
   if (!Array.isArray(items) || !Array.isArray(selection)) throw badRequest('Invalid Arguments!');
 
@@ -102,6 +71,7 @@ const getTransformedItems = ({ items = [], selection = [], path = '/' }: Transfo
     selection.forEach((key) => {
       result[key] = item[key];
     });
+
     result.link = `${path}/${item.id}`;
     return result;
   });

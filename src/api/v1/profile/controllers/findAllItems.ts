@@ -24,6 +24,7 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
       lastName,
       email,
     });
+
     const data = query.getTransformedItems({
       items: profiles,
       selection: [
@@ -56,7 +57,7 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
       page,
     });
 
-    // generate response
+    // send response
     res.status(200).json({
       data,
       pagination,

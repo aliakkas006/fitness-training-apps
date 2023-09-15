@@ -1,26 +1,8 @@
-import { Schema, Model, model, Types } from 'mongoose';
-import { FitnessLevel, Goal } from './Profile';
+import { Schema, Model, model } from 'mongoose';
+import { IProgress } from '../types/interfaces';
+import { Status } from '../types/enums';
 
-export enum Status {
-  PUBLIC = 'public',
-  PRIVATE = 'private',
-}
 
-export interface Track {
-  newWeight: string;
-  newHeight: string;
-  newFitnessLevel: FitnessLevel;
-  achievedGoal: Goal;
-}
-
-export interface IProgress {
-  workoutSession: string;
-  trackProgress: Track;
-  performance: string;
-  status: Status;
-  builder: Types.ObjectId;
-  workout: Types.ObjectId;
-}
 
 const progressSchema = new Schema<IProgress>(
   {

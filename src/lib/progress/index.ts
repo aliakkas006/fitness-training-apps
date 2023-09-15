@@ -1,28 +1,9 @@
 import defaults from '../../config/defaults';
-import Progress, { IProgress, Status, Track } from '../../model/Progress';
+import Progress from '../../model/Progress';
 import WorkoutPlan from '../../model/WorkoutPlan';
-import { badRequest, notFound } from '../../utils/CustomError';
-
-// interface CreateParam {
-//   workoutSession: string;
-//   trackProgress: Track;
-//   performance: string;
-//   workoutId: number;
-//   status: Status.PUBLIC;
-//   builder: { id: string };
-// }
-
-interface UpdatePropertiesParam {
-  workoutSession: string;
-  trackProgress: Track;
-  performance: string;
-  status: Status;
-}
-
-interface CheckOwnershipParam {
-  resourceId: string;
-  userId: string;
-}
+import { Status } from '../../types/enums';
+import { CheckOwnershipParam, IProgress, ProgressUpdateProps } from '../../types/interfaces';
+import { badRequest, notFound } from '../../utils/error';
 
 class ProgressService {
   // Find all progress data
@@ -89,22 +70,14 @@ class ProgressService {
   // Update the progress properties using PATCH request
   public async updateProperties(
     id: string,
-    { workoutSession, trackProgress, performance, status }: UpdatePropertiesParam,
-    user: any
+    { workoutSession, trackProgress, performance, status }: ProgressUpdateProps
   ): Promise<any> {
     const progress: any = await Progress.findById(id);
     if (!progress) throw notFound();
 
     const payload: any = { workoutSession, trackProgress, performance, status };
 
-    // Only admin can update status
     Object.keys(payload).forEach((key) => {
-      if (
-        user.role !== 'admin' ||
-        (user.role === 'admin' && user.status !== 'approved' && key === 'status')
-      )
-        throw badRequest('Only admin can update status');
-
       progress[key] = payload[key] ?? progress[key];
     });
 

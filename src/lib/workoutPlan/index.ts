@@ -1,47 +1,13 @@
 import WorkoutPlan from '../../model/WorkoutPlan';
 import defaults from '../../config/defaults';
-import { badRequest, notFound } from '../../utils/CustomError';
+import { badRequest, notFound } from '../../utils/error';
 import Progress from '../../model/Progress';
-
-// TODO: typescript short imports
-
-// Define data types
-enum Status {
-  PROGRESS = 'progress',
-  DONE = 'done',
-}
-
-// interface FindAllItemsParam {
-//   page?: number;
-//   limit?: number;
-//   sortType?: string;
-//   sortBy?: string;
-//   search?: string;
-// }
-
-// interface FindSingleItemParam {
-//   id: string;
-//   expand?: string ;
-// }
-
-interface UpdatePropertiesParam {
-  name: string;
-  mode: string;
-  equipment: Array<string>;
-  exercises: Array<string>;
-  trainerTips: Array<string>;
-  photo?: string;
-  status?: Status;
-}
-
-interface CreateOrUpdateParam extends UpdatePropertiesParam {
-  builder: { id: string };
-}
-
-interface CheckOwnershipParam {
-  resourceId: string;
-  userId: string;
-}
+import {
+  CheckOwnershipParam,
+  WorkoutCreateProps,
+  WorkoutUpdateProps,
+} from '../../types/interfaces';
+import { WStatus } from '../../types/enums';
 
 class WorkoutPlanService {
   // find all workout plan
@@ -85,9 +51,9 @@ class WorkoutPlanService {
     exercises,
     trainerTips,
     photo = '',
-    status = Status.PROGRESS,
+    status = WStatus.PROGRESS,
     builder,
-  }: CreateOrUpdateParam): Promise<any> {
+  }: WorkoutCreateProps): Promise<any> {
     if (!name || !mode || !equipment || !exercises || !trainerTips || !builder)
       throw badRequest('Invalid Parameters!');
 
@@ -113,7 +79,6 @@ class WorkoutPlanService {
   // find a sigle workout plan
   public async findSingleItem({ id, expand = '' }: any): Promise<any> {
     if (!id) throw badRequest('Id is required');
-    //TODO: progress expand is not working
     expand = expand.split(',').map((item: any) => item.trim());
 
     const workoutPlan: any = await WorkoutPlan.findById(id);
@@ -144,9 +109,9 @@ class WorkoutPlanService {
       exercises,
       trainerTips,
       photo = '',
-      status = Status.PROGRESS,
+      status = WStatus.PROGRESS,
       builder,
-    }: CreateOrUpdateParam
+    }: WorkoutCreateProps
   ): Promise<{ workoutPlan: any; code: number }> {
     const workoutPlan: any = await WorkoutPlan.findById(id);
 
@@ -191,7 +156,7 @@ class WorkoutPlanService {
   // Update the workout plan using PATCH request
   public async updateProperties(
     id: string,
-    { name, mode, equipment, exercises, trainerTips, photo, status }: UpdatePropertiesParam
+    { name, mode, equipment, exercises, trainerTips, photo, status }: WorkoutUpdateProps
   ): Promise<any> {
     const workoutPlan: any = await WorkoutPlan.findById(id);
     if (!workoutPlan) throw notFound();

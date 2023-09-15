@@ -19,7 +19,6 @@ const devFormat = format.combine(
 
 // production format
 const prodFormat = format.combine(format.timestamp(), format.align(), format.printf(formatParams));
-
 let logger: any = null;
 
 if (process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production') {

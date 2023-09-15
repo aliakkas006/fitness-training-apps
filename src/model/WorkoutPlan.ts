@@ -1,21 +1,6 @@
-import { Schema, Model, model, Types } from 'mongoose';
-
-export enum Status {
-  PROGRESS = 'progress',
-  DONE = 'done',
-}
-
-export interface Workout {
-  name: string;
-  mode: string;
-  equipment: Types.Array<string>;
-  exercises: Types.Array<string>;
-  trainerTips: Types.Array<string>;
-  status?: Status;
-  photo?: string;
-  builder: Types.ObjectId;
-  
-}
+import { Schema, Model, model } from 'mongoose';
+import { Workout } from '../types/interfaces';
+import { WStatus } from '../types/enums';
 
 const workoutPlanSchema = new Schema<Workout>(
   {
@@ -26,8 +11,8 @@ const workoutPlanSchema = new Schema<Workout>(
     trainerTips: { type: [String], required: [true, 'Trainer tips must be required*'] },
     status: {
       type: String,
-      enum: Object.values(Status),
-      default: Status.PROGRESS,
+      enum: Object.values(WStatus),
+      default: WStatus.PROGRESS,
     },
     photo: {
       type: String,
@@ -39,7 +24,7 @@ const workoutPlanSchema = new Schema<Workout>(
     builder: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: true,
     },
   },
   { timestamps: true, id: true }

@@ -1,21 +1,12 @@
 import defaults from '../../config/defaults';
 import Profile from '../../model/Profile';
 import Progress from '../../model/Progress';
-import RefreshToken from '../../model/RefrershToken';
-import User, { IUser, Role, Status } from '../../model/User';
+import User from '../../model/User';
 import WorkoutPlan from '../../model/WorkoutPlan';
-import { badRequest, notFound } from '../../utils/CustomError';
+import { Role, UStatus } from '../../types/enums';
+import { CreateAccountParam, IUser, UserUpdateProps } from '../../types/interfaces';
+import { badRequest, notFound } from '../../utils/error';
 import { generateHash } from '../../utils/hashing';
-import profileService from '../profile';
-
-// TODO: create same interface for all model and service (do it in a interface file)
-
-interface UpdatePropertiesParam {
-  name: string;
-  email: string;
-  role: Role;
-  status: Status;
-}
 
 class UserService {
   public async findUserByEmail(email: string): Promise<IUser | false> {
@@ -28,7 +19,7 @@ class UserService {
     return user ? true : false;
   }
 
-  public async createAccount({ name, email, password }: IUser) {
+  public async createAccount({ name, email, password }: CreateAccountParam) {
     if (!name || !email || !password) throw badRequest('Invalid Parameters!');
 
     const user: any = new User({ name, email, password });
@@ -37,7 +28,7 @@ class UserService {
     return { ...user._doc, id: user.id };
   }
 
-  // find all users
+  // Find all users
   public async findAllItems({
     page = defaults.page,
     limit = defaults.limit,
@@ -74,7 +65,7 @@ class UserService {
   }
 
   // create a new user
-  public async create({ name, email, password, role = Role.USER, status = Status.PENDING }: IUser) {
+  public async create({ name, email, password, role = Role.USER, status = UStatus.PENDING }: IUser) {
     if (!name || !email || !password) throw badRequest('Invalid parameters!');
 
     password = await generateHash(password);
@@ -100,7 +91,7 @@ class UserService {
   // Update the User properties using PATCH request
   public async updateProperties(
     id: string,
-    { name, email, role, status }: UpdatePropertiesParam
+    { name, email, role, status }: UserUpdateProps
   ): Promise<any> {
     const user: any = await User.findById(id);
     if (!user) throw notFound();

@@ -1,24 +1,10 @@
 import defaults from '../../config/defaults';
-import Profile, { FitnessLevel, Goal, IProfile } from '../../model/Profile';
+import Profile from '../../model/Profile';
 import User from '../../model/User';
-import { badRequest, notFound } from '../../utils/CustomError';
+import { CheckOwnershipParam, IProfile, ProfileUpdateProps } from '../../types/interfaces';
+import { badRequest, notFound } from '../../utils/error';
 
-interface UpdatePropertiesParam {
-  firstName: string;
-  lastName: string;
-  email: string;
-  profilePic: string;
-  age: number;
-  height: number;
-  weight: number;
-  fitnessLevel: FitnessLevel;
-  goal: Goal;
-}
 
-interface CheckOwnershipParam {
-  resourceId: string;
-  userId: string;
-}
 
 class ProfileService {
   private async findProfileByEmail(email: string): Promise<boolean> {
@@ -81,8 +67,6 @@ class ProfileService {
     user,
   }: any): Promise<any> {
     const hasProfile = await this.findProfileByEmail(email);
-    console.log('hasProfile', hasProfile);
-
     if (hasProfile) throw badRequest('Profile already exist!');
 
     if (!firstName || !lastName || !age || !height || !weight || !fitnessLevel || !goal || !user)
@@ -132,7 +116,7 @@ class ProfileService {
       weight,
       fitnessLevel,
       goal,
-    }: UpdatePropertiesParam
+    }: ProfileUpdateProps
   ): Promise<any> {
     const profile: any = await Profile.findById(id);
     if (!profile) throw notFound();

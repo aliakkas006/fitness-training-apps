@@ -34,7 +34,7 @@ privateRouter
 privateRouter
   .route('/api/v1/progress/:id')
   .patch(
-    [authenticate, authorize(['user', 'admin']), ownership('Progress')],
+    [authenticate, authorize(['user', 'admin']), ownership('Progress')], 
     progressControllers.updateItemPatch
   )
   .delete(

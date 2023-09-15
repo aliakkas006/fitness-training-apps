@@ -5,7 +5,7 @@ const updateItemPatch = async (req: Request, res: Response, next: NextFunction) 
   const { id } = req.params;
 
   try {
-    const progress = await progressService.updateProperties(id, req.body, req.user);
+    const progress = await progressService.updateProperties(id, req.body);
     const response = {
       code: 200,
       message: 'Successfully updated progress property',

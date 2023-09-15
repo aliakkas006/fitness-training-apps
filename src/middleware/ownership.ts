@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import workoutPlanService from '../lib/workoutPlan';
-import { authorizationError } from '../utils/CustomError';
+import { authorizationError } from '../utils/error';
 import progressService from '../lib/progress';
 import profileService from '../lib/profile';
 
@@ -25,7 +25,7 @@ const ownership =
         break;
     }
 
-    if (isOwner) next();
+    if (isOwner || (req.user.role === 'admin' && req.user.status === 'approved')) next();
     else next(authorizationError());
   };
 
