@@ -1,8 +1,9 @@
 import userService from '../../../src/lib/user';
 import { hashMatched } from '../../../src/utils/hashing';
 import { badRequest } from '../../../src/utils/error';
-import authService, { LoginParam } from '../../../src/lib/auth';
+import authService from '../../../src/lib/auth';
 import tokenService from '../../../src/lib/token';
+import { LoginParam } from '../../../src/types/interfaces';
 
 jest.mock('../../../src/lib/user', () => ({
   findUserByEmail: jest.fn(),

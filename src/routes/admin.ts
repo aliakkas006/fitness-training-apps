@@ -5,7 +5,6 @@ import userControllers from '../api/v1/user';
 import profileControllers from '../api/v1/profile';
 import progressControllers from '../api/v1/progress';
 import tokenControllers from '../api/v1/token';
-import ownership from '../middleware/ownership';
 
 const adminRouter = Router();
 
@@ -26,17 +25,14 @@ adminRouter.patch(
 );
 
 // Profile route
-adminRouter
-  .route('/api/v1/profiles')
-  .get([authenticate, authorize()], profileControllers.findAllItems);
+adminRouter.get('/api/v1/profiles', [authenticate, authorize()], profileControllers.findAllItems);
 
 // progress route
-adminRouter
-  .route('/api/v1/progress')
-  .get(
-    [authenticate, authorize(['user', 'admin'])],
-    progressControllers.findAllItems
-  );
+adminRouter.get(
+  '/api/v1/progress',
+  [authenticate, authorize(['user', 'admin'])],
+  progressControllers.findAllItems
+);
 
 // Token routes
 adminRouter

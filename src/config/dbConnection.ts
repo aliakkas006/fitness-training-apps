@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import logger from '../config/logger';
+import logger from './logger';
 
 let connectionURL = process.env.DB_CONNECTION_URL || '';
 connectionURL = connectionURL.replace('<username>', process.env.DB_USERNAME || '');

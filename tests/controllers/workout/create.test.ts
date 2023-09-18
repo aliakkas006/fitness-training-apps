@@ -1,17 +1,11 @@
 import request from 'supertest';
-import express from 'express';
-import createController from '../../../src/api/v1/workout/controllers/create';
+import app from '../../../src/app';
 import workoutPlanService from '../../../src/lib/workoutPlan';
 
 // Mock the workoutPlanService
 jest.mock('../../../src/lib/workoutPlan', () => ({
   create: jest.fn(),
 }));
-
-// Create an Express app and use the controller
-const app = express();
-app.use(express.json());
-app.post('/api/v1/workouts', createController);
 
 describe('Workout Plan Creation Controller', () => {
   it('should create a new workout plan', async () => {

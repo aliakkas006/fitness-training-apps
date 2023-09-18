@@ -2,8 +2,6 @@ import { Schema, model, Model } from 'mongoose';
 import { isAfter } from 'date-fns';
 import { RefreshTokenDocument } from '../types/interfaces';
 
-
-
 const refreshTokenSchema = new Schema<RefreshTokenDocument>(
   {
     user: {
@@ -43,6 +41,9 @@ refreshTokenSchema.set('toJSON', {
   versionKey: false,
 });
 
-const RefreshToken: Model<RefreshTokenDocument> = model<RefreshTokenDocument>('RefreshToken', refreshTokenSchema);
+const RefreshToken: Model<RefreshTokenDocument> = model<RefreshTokenDocument>(
+  'RefreshToken',
+  refreshTokenSchema
+);
 
 export default RefreshToken;

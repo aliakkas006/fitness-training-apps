@@ -1,12 +1,8 @@
 import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import login from '../../../src/api/v1/auth/controllers/login';
 import authService from '../../../src/lib/auth';
-
-// Create an Express app and use the login controller
-const app = express();
-app.use(express.json());
-app.post('/api/v1/auth/login', login);
+import app from '../../../src/app';
 
 describe('Rogin controller', () => {
   it('should log in a user and return an access token and refresh token with status 200', async () => {
@@ -29,11 +25,11 @@ describe('Rogin controller', () => {
     expect(response.body).toHaveProperty('message', 'Login successful');
     expect(response.body.data).toHaveProperty('access_token', 'mockAccessToken');
     expect(response.body.data).toHaveProperty('refresh_token', 'mockRefreshToken');
-    
+
     expect(mockLogin).toHaveBeenCalledWith({
       email: requestBody.email,
       password: requestBody.password,
-      issuedIp: 'N/A',
+      issuedIp: '::ffff:127.0.0.1',
     });
   });
 
@@ -61,4 +57,3 @@ describe('Rogin controller', () => {
     expect(next).toHaveBeenCalledWith(expect.any(Error));
   });
 });
-

@@ -90,11 +90,14 @@ class WorkoutPlanService {
     }
 
     if (expand.includes('progress')) {
-      await workoutPlan?.populate({ path: 'progresses', strictPopulate: false });
+      // Fetch progress data associated with the workout plan
+      const progressData = await Progress.find({ workout: id });
+      workoutPlan.progress = progressData;
     }
 
     return {
       ...workoutPlan._doc,
+      progresses: workoutPlan.progress,
       id: workoutPlan.id,
     };
   }

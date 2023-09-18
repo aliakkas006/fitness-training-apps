@@ -2,8 +2,6 @@ import { Schema, Model, model } from 'mongoose';
 import { IProgress } from '../types/interfaces';
 import { Status } from '../types/enums';
 
-
-
 const progressSchema = new Schema<IProgress>(
   {
     workoutSession: { type: String, required: [true, 'Workout session must be required*'] },

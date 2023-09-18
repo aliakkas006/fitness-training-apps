@@ -1,13 +1,9 @@
 import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import register from '../../../src/api/v1/auth/controllers/register';
 import authService from '../../../src/lib/auth';
 import tokenService from '../../../src/lib/token';
-
-// Create an Express app and use the register controller
-const app = express();
-app.use(express.json());
-app.post('/api/v1/auth/register', register);
+import app from '../../../src/app';
 
 describe('Register controller', () => {
   it('should register a new user and return an access token with status 201', async () => {

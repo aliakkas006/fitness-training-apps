@@ -1,12 +1,6 @@
 import request from 'supertest';
-import express from 'express';
-import create from '../../../src/api/v1/profile/controllers/create';
+import app from '../../../src/app';
 import profileService from '../../../src/lib/profile';
-
-// Create an Express app and use the findAllItems controller
-const app = express();
-app.use(express.json());
-app.post('/api/v1/profiles', create);
 
 jest.mock('../../../src/lib/profile');
 
@@ -43,7 +37,11 @@ describe('Create Profile Controller', () => {
     };
 
     // Make a POST request to the controller's route with the request body
-    const response = await request(app).post('/api/v1/profiles').send(requestBody).expect(201);
+    const response = await request(app)
+      .post('/api/v1/profiles')
+      .set('Authorization', 'Bearer ACCESS_TOKEN')  // actual authorization header 
+      .send(requestBody)
+      .expect(201);
 
     // Add assertions to check the response body and links
     expect(response.body).toHaveProperty('code', 201);

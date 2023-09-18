@@ -2,8 +2,6 @@ import { Schema, Model, model } from 'mongoose';
 import { IProfile } from '../types/interfaces';
 import { FitnessLevel, Goal } from '../types/enums';
 
-
-
 const profileSchema = new Schema<IProfile>(
   {
     firstName: { type: String, required: [true, 'User first name must be required*'] },

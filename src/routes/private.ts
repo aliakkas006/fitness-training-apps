@@ -9,9 +9,11 @@ import profileControllers from '../api/v1/profile';
 const privateRouter = Router();
 
 // WorkoutPlan routes
-privateRouter
-  .route('/api/v1/workouts')
-  .post([authenticate, authorize(['user', 'admin'])], workoutControllers.create);
+privateRouter.post(
+  '/api/v1/workouts',
+  [authenticate, authorize(['user', 'admin'])],
+  workoutControllers.create
+);
 privateRouter
   .route('/api/v1/workouts/:id')
   .put(
@@ -28,13 +30,15 @@ privateRouter
   );
 
 // Progress routes
-privateRouter
-  .route('/api/v1/progress')
-  .post([authenticate, authorize(['user', 'admin'])], progressControllers.create);
+privateRouter.post(
+  '/api/v1/progress',
+  [authenticate, authorize(['user', 'admin'])],
+  progressControllers.create
+);
 privateRouter
   .route('/api/v1/progress/:id')
   .patch(
-    [authenticate, authorize(['user', 'admin']), ownership('Progress')], 
+    [authenticate, authorize(['user', 'admin']), ownership('Progress')],
     progressControllers.updateItemPatch
   )
   .delete(
@@ -43,9 +47,11 @@ privateRouter
   );
 
 // Profile routes
-privateRouter
-  .route('/api/v1/profiles')
-  .post([authenticate, authorize(['user', 'admin'])], profileControllers.create);
+privateRouter.post(
+  '/api/v1/profiles',
+  [authenticate, authorize(['user', 'admin'])],
+  profileControllers.create
+);
 privateRouter
   .route('/api/v1/profiles/:id')
   .get(

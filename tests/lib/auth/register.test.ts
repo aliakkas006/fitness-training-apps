@@ -1,7 +1,8 @@
 import userService from '../../../src/lib/user';
 import { generateHash } from '../../../src/utils/hashing';
 import { badRequest } from '../../../src/utils/error';
-import authService, { RegisterParam } from '../../../src/lib/auth';
+import authService from '../../../src/lib/auth';
+import { RegisterParam } from '../../../src/types/interfaces';
 
 jest.mock('../../../src/lib/user', () => ({
   userExist: jest.fn(),

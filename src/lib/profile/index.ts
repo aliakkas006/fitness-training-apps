@@ -4,8 +4,6 @@ import User from '../../model/User';
 import { CheckOwnershipParam, IProfile, ProfileUpdateProps } from '../../types/interfaces';
 import { badRequest, notFound } from '../../utils/error';
 
-
-
 class ProfileService {
   private async findProfileByEmail(email: string): Promise<boolean> {
     const profile = await Profile.findOne({ email });
@@ -44,10 +42,13 @@ class ProfileService {
   }
 
   // Count profiles based on provided filters
-  public async count({ firstName = '', lastName = '' }): Promise<number> {
+  public async count({ firstName = '', lastName = '', email='' }): Promise<number> {
     const filter = {
-      firstName: { $regex: firstName, $options: 'i' },
-      lastName: { $regex: lastName, $options: 'i' },
+      $or: [
+        { firstName: { $regex: firstName, $options: 'i' } },
+        { lastName: { $regex: lastName, $options: 'i' } },
+        { email: { $regex: email, $options: 'i' } },
+      ],
     };
 
     return Profile.count(filter);

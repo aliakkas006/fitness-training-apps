@@ -1,5 +1,4 @@
-import { Config } from "../types/interfaces";
-
+import { Config } from '../types/interfaces';
 
 const config: Config = {
   totalItems: 0,
@@ -9,7 +8,7 @@ const config: Config = {
   sortBy: 'updatedAt',
   search: '',
   algorithm: 'HS256',
-  expiresIn: '1h'
+  expiresIn: '1h',
 };
 
 export default Object.freeze(config);

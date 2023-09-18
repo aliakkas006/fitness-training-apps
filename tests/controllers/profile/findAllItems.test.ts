@@ -1,6 +1,5 @@
 import request from 'supertest';
-import express from 'express';
-import findAllItems from '../../../src/api/v1/profile/controllers/findAllItems';
+import app from '../../../src/app';
 import profileService from '../../../src/lib/profile';
 import query from '../../../src/utils/query';
 
@@ -15,11 +14,6 @@ jest.mock('../../../src/utils/query', () => ({
   getPagination: jest.fn(),
   getHATEOASForAllItems: jest.fn(),
 }));
-
-// Create an Express app and use the findAllItems controller
-const app = express();
-app.use(express.json());
-app.get('/api/v1/profiles', findAllItems);
 
 describe('Find all profiles Controller', () => {
   it('should return a list of all profiles with status 200', async () => {
@@ -58,7 +52,10 @@ describe('Find all profiles Controller', () => {
     (query.getPagination as jest.Mock).mockReturnValue({ totalItems: 2, limit: 10, page: 1 });
     (query.getHATEOASForAllItems as jest.Mock).mockReturnValue({ next: null, prev: null });
 
-    const response = await request(app).get('/api/v1/profiles').expect(200);
+    const response = await request(app)
+      .get('/api/v1/profiles')
+      .set('Authorization', 'Bearer ACCESS_TOKEN') // actual authorization header
+      .expect(200);
 
     // Assertions
     expect(response.body).toHaveProperty('data', mockProfiles);

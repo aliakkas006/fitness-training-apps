@@ -6,10 +6,10 @@ const findSingleItem = async (req: Request, res: Response, next: NextFunction) =
   const expand = req.query.expand || '';
 
   try {
-    const workout = await workoutPlanService.findSingleItem({ id, expand });
+    const workoutPlan = await workoutPlanService.findSingleItem({ id, expand });
 
     const response = {
-      data: workout,
+      data: workoutPlan,
       links: {
         self: req.url,
         builder: `${req.url}/builder`,
