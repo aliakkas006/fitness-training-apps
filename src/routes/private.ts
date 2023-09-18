@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import authControllers from '../api/v1/auth';
 import authenticate from '../middleware/authenticate';
 import authorize from '../middleware/authorize';
 import ownership from '../middleware/ownership';
@@ -7,6 +8,13 @@ import progressControllers from '../api/v1/progress';
 import profileControllers from '../api/v1/profile';
 
 const privateRouter = Router();
+
+// Logout route
+privateRouter.post(
+  '/api/v1/auth/logout',
+  [authenticate, authorize(['user', 'admin'])],
+  authControllers.logout
+);
 
 // WorkoutPlan routes
 privateRouter.post(
@@ -29,7 +37,13 @@ privateRouter
     workoutControllers.removeItem
   );
 
-// Progress routes
+// TODO: Progress route
+privateRouter.get(
+  '/api/v1/progress',
+  [authenticate, authorize(['user', 'admin'])],
+  progressControllers.findAllItems
+);
+
 privateRouter.post(
   '/api/v1/progress',
   [authenticate, authorize(['user', 'admin'])],

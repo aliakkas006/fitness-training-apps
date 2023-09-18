@@ -17,6 +17,7 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
       limit,
       sortType,
       sortBy,
+      user: req.user
     });
     const data = query.getTransformedItems({
       items: progresses,
@@ -25,7 +26,7 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
     });
 
     // pagination
-    const totalItems = await progressService.count();
+    const totalItems = await progressService.count({user: req.user});
     const pagination = query.getPagination({ totalItems, limit, page });
 
     // HATEOAS links

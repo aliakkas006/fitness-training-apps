@@ -27,17 +27,9 @@ adminRouter.patch(
 // Profile route
 adminRouter.get('/api/v1/profiles', [authenticate, authorize()], profileControllers.findAllItems);
 
-// progress route
-adminRouter.get(
-  '/api/v1/progress',
-  [authenticate, authorize(['user', 'admin'])],
-  progressControllers.findAllItems
-);
-
 // Token routes
 adminRouter
   .post('/api/v1/tokens/refresh', [authenticate, authorize()], tokenControllers.refresh)
-  .post('/api/v1/tokens/revoke', [authenticate, authorize()], tokenControllers.revoke)
   .post('/api/v1/tokens/validate', [authenticate, authorize()], tokenControllers.validate);
 
 export default adminRouter;

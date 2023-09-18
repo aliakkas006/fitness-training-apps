@@ -12,27 +12,44 @@ class ProgressService {
     limit = defaults.limit,
     sortType = defaults.sortType,
     sortBy = defaults.sortBy,
-  }) {
+    user,
+  }: any) {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
+    let progressIds;
 
-    const progresses: any = await Progress.find({})
-      .populate([
-        { path: 'builder', select: 'name' },
-        { path: 'workout', select: 'name' },
-      ])
-      .sort(sortStr)
-      .skip((page - 1) * limit)
-      .limit(limit);
+    // If the user is admin, fetch all progress Ids. If the user is not an admin, fetch progress IDs for the specific builder (user)
+    if (user.role === 'admin') {
+      progressIds = await Progress.find({}).distinct('_id');
+    } else {
+      progressIds = await Progress.find({ builder: user.id }).distinct('_id');
+    }
 
-    return progresses.map((progress: any) => ({
-      ...progress._doc,
-      id: progress.id,
-    }));
+    if (progressIds.length > 0) {
+      const progresses = await Progress.find({ _id: { $in: progressIds } })
+        .populate([
+          { path: 'builder', select: 'name' },
+          { path: 'workout', select: 'name' },
+        ])
+        .sort(sortStr)
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      return progresses.map((progress: any) => ({
+        ...progress._doc,
+        id: progress.id,
+      }));
+    } else {
+      throw notFound();
+    }
   }
 
-  // total progress count
-  public async count(): Promise<number> {
-    return Progress.count({});
+  // total progress count based on user's role
+  public async count({ user }: any) {
+    if (user.role === 'admin') {
+      return Progress.count({});
+    } else {
+      return Progress.count({ builder: user.id });
+    }
   }
 
   // create a new workout plan

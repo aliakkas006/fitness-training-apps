@@ -128,7 +128,51 @@ paths:
           $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
-
+  '/auth/logout':
+    post:
+      security:
+        - bearerAuth: []
+      description: logout from your account
+      tags: [Auth]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p'
+              required: [token]
+      responses:
+        '200':
+          description: logout Successful
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: logout Successful
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: '/auth/logout'
+                      login:
+                        type: string
+                        example: '/auth/login'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  
   '/workouts':
     get:
       tags: [Workout plan]
@@ -1410,45 +1454,6 @@ paths:
                       self:
                         type: string
                         example: '/tokens/refresh'
-        '401':
-          $ref: '#/components/responses/401'
-  '/tokens/revoke':
-    post:
-      security:
-        - bearerAuth: []
-      description: Revoke refresh token
-      tags: [Token]
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                  example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p'
-              required: [token]
-      responses:
-        '201':
-          description: Revoked Token
-          content:
-            'application/json':
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                    example: 201
-                  message:
-                    type: string
-                    example: revoke successfully
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                        example: '/tokens/revoke'
         '401':
           $ref: '#/components/responses/401'
   '/tokens/validate':

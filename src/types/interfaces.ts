@@ -65,6 +65,10 @@ export interface RotateRefreshTokenParam {
   clientIp: string;
 }
 
+export interface LogoutParam extends RotateRefreshTokenParam {
+  user: any
+}
+
 export interface CreateAccountParam {
   name: string;
   email: string;

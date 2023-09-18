@@ -2,7 +2,7 @@ import userService from '../user';
 import { badRequest } from '../../utils/error';
 import { generateHash, hashMatched } from '../../utils/hashing';
 import tokenService from '../../lib/token';
-import { LoginParam, RegisterParam } from '../../types/interfaces';
+import { LoginParam, LogoutParam, RegisterParam } from '../../types/interfaces';
 
 class AuthService {
   public async register({ name, email, password }: RegisterParam) {
@@ -41,6 +41,14 @@ class AuthService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  public async logout({ token, clientIp, user }: LogoutParam) {
+    // revoke (invalidate) the refresh token
+    await tokenService.revokeRefreshToken({ token, clientIp });
+
+    // blocked the user
+    if (user.status === 'approved') user.status = 'blocked';
   }
 }
 
