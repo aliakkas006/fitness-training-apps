@@ -2,7 +2,8 @@ import userService from '../user';
 import { badRequest } from '../../utils/error';
 import { generateHash, hashMatched } from '../../utils/hashing';
 import tokenService from '../../lib/token';
-import { LoginParam, LogoutParam, RegisterParam } from '../../types/interfaces';
+import { LoginParam, RegisterParam, RotateRefreshTokenParam } from '../../types/interfaces';
+import User from '../../model/User';
 
 class AuthService {
   public async register({ name, email, password }: RegisterParam) {
@@ -32,7 +33,7 @@ class AuthService {
     const accessToken = tokenService.generateAccessToken({ payload });
 
     // generate refresh token
-    const refreshToken = await tokenService.generateRefreshToken({
+    const refreshToken: any = await tokenService.generateRefreshToken({
       userId: user.id,
       issuedIp,
       name: user.name,
@@ -40,15 +41,25 @@ class AuthService {
       role: user.role,
     });
 
+    // For the second time login after the user logged out - update the user status (approved)
+    if (user.status === 'blocked') {
+      user.status = 'approved';
+      await user.save();
+    }
+
     return { accessToken, refreshToken };
   }
 
-  public async logout({ token, clientIp, user }: LogoutParam) {
+  public async logout({ token, clientIp }: RotateRefreshTokenParam) {
     // revoke (invalidate) the refresh token
-    await tokenService.revokeRefreshToken({ token, clientIp });
+    const rToken = await tokenService.revokeRefreshToken({ token, clientIp });
 
-    // blocked the user
-    if (user.status === 'approved') user.status = 'blocked';
+    // Find the user and blocked the user status
+    const user: any = await User.findById(rToken.user);
+    if (user) {
+      user.status = 'blocked';
+      await user.save();
+    }
   }
 }
 

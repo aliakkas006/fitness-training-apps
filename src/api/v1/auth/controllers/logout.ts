@@ -1,13 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
-import authService from '../../../../lib/auth'
+import authService from '../../../../lib/auth';
 
 const logout = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.body;
 
   try {
-    await authService.logout({ token, clientIp: req.clientIp || 'N/A', user: req.user });
+    await authService.logout({ token, clientIp: req.clientIp || 'N/A' });
 
-    res.status(201).json({ message: 'Logout Successfully!' });
+    const response = {
+      code: 200,
+      message: 'Logout Successfully!',
+      links: {
+        self: req.url,
+        login: `/api/v1/auth/login`,
+      },
+    };
+
+    res.status(201).json(response);
   } catch (err) {
     next(err);
   }

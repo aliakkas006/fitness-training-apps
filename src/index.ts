@@ -11,6 +11,7 @@ const main = async () => {
   try {
     // database connection
     await connectDB();
+    logger.error('Error message!');
 
     // server connection
     server.listen(port, async () => {

@@ -130,9 +130,7 @@ paths:
           $ref: '#/components/responses/500'
   '/auth/logout':
     post:
-      security:
-        - bearerAuth: []
-      description: logout from your account
+      description: logout from account
       tags: [Auth]
       requestBody:
         content:
@@ -158,7 +156,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: logout Successful
+                    example: Logout Successfully!
                   links:
                     type: object
                     properties:
