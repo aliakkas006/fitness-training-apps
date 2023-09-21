@@ -1,0 +1,6 @@
+in: query
+name: sort_by
+description: sort key
+schema:
+  type: string
+  example: updatedAt

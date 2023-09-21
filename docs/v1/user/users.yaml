@@ -1,0 +1,121 @@
+get:
+  security:
+    - bearerAuth: []
+  tags: [User]
+  description: Retrive all users
+  parameters:
+    - $ref: '../components/parameters/pageParam.yaml'
+    - $ref: '../components/parameters/limitParam.yaml'
+    - $ref: '../components/parameters/sortTypeParam.yaml'
+    - $ref: '../components/parameters/sortByParam.yaml'
+    - in: query
+      name: name
+      description: Name of the user
+      schema:
+        type: string
+        example: Ali Akkas
+    - in: query
+      name: email
+      description: Email of the user
+      schema:
+        type: string
+        example: aliakkas006@gmail.com
+  responses:
+    '200':
+      description: Return a list of users
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  allOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int32
+                          example: 1
+                        name:
+                          type: string
+                          example: user_1
+                        email:
+                          type: string
+                          example: user@gmail.com
+                      required: [id, name, email]
+                    - $ref: '../components/schemas/Timestamp.yaml'
+              pagination:
+                $ref: '../components/schemas/Pagination.yaml'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: url
+                    example: '/users?page=2&limit=10'
+                  next:
+                    type: string
+                    format: url
+                    example: '/users?page=3&limit=10'
+                  prev:
+                    type: string
+                    format: url
+                    example: '/users?page=1&limit=10'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'
+post:
+  operationId: createUser
+  security:
+    - bearerAuth: []
+  tags: [User]
+  description: Create a new user
+  requestBody:
+    description: To create a new user admin must need to provide valid data
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: user_1
+            email:
+              type: string
+              format: email
+              example: user@gmail.com
+            password:
+              type: string
+              format: password
+              example: user123
+            role:
+              type: string
+              enum:
+                - user
+                - admin
+              example: user
+            status:
+              type: string
+              enum:
+                - pending
+                - approved
+                - block
+                - decline
+              example: pending
+          required: [name, email, password]
+  responses:
+    '201':
+      description: Successfully created a new user
+      content:
+        'application/json':
+          schema:
+            $ref: '../components/schemas/UserCreateDTO.yaml'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'

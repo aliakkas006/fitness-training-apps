@@ -1,0 +1,30 @@
+type: object
+properties:
+  code:
+    type: integer
+    format: int32
+    example: 201
+  message:
+    type: string
+    example: 'User Profile created successfully'
+  data:
+    $ref: './Profile.yaml'
+  links:
+    type: object
+    properties:
+      self:
+        type: string
+        format: url
+        example: '/profiles/1'
+      edit:
+        type: string
+        format: url
+        example: '/profiles/1/edit'
+      delete:
+        type: string
+        format: url
+        example: '/profiles/1/delete'
+      view:
+        type: string
+        format: url
+        example: '/users/1/view'

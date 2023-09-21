@@ -1,0 +1,8 @@
+in: query
+name: page
+description: current page number
+required: true
+schema:
+  type: integer
+  format: int32
+  example: 2

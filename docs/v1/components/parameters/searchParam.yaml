@@ -1,0 +1,6 @@
+in: query
+name: search
+description: the search term
+schema:
+  type: string
+  example: workout name

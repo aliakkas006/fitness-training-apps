@@ -1,0 +1,7 @@
+in: query
+name: sort_type
+description: type of sort (asc or dsc)
+schema:
+  type: string
+  enum: [asc, dsc]
+  example: dsc

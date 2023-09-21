@@ -1,0 +1,30 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 1
+      name:
+        type: string
+        example: Ali Akkas
+      email:
+        type: string
+        format: email
+        example: akkas@gmail.com
+      role:
+        type: string
+        enum:
+          - user
+          - admin
+        example: user
+      status:
+        type: string
+        enum:
+          - pending
+          - approved
+          - block
+          - decline
+        example: pending
+    required: [id, name, email, status]
+  - $ref: './Timestamp.yaml'

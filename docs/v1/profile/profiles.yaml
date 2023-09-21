@@ -1,0 +1,197 @@
+get:
+  security:
+    - bearerAuth: []
+  tags: [Profile]
+  description: Retrieve all user profiles
+  parameters:
+    - $ref: '../components/parameters/pageParam.yaml'
+    - $ref: '../components/parameters/limitParam.yaml'
+    - $ref: '../components/parameters/sortTypeParam.yaml'
+    - $ref: '../components/parameters/sortByParam.yaml'
+    - in: query
+      name: firstName
+      description: First Name of the user profile
+      schema:
+        type: string
+        example: Ali
+    - in: query
+      name: lastName
+      description: Last Name of the user profile
+      schema:
+        type: string
+        example: Akkas
+    - in: query
+      name: email
+      description: Email of the user profile
+      schema:
+        type: string
+        format: email
+        example: ali@gmail.com
+  responses:
+    '200':
+      description: Return a list of User Profiles
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  allOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int32
+                          example: 1
+                        firstName:
+                          type: string
+                          example: Ali
+                        lastName:
+                          type: string
+                          example: Akkas
+                        email:
+                          type: string
+                          format: email
+                          example: ali@gmail.com
+                        profilePic:
+                          type: string
+                          format: url
+                          example: 'https://s3.aws.com/my-fitness/img.jpg'
+                        age:
+                          type: integer
+                          format: int32
+                          example: 23
+                        height:
+                          type: integer
+                          format: int32
+                          example: 6
+                        weight:
+                          type: integer
+                          format: int32
+                          example: 60
+                        fitnessLevel:
+                          type: string
+                          enum:
+                            - beginner
+                            - intermmediate
+                            - advanced
+                          example: beginner
+                        goal:
+                          type: string
+                          enum:
+                            - lose_weight
+                            - build_muscle
+                            - maintain_fitness
+                          example: maintain_fitness
+                        user:
+                          $ref: '../components/schemas/BuilderDTO.yaml'
+                      required:
+                        - id
+                        - firstName
+                        - lastName
+                        - email
+                        - age
+                        - height
+                        - weight
+                        - fitnessLevel
+                        - goal
+                        - user
+                    - $ref: '../components/schemas/Timestamp.yaml'
+              pagination:
+                $ref: '../components/schemas/Pagination.yaml'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: url
+                    example: '/profiles?page=2&limit=10'
+                  next:
+                    type: string
+                    format: url
+                    example: '/profiles?page=3&limit=10'
+                  prev:
+                    type: string
+                    format: url
+                    example: '/profiles?page=1&limit=10'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'
+post:
+  operationId: createProfile
+  security:
+    - bearerAuth: []
+  tags: [Profile]
+  description: Create a new profile
+  requestBody:
+    description: To create a new user profile user must need to provide valid data
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            firstName:
+              type: string
+              example: Ali
+            lastName:
+              type: string
+              example: Akkas
+            email:
+              type: string
+              format: email
+              example: akkas@gmail.com
+            profilePic:
+              type: string
+              format: url
+              example: 'https://s3.aws.com/my-fitness/img.jpg'
+            age:
+              type: integer
+              format: int32
+              example: 23
+            height:
+              type: integer
+              format: int32
+              example: 6
+            weight:
+              type: integer
+              format: int32
+              example: 60
+            fitnessLevel:
+              type: string
+              enum:
+                - beginner
+                - intermmediate
+                - advanced
+              example: beginner
+            goal:
+              type: string
+              enum:
+                - lose_weight
+                - build_muscle
+                - maintain_fitness
+              example: maintain_fitness
+          required:
+            - firstName
+            - lastName
+            - email
+            - age
+            - height
+            - weight
+            - fitnessLevel
+            - goal
+  responses:
+    '201':
+      description: Successfully created a new Profile
+      content:
+        'application/json':
+          schema:
+            $ref: '../components/schemas/ProfileCreateDTO.yaml'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'

@@ -1,0 +1,126 @@
+get:
+  security:
+    - bearerAuth: []
+  tags: [Profile]
+  description: Fetch a single user profile
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  responses:
+    '200':
+      description: Single profile view
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 200
+              data:
+                allOf:
+                  - $ref: '../components/schemas/Profile.yaml'
+                  - type: object
+                    properties:
+                      user:
+                        $ref: '../components/schemas/BuilderDTO.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'
+patch:
+  security:
+    - bearerAuth: []
+  tags: [Profile]
+  description: Partially updated a user profile
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  requestBody:
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            firstName:
+              type: string
+              example: Ali
+            lastName:
+              type: string
+              example: Akkas
+            email:
+              type: string
+              format: email
+              example: example@user.com
+            profilePic:
+              type: string
+              format: url
+              example: 'https://s3.aws.com/my-fitness/img.jpg'
+            age:
+              type: integer
+              format: int32
+              example: 23
+            height:
+              type: integer
+              format: int32
+              example: 6
+            weight:
+              type: integer
+              format: int32
+              example: 60
+            fitnessLevel:
+              type: string
+              enum:
+                - beginner
+                - intermmediate
+                - advanced
+              example: beginner
+            goal:
+              type: string
+              enum:
+                - lose_weight
+                - build_muscle
+                - maintain_fitness
+              example: maintain_fitness
+
+  responses:
+    '200':
+      description: User Profile property updated successfully
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 200
+              message:
+                type: string
+                example: Successfully updated
+              data:
+                $ref: '../components/schemas/Profile.yaml'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: url
+                    example: 'users/1'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'
+delete:
+  security:
+    - bearerAuth: []
+  tags: [Profile]
+  description: Delete a profile by id
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  responses:
+    '204':
+      description: Profile Deleted Successfully!
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'

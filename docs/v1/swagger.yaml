@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  version: '1'
+  title: Fitness Training Apps Rest API
+  description: 'This is the first professional rest API project that I creating in full-stack army advanced backend course. This is a simple fitness training application where user can see their daily workouts plan and doing CRUD operation on it.They can also create their account and login to their existing account.'
+  contact:
+    name: Ali Akkas
+    url: https://example.com
+    email: aliakkas006@gmail.com
+servers:
+  - description: Dev
+    url: 'http://localhost:4000/api/v1'
+tags:
+  - name: Auth
+    description: Authentication Endpoints (public)
+  - name: Workout plan
+    description: Workout plan Endpoints (public + private)
+  - name: Progress
+    description: Progress Endpoints (private)
+  - name: User
+    description: User Endpoints (only for admin)
+  - name: Profile
+    description: Profile Endpoints (private)
+  - name: Token
+    description: Token Endpoints (only for admin)
+paths:
+  '/auth/register':
+    $ref: './auth/register.yaml'
+  '/auth/login':
+    $ref: './auth/login.yaml'
+  '/auth/logout':
+    $ref: './auth/logout.yaml'
+
+  '/workouts':
+    $ref: './workout/workouts.yaml'
+  '/workouts/{id}':
+    $ref: './workout/workout.yaml'
+
+  '/progress':
+    $ref: './progress/progresses.yaml'
+  '/progress/{id}':
+    $ref: './progress/progress.yaml'
+
+  '/users':
+    $ref: './user/users.yaml'
+  '/users/{id}':
+    $ref: './user/user.yaml'
+  '/users/{id}/password':
+    $ref: './user/password.yaml'
+
+  '/profiles':
+    $ref: './profile/profiles.yaml'
+  '/profiles/{id}':
+    $ref: './profile/profile.yaml'
+
+  '/tokens/refresh':
+    $ref: './token/refresh.yaml'
+  '/tokens/validate':
+    $ref: './token/validate.yaml'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,8 @@
+in: query
+name: limit
+description: the number of objects should be returned
+required: true
+schema:
+  type: integer
+  format: int32
+  example: 10

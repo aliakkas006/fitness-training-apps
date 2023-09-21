@@ -1,0 +1,204 @@
+get:
+  tags: [Workout plan]
+  description: Fetch a Workout plan
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+    - in: query
+      name: expand
+      description: Expand builder and progress object
+      schema:
+        type: string
+        example: 'builder, progress'
+  responses:
+    '200':
+      description: Single Workout plan view
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 200
+              data:
+                allOf:
+                  - $ref: '../components/schemas/Workouts.yaml'
+                  - type: object
+                    properties:
+                      builder:
+                        $ref: '../components/schemas/BuilderDTO.yaml'
+                  - type: object
+                    properties:
+                      progress:
+                        $ref: '../components/schemas/Progress.yaml'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: url
+                    example: 'workouts/1'
+                  profile:
+                    type: string
+                    format: url
+                    example: 'workouts/1/profile'
+                  progress:
+                    type: string
+                    format: url
+                    example: 'workouts/1/progress'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'
+put:
+  security:
+    - bearerAuth: []
+  tags: [Workout plan]
+  description: Create or update the entire Workout plan
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  requestBody:
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            name:
+              type: string
+              example: Workout name
+            mode:
+              type: string
+              example: Workout mode
+            equipment:
+              type: array
+              items:
+                type: string
+              example:
+                - Equipment-01
+                - Equipment-02
+                - Equipment-03
+            exercises:
+              type: array
+              items:
+                type: string
+              example:
+                - Exercise-01
+                - Exercise-02
+                - Exercise-03
+            trainerTips:
+              type: array
+              items:
+                type: string
+              example:
+                - Trainer tips-01
+                - Trainer tips-02
+                - Trainer tips-03
+            photo:
+              type: string
+              format: url
+              example: 'https://s3.aws.workouts/3.png'
+            status:
+              type: string
+              enum: [progress, done]
+              example: progress
+          required:
+            - name
+            - mode
+            - equipment
+            - exercises
+            - trainerTips
+  responses:
+    '200':
+      description: Successfully updated
+      content:
+        'application/json':
+          schema:
+            $ref: '../components/schemas/WorkoutsUpdateDTO.yaml'
+    '201':
+      description: Successfully created
+      content:
+        'application/json':
+          schema:
+            $ref: '../components/schemas/WorkoutsCreateDTO.yaml'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'
+patch:
+  security:
+    - bearerAuth: []
+  tags: [Workout plan]
+  description: Partially updated a Workout plan
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  requestBody:
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Workout name
+            mode:
+              type: string
+              example: Workout mode
+            equipment:
+              type: string
+              example:
+                - Equipment-01
+                - Equipment-02
+            exercises:
+              type: string
+              example:
+                - Exercise-01
+                - Exercise-02
+                - Exercise-03
+            photo:
+              type: string
+              format: url
+              example: 'https://s3.aws.workouts/3.png'
+            status:
+              type: string
+              enum: [progress, done]
+              example: progress
+  responses:
+    '200':
+      description: Successfully updated
+      content:
+        'application/json':
+          schema:
+            $ref: '../components/schemas/WorkoutsUpdateDTO.yaml'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'
+delete:
+  security:
+    - bearerAuth: []
+  tags: [Workout plan]
+  description: Delete a workout plan by id
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  responses:
+    '204':
+      description: Workout plan deleted successfully!
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'

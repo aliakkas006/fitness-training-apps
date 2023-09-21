@@ -61,7 +61,7 @@ privateRouter.post(
 privateRouter
   .route('/api/v1/profiles/:id')
   .get(
-    // [authenticate, authorize(['user', 'admin']), ownership('Profile')],
+    [authenticate, authorize(['user', 'admin']), ownership('Profile')],
     profileControllers.findSingleItem
   )
   .patch(

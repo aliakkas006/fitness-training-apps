@@ -5,8 +5,10 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "npx nodemon",
+    "test": "npx jest",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
+    "generate-doc": "swagger-cli bundle docs/v1/swagger.yaml --outfile docs/v1/_build/swagger.yaml --type yaml",
     "format": "eslint src/**/*.ts --fix",
     "postinstall": "yarn run build"
   },

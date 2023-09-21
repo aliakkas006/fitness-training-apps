@@ -1,0 +1,28 @@
+description: 'Bad Request'
+content:
+  'application/json':
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: input field's value
+              message:
+                type: string
+                example: Invalid field's value
+              in:
+                type: string
+                enum: [query, body]
+                example: body

@@ -3,7 +3,6 @@ import authenticate from '../middleware/authenticate';
 import authorize from '../middleware/authorize';
 import userControllers from '../api/v1/user';
 import profileControllers from '../api/v1/profile';
-import progressControllers from '../api/v1/progress';
 import tokenControllers from '../api/v1/token';
 
 const adminRouter = Router();

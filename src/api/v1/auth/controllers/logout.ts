@@ -8,7 +8,7 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
     await authService.logout({ token, clientIp: req.clientIp || 'N/A' });
 
     const response = {
-      code: 200,
+      code: 204,
       message: 'Logout Successfully!',
       links: {
         self: req.url,

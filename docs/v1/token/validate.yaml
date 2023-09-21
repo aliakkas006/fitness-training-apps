@@ -1,0 +1,41 @@
+post:
+  security:
+    - bearerAuth: []
+  description: Validate refresh token
+  tags: [Token]
+  requestBody:
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p'
+          required: [token]
+  responses:
+    '200':
+      description: Validate Token
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 200
+              message:
+                type: string
+                example: Token is valid!
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    example: '/tokens/validate'
+                  refresh:
+                    type: string
+                    example: '/tokens/refresh'
+    '401':
+      $ref: '../components/responses/401.yaml'

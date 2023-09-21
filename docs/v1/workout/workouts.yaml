@@ -1,0 +1,159 @@
+get:
+  tags: [Workout plan]
+  description: Retrieve all workouts plan
+  parameters:
+    - $ref: '../components/parameters/pageParam.yaml'
+    - $ref: '../components/parameters/limitParam.yaml'
+    - $ref: '../components/parameters/sortTypeParam.yaml'
+    - $ref: '../components/parameters/sortByParam.yaml'
+    - $ref: '../components/parameters/searchParam.yaml'
+  responses:
+    '200':
+      description: Return a list of Workouts data
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  allOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int32
+                          example: 1
+                        name:
+                          type: string
+                          example: Heavy DT
+                        mode:
+                          type: string
+                          example: 5 Rounds For Time
+                        equipment:
+                          type: string
+                          example:
+                            - barbell
+                            - rope
+                        exercises:
+                          type: string
+                          example:
+                            - 9 deadlifts
+                            - 5 hang power cleans
+                            - 4 push jerks
+                        trainerTips:
+                          type: string
+                          example:
+                            - Aim for unbroken push jerks
+                            - The first three rounds might feel terrible, but stick to it
+                            - RX Weights - 205lb/145lb
+                        photo:
+                          type: string
+                          format: url
+                          example: https://s3.aws.com/my-fitness/img.jpg
+                        builder:
+                          $ref: '../components/schemas/BuilderDTO.yaml'
+                        link:
+                          type: string
+                          format: url
+                          example: '/workouts/1'
+                      required:
+                        - id
+                        - name
+                        - mode
+                        - equipment
+                        - exercises
+                        - trainerTips
+                        - builder
+                    - $ref: '../components/schemas/Timestamp.yaml'
+              pagination:
+                $ref: '../components/schemas/Pagination.yaml'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: url
+                    example: '/workouts?page=2&limit=10'
+                  next:
+                    type: string
+                    format: url
+                    example: '/workouts?page=3&limit=10'
+                  prev:
+                    type: string
+                    format: url
+                    example: '/workouts?page=1&limit=10'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'
+post:
+  operationId: createWorkoutPlan
+  security:
+    - bearerAuth: []
+  tags: [Workout plan]
+  description: Create a new workout plan
+  requestBody:
+    description: To create a new workout plan user must be authenticated and also provide valid data.
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Heavy DT
+            mode:
+              type: string
+              example: 5 Rounds For Time
+            equipment:
+              type: array
+              items:
+                type: string
+              example:
+                - barbell
+                - rope
+            exercises:
+              type: array
+              items:
+                type: string
+              example:
+                - 9 deadlifts
+                - 5 hang power cleans
+                - 4 push jerks
+            trainerTips:
+              type: array
+              items:
+                type: string
+              example:
+                - Aim for unbroken push jerks
+                - The first three rounds might feel terrible, but stick to it
+                - RX Weights - 205lb/145lb
+            photo:
+              type: string
+              format: url
+              example: https://s3.aws.com/my-fitness/img.jpg
+            status:
+              type: string
+              enum: [progress, done]
+              example: progress
+          required:
+            - name
+            - mode
+            - equipment
+            - exercises
+            - trainerTips
+  responses:
+    '201':
+      description: Successfully created a new workout plan
+      content:
+        'application/jsom':
+          schema:
+            $ref: '../components/schemas/WorkoutsCreateDTO.yaml'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'

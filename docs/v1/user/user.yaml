@@ -1,0 +1,109 @@
+get:
+  security:
+    - bearerAuth: []
+  tags: [User]
+  description: Fetch a single user
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  responses:
+    '200':
+      description: Single user view
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 200
+              message:
+                type: string
+                example: Successfully fetch a user
+              data:
+                allOf:
+                  - $ref: '../components/schemas/User.yaml'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: url
+                    example: '/users/1'
+    '404':
+      $ref: '../components/responses/404.yaml'
+patch:
+  security:
+    - bearerAuth: []
+  tags: [User]
+  description: Partially updated a single user
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  requestBody:
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Ali Akkas
+            email:
+              type: string
+              format: email
+              example: ali@gmail.com
+            role:
+              type: string
+              enum: [user, admin]
+              example: user
+            status:
+              type: string
+              enum:
+                - pending
+                - approved
+                - block
+                - decline
+  responses:
+    '200':
+      description: User property updated successfully
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 200
+              message:
+                type: string
+                example: Successfully updated user property
+              data:
+                $ref: '../components/schemas/User.yaml'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    format: url
+                    example: 'users/1'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'
+delete:
+  security:
+    - bearerAuth: []
+  tags: [User]
+  description: Delete a user by id
+  parameters:
+    - $ref: '../components/parameters/idPathParam.yaml'
+  responses:
+    '204':
+      description: User Deleted Successfully!
+    '401':
+      $ref: '../components/responses/401.yaml'
+    '404':
+      $ref: '../components/responses/404.yaml'

@@ -1,0 +1,52 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 1
+      builderId:
+        type: integer
+        format: int32
+        example: 1
+      name:
+        type: string
+        example: Heavy DT
+      mode:
+        type: string
+        example: 5 Rounds For Time
+      equipment:
+        type: string
+        example:
+          - barbell
+          - rope
+      exercises:
+        type: string
+        example:
+          - 9 deadlifts
+          - 5 hang power cleans
+          - 4 push jerks
+      trainerTips:
+        type: string
+        example:
+          - Aim for unbroken push jerks
+          - The first three rounds might feel terrible, but stick to it
+          - RX Weights - 205lb/145lb
+      photo:
+        type: string
+        format: url
+        example: https://s3.aws.com/my-fitness/img.jpg
+      status:
+        type: string
+        enum: [progress, done]
+        example: progress
+    required:
+      - id
+      - builderId
+      - name
+      - mode
+      - equipment
+      - exercises
+      - trainerTips
+      - status
+  - $ref: './Timestamp.yaml'

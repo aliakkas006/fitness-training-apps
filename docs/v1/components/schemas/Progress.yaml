@@ -1,0 +1,53 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 1
+      builderId:
+        type: integer
+        format: int32
+        example: 1
+      workoutId:
+        type: integer
+        format: int32
+        example: 111
+      workoutSession:
+        type: string
+        example: '50 min'
+      trackProgress:
+        type: object
+        properties:
+          newHeight:
+            type: string
+            example: '5.8 feet'
+          newWeight:
+            type: string
+            example: '60 kg'
+          newFitnessLevel:
+            type: string
+            example: intermmediate
+          achievedGoal:
+            type: string
+            enum:
+              - lose_weight
+              - build_muscle
+              - maintain_fitness
+            example: build_muscle
+      performance:
+        type: string
+        example: 'Body Composition coordinated'
+      status:
+        type: string
+        enum: [public, private]
+        example: public
+    required:
+      - id
+      - builderId
+      - workoutId
+      - workoutSession
+      - trackProgress
+      - performance
+      - status
+  - $ref: './Timestamp.yaml' 

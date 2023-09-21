@@ -1,0 +1,16 @@
+description: 'Unauthorized'
+content:
+  'application/json':
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 401
+        error:
+          type: string
+          example: Unauthorized!
+        message:
+          type: string
+          example: You don't have the right permissions!

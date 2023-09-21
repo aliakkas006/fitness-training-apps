@@ -1,0 +1,55 @@
+post:
+  description: Create a new account
+  tags: [Auth]
+  requestBody:
+    content:
+      'application/json':
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Anisur Rahman
+            email:
+              type: string
+              format: email
+              example: anis@gmail.com
+            password:
+              type: string
+              format: password
+              example: Pass1$23
+          required: [name, email, password]
+  responses:
+    '201':
+      description: Account Created Successfully
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 201
+              message:
+                type: string
+                example: register Successful
+              data:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    example: '/auth/register'
+                  login:
+                    type: string
+                    example: '/auth/login'
+    '400':
+      $ref: '../components/responses/400.yaml'
+    '500':
+      $ref: '../components/responses/500.yaml'

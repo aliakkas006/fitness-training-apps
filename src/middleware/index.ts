@@ -10,7 +10,6 @@ const swaggerDoc = YAML.load('./swagger.yaml');
 
 const applyMiddleware = (app: Application) => {
   app.use([express.json(), cors(), morgan('dev'), requestIp.mw()]);
-  
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
   app.use(
     middleware({
@@ -20,3 +19,5 @@ const applyMiddleware = (app: Application) => {
 };
 
 export default applyMiddleware;
+
+// const swaggerDoc = YAML.load('./docs/_build/swagger.yaml')

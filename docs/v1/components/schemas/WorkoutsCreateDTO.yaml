@@ -1,0 +1,26 @@
+type: object
+properties:
+  code:
+    type: integer
+    format: int32
+    example: 201
+  message:
+    type: string
+    example: 'Workout plan created successfully!'
+  data:
+    $ref: './Workouts.yaml'
+  links:
+    type: object
+    properties:
+      self:
+        type: string
+        format: url
+        example: 'workouts/1'
+      profile:
+        type: string
+        format: url
+        example: 'workouts/1/profile'
+      progress:
+        type: string
+        format: url
+        example: 'workouts/1/progress'

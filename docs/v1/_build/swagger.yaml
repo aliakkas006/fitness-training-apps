@@ -2,11 +2,11 @@ openapi: 3.0.0
 info:
   version: '1'
   title: Fitness Training Apps Rest API
-  description: 'This is the first professional rest API project I creating in full-stack army advanced backend course. This is a simple fitness training application where user can see their daily workouts plan and doing CRUD operation on it.They can also create their account and singnin to their existing account.'
+  description: This is the first professional rest API project that I creating in full-stack army advanced backend course. This is a simple fitness training application where user can see their daily workouts plan and doing CRUD operation on it.They can also create their account and login to their existing account.
   contact:
     name: Ali Akkas
-    url: https://aliakkas.com
-    email: help@ali.com
+    url: 'https://example.com'
+    email: aliakkas006@gmail.com
 servers:
   - description: Dev
     url: 'http://localhost:4000/api/v1'
@@ -24,13 +24,14 @@ tags:
   - name: Token
     description: Token Endpoints (only for admin)
 paths:
-  '/auth/register':
+  /auth/register:
     post:
-      description: create a new account
-      tags: [Auth]
+      description: Create a new account
+      tags:
+        - Auth
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -45,12 +46,15 @@ paths:
                   type: string
                   format: password
                   example: Pass1$23
-              required: [name, email, password]
+              required:
+                - name
+                - email
+                - password
       responses:
         '201':
           description: Account Created Successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -66,27 +70,28 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: '/auth/register'
+                        example: /auth/register
                       login:
                         type: string
-                        example: '/auth/login'
+                        example: /auth/login
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '500':
-          $ref: '#/components/responses/500'
-  '/auth/login':
+          $ref: '#/paths/~1users/get/responses/500'
+  /auth/login:
     post:
       description: login to your account
-      tags: [Auth]
+      tags:
+        - Auth
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -98,12 +103,14 @@ paths:
                   type: string
                   format: password
                   example: Pass1$23
-              required: [email, password]
+              required:
+                - email
+                - password
       responses:
         '200':
           description: login Successful
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -119,36 +126,38 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: '/auth/login'
+                        example: /auth/login
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '500':
-          $ref: '#/components/responses/500'
-  '/auth/logout':
+          $ref: '#/paths/~1users/get/responses/500'
+  /auth/logout:
     post:
       description: logout from account
-      tags: [Auth]
+      tags:
+        - Auth
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
                 token:
                   type: string
-                  example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p'
-              required: [token]
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p
+              required:
+                - token
       responses:
         '200':
           description: logout Successful
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -164,30 +173,35 @@ paths:
                     properties:
                       self:
                         type: string
-                        example: '/auth/logout'
+                        example: /auth/logout
                       login:
                         type: string
-                        example: '/auth/login'
+                        example: /auth/login
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '500':
-          $ref: '#/components/responses/500'
-  
-  '/workouts':
+          $ref: '#/paths/~1users/get/responses/500'
+  /workouts:
     get:
-      tags: [Workout plan]
+      tags:
+        - Workout plan
       description: Retrieve all workouts plan
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
-        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/paths/~1users/get/parameters/0'
+        - $ref: '#/paths/~1users/get/parameters/1'
+        - $ref: '#/paths/~1users/get/parameters/2'
+        - $ref: '#/paths/~1users/get/parameters/3'
+        - in: query
+          name: search
+          description: the search term
+          schema:
+            type: string
+            example: workout name
       responses:
         '200':
           description: Return a list of Workouts data
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -222,18 +236,18 @@ paths:
                               type: string
                               example:
                                 - Aim for unbroken push jerks
-                                - The first three rounds might feel terrible, but stick to it
+                                - 'The first three rounds might feel terrible, but stick to it'
                                 - RX Weights - 205lb/145lb
                             photo:
                               type: string
                               format: url
-                              example: https://s3.aws.com/my-fitness/img.jpg
+                              example: 'https://s3.aws.com/my-fitness/img.jpg'
                             builder:
-                              $ref: '#/components/schemas/BuilderDTO'
+                              $ref: '#/paths/~1profiles~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/allOf/1/properties/user'
                             link:
                               type: string
                               format: url
-                              example: '/workouts/1'
+                              example: /workouts/1
                           required:
                             - id
                             - name
@@ -242,38 +256,39 @@ paths:
                             - exercises
                             - trainerTips
                             - builder
-                        - $ref: '#/components/schemas/Timestamp'
+                        - $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/data/items/allOf/1'
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/pagination'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/workouts?page=2&limit=10'
+                        example: /workouts?page=2&limit=10
                       next:
                         type: string
                         format: url
-                        example: '/workouts?page=3&limit=10'
+                        example: /workouts?page=3&limit=10
                       prev:
                         type: string
                         format: url
-                        example: '/workouts?page=1&limit=10'
+                        example: /workouts?page=1&limit=10
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
     post:
       operationId: createWorkoutPlan
       security:
         - bearerAuth: []
-      tags: [Workout plan]
+      tags:
+        - Workout plan
       description: Create a new workout plan
       requestBody:
         description: To create a new workout plan user must be authenticated and also provide valid data.
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -304,15 +319,17 @@ paths:
                     type: string
                   example:
                     - Aim for unbroken push jerks
-                    - The first three rounds might feel terrible, but stick to it
+                    - 'The first three rounds might feel terrible, but stick to it'
                     - RX Weights - 205lb/145lb
                 photo:
                   type: string
                   format: url
-                  example: https://s3.aws.com/my-fitness/img.jpg
+                  example: 'https://s3.aws.com/my-fitness/img.jpg'
                 status:
                   type: string
-                  enum: [progress, done]
+                  enum:
+                    - progress
+                    - done
                   example: progress
               required:
                 - name
@@ -324,21 +341,47 @@ paths:
         '201':
           description: Successfully created a new workout plan
           content:
-            'application/jsom':
+            application/jsom:
               schema:
-                $ref: '#/components/schemas/WorkoutsCreateDTO'
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Workout plan created successfully!
+                  data:
+                    $ref: '#/paths/~1workouts~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/allOf/0'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: workouts/1
+                      profile:
+                        type: string
+                        format: url
+                        example: workouts/1/profile
+                      progress:
+                        type: string
+                        format: url
+                        example: workouts/1/progress
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
   '/workouts/{id}':
     get:
-      tags: [Workout plan]
+      tags:
+        - Workout plan
       description: Fetch a Workout plan
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
         - in: query
           name: expand
           description: Expand builder and progress object
@@ -349,7 +392,7 @@ paths:
         '200':
           description: Single Workout plan view
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -359,46 +402,100 @@ paths:
                     example: 200
                   data:
                     allOf:
-                      - $ref: '#/components/schemas/Workouts'
+                      - allOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: integer
+                                format: int32
+                                example: 1
+                              builderId:
+                                type: integer
+                                format: int32
+                                example: 1
+                              name:
+                                type: string
+                                example: Heavy DT
+                              mode:
+                                type: string
+                                example: 5 Rounds For Time
+                              equipment:
+                                type: string
+                                example:
+                                  - barbell
+                                  - rope
+                              exercises:
+                                type: string
+                                example:
+                                  - 9 deadlifts
+                                  - 5 hang power cleans
+                                  - 4 push jerks
+                              trainerTips:
+                                type: string
+                                example:
+                                  - Aim for unbroken push jerks
+                                  - 'The first three rounds might feel terrible, but stick to it'
+                                  - RX Weights - 205lb/145lb
+                              photo:
+                                type: string
+                                format: url
+                                example: 'https://s3.aws.com/my-fitness/img.jpg'
+                              status:
+                                type: string
+                                enum:
+                                  - progress
+                                  - done
+                                example: progress
+                            required:
+                              - id
+                              - builderId
+                              - name
+                              - mode
+                              - equipment
+                              - exercises
+                              - trainerTips
+                              - status
+                          - $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/data/items/allOf/1'
                       - type: object
                         properties:
                           builder:
-                            $ref: '#/components/schemas/BuilderDTO'
+                            $ref: '#/paths/~1profiles~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/allOf/1/properties/user'
                       - type: object
                         properties:
                           progress:
-                            $ref: '#/components/schemas/Progress'
+                            $ref: '#/paths/~1progress~1%7Bid%7D/patch/responses/200/content/application~1json/schema/properties/data'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: 'workouts/1'
+                        example: workouts/1
                       profile:
                         type: string
                         format: url
-                        example: 'workouts/1/profile'
+                        example: workouts/1/profile
                       progress:
                         type: string
                         format: url
-                        example: 'workouts/1/progress'
+                        example: workouts/1/progress
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
     put:
       security:
         - bearerAuth: []
-      tags: [Workout plan]
+      tags:
+        - Workout plan
       description: Create or update the entire Workout plan
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -442,7 +539,9 @@ paths:
                   example: 'https://s3.aws.workouts/3.png'
                 status:
                   type: string
-                  enum: [progress, done]
+                  enum:
+                    - progress
+                    - done
                   example: progress
               required:
                 - name
@@ -454,31 +553,49 @@ paths:
         '200':
           description: Successfully updated
           content:
-            'application/json':
+            application/json:
               schema:
-                $ref: '#/components/schemas/WorkoutUpdateDTO'
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Workout plan updated successfully!
+                  data:
+                    $ref: '#/paths/~1workouts~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/allOf/0'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: workouts/1
         '201':
           description: Successfully created
           content:
-            'application/json':
+            application/json:
               schema:
-                $ref: '#/components/schemas/WorkoutsCreateDTO'
+                $ref: '#/paths/~1workouts/post/responses/201/content/application~1jsom/schema'
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
     patch:
       security:
         - bearerAuth: []
-      tags: [Workout plan]
+      tags:
+        - Workout plan
       description: Partially updated a Workout plan
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -505,56 +622,59 @@ paths:
                   example: 'https://s3.aws.workouts/3.png'
                 status:
                   type: string
-                  enum: [progress, done]
+                  enum:
+                    - progress
+                    - done
                   example: progress
       responses:
         '200':
           description: Successfully updated
           content:
-            'application/json':
+            application/json:
               schema:
-                $ref: '#/components/schemas/WorkoutUpdateDTO'
+                $ref: '#/paths/~1workouts~1%7Bid%7D/put/responses/200/content/application~1json/schema'
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
     delete:
       security:
         - bearerAuth: []
-      tags: [Workout plan]
+      tags:
+        - Workout plan
       description: Delete a workout plan by id
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
         '204':
           description: Workout plan deleted successfully!
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
         '500':
-          $ref: '#/components/responses/500'
-
-  '/progress':
+          $ref: '#/paths/~1users/get/responses/500'
+  /progress:
     get:
       security:
         - bearerAuth: []
-      tags: [Progress]
+      tags:
+        - Progress
       description: Users can see a list of their progress and admin can see a list of all progress
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/paths/~1users/get/parameters/0'
+        - $ref: '#/paths/~1users/get/parameters/1'
+        - $ref: '#/paths/~1users/get/parameters/2'
+        - $ref: '#/paths/~1users/get/parameters/3'
       responses:
         '200':
           description: Return a list of progress data
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -570,16 +690,16 @@ paths:
                               example: 1
                             workoutSession:
                               type: string
-                              example: '50 min'
+                              example: 50 min
                             trackProgress:
                               type: object
                               properties:
                                 newHeight:
                                   type: string
-                                  example: '5.8 feet'
+                                  example: 5.8 feet
                                 newWeight:
                                   type: string
-                                  example: '60 kg'
+                                  example: 60 kg
                                 newFitnessLevel:
                                   type: string
                                   enum:
@@ -596,15 +716,28 @@ paths:
                                   example: build_muscle
                             performance:
                               type: string
-                              example: 'Body Composition coordinated'
+                              example: Body Composition coordinated
                             status:
                               type: string
-                              enum: [public, private]
+                              enum:
+                                - public
+                                - private
                               example: public
                             builder:
-                              $ref: '#/components/schemas/BuilderDTO'
+                              $ref: '#/paths/~1profiles~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/allOf/1/properties/user'
                             workout:
-                              $ref: '#/components/schemas/WorkoutDTO'
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  format: int32
+                                  example: 101
+                                name:
+                                  type: string
+                                  example: Push Jerk
+                              required:
+                                - id
+                                - name
                           required:
                             - id
                             - workoutSession
@@ -612,61 +745,62 @@ paths:
                             - performance
                             - builder
                             - workout
-                        - $ref: '#/components/schemas/Timestamp'
+                        - $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/data/items/allOf/1'
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/pagination'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/progress?page=2&limit=10'
+                        example: /progress?page=2&limit=10
                       next:
                         type: string
                         format: url
-                        example: '/progress?page=3&limit=10'
+                        example: /progress?page=3&limit=10
                       prev:
                         type: string
                         format: url
-                        example: '/progress?page=1&limit=10'
+                        example: /progress?page=1&limit=10
                       workoutPlan:
                         type: string
                         format: url
-                        example: '/progress?workoutId=56645555df'
+                        example: /progress?workoutId=56645555df
                       builder:
                         type: string
                         format: url
-                        example: '/progress?builderId=47855555dd'
+                        example: /progress?builderId=47855555dd
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
     post:
       operationId: createProgress
       security:
         - bearerAuth: []
-      tags: [Progress]
+      tags:
+        - Progress
       description: Create a new progress
       requestBody:
         description: To create a new progress user must be authenticated and also provide valid data
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
                 workoutSession:
                   type: string
-                  example: '50 min'
+                  example: 50 min
                 trackProgress:
                   type: object
                   properties:
                     newHeight:
                       type: string
-                      example: '5.8 feet'
+                      example: 5.8 feet
                     newWeight:
                       type: string
-                      example: '60 kg'
+                      example: 60 kg
                     newFitnessLevel:
                       type: string
                       enum:
@@ -683,13 +817,15 @@ paths:
                       example: build_muscle
                 performance:
                   type: string
-                  example: 'Body Composition coordinated'
+                  example: Body Composition coordinated
                 workoutId:
                   type: string
                   example: 64feeb01f731d5ccd1118f5a
                 status:
                   type: string
-                  enum: [public, private]
+                  enum:
+                    - public
+                    - private
                   example: public
               required:
                 - workoutSession
@@ -700,41 +836,59 @@ paths:
         '201':
           description: Successfully created a new progress
           content:
-            'application/jsom':
+            application/jsom:
               schema:
-                $ref: '#/components/schemas/ProgressCreateDTO'
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Progress created successfully!
+                  data:
+                    $ref: '#/paths/~1progress~1%7Bid%7D/patch/responses/200/content/application~1json/schema/properties/data'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: progress/1
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
   '/progress/{id}':
     patch:
       security:
         - bearerAuth: []
-      tags: [Progress]
+      tags:
+        - Progress
       description: Admin can update any progress and authenticate users can update only their progress
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
                 workoutSession:
                   type: string
-                  example: '1 hr'
+                  example: 1 hr
                 trackProgress:
                   type: object
                   properties:
                     newHeight:
                       type: string
-                      example: '5.8 feet'
+                      example: 5.8 feet
                     newWeight:
                       type: string
-                      example: '60 kg'
+                      example: 60 kg
                     newFitnessLevel:
                       type: string
                       enum:
@@ -751,16 +905,18 @@ paths:
                       example: build_muscle
                 performance:
                   type: string
-                  example: 'Body Composition coordinated'
+                  example: Body Composition coordinated
                 status:
                   type: string
-                  enum: [public, private]
+                  enum:
+                    - public
+                    - private
                   example: public
       responses:
         '200':
           description: Progress updated successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -772,48 +928,130 @@ paths:
                     type: string
                     example: Successfully updated progress property
                   data:
-                    $ref: '#/components/schemas/Progress'
+                    allOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: integer
+                            format: int32
+                            example: 1
+                          builderId:
+                            type: integer
+                            format: int32
+                            example: 1
+                          workoutId:
+                            type: integer
+                            format: int32
+                            example: 111
+                          workoutSession:
+                            type: string
+                            example: 50 min
+                          trackProgress:
+                            type: object
+                            properties:
+                              newHeight:
+                                type: string
+                                example: 5.8 feet
+                              newWeight:
+                                type: string
+                                example: 60 kg
+                              newFitnessLevel:
+                                type: string
+                                example: intermmediate
+                              achievedGoal:
+                                type: string
+                                enum:
+                                  - lose_weight
+                                  - build_muscle
+                                  - maintain_fitness
+                                example: build_muscle
+                          performance:
+                            type: string
+                            example: Body Composition coordinated
+                          status:
+                            type: string
+                            enum:
+                              - public
+                              - private
+                            example: public
+                        required:
+                          - id
+                          - builderId
+                          - workoutId
+                          - workoutSession
+                          - trackProgress
+                          - performance
+                          - status
+                      - $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/data/items/allOf/1'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: 'progress/1'
+                        example: progress/1
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
     delete:
       security:
         - bearerAuth: []
-      tags: [Progress]
+      tags:
+        - Progress
       description: Admin can delete any progress data but authenticate users can delete only their progress data.
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
         '204':
           description: Progress deleted successfully!
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
         '500':
-          $ref: '#/components/responses/500'
-
-  '/users':
+          $ref: '#/paths/~1users/get/responses/500'
+  /users:
     get:
       security:
         - bearerAuth: []
-      tags: [User]
+      tags:
+        - User
       description: Retrive all users
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
+        - in: query
+          name: page
+          description: current page number
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        - in: query
+          name: limit
+          description: the number of objects should be returned
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 10
+        - in: query
+          name: sort_type
+          description: type of sort (asc or dsc)
+          schema:
+            type: string
+            enum:
+              - asc
+              - dsc
+            example: dsc
+        - in: query
+          name: sort_by
+          description: sort key
+          schema:
+            type: string
+            example: updatedAt
         - in: query
           name: name
           description: Name of the user
@@ -830,7 +1068,7 @@ paths:
         '200':
           description: Return a list of users
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -850,39 +1088,127 @@ paths:
                             email:
                               type: string
                               example: user@gmail.com
-                          required: [id, name, email]
-                        - $ref: '#/components/schemas/Timestamp'
+                          required:
+                            - id
+                            - name
+                            - email
+                        - type: object
+                          properties:
+                            createdAt:
+                              type: string
+                              format: date-time
+                            updatedAt:
+                              type: string
+                              format: date-time
+                          required:
+                            - createdAt
+                            - updatedAt
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        format: int32
+                        example: 2
+                      limit:
+                        type: integer
+                        format: int32
+                        example: 10
+                      next:
+                        type: integer
+                        format: int32
+                        example: 3
+                      prev:
+                        type: integer
+                        format: int32
+                        example: 1
+                      totalPage:
+                        type: integer
+                        format: int32
+                        example: 5
+                      totalItems:
+                        type: integer
+                        format: int32
+                        example: 10
+                    required:
+                      - page
+                      - limit
+                      - totalPage
+                      - totalItems
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/users?page=2&limit=10'
+                        example: /users?page=2&limit=10
                       next:
                         type: string
                         format: url
-                        example: '/users?page=3&limit=10'
+                        example: /users?page=3&limit=10
                       prev:
                         type: string
                         format: url
-                        example: '/users?page=1&limit=10'
+                        example: /users?page=1&limit=10
         '400':
-          $ref: '#/components/responses/400'
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 400
+                  error:
+                    type: string
+                    example: Bad Request
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: input field's value
+                        message:
+                          type: string
+                          example: Invalid field's value
+                        in:
+                          type: string
+                          enum:
+                            - query
+                            - body
+                          example: body
         '500':
-          $ref: '#/components/responses/500'
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 500
+                  error:
+                    type: string
+                    example: Internal Server Error!
+                  message:
+                    type: string
+                    example: We are sorry for the inconvenience. Please try again later...
     post:
       operationId: createUser
       security:
         - bearerAuth: []
-      tags: [User]
+      tags:
+        - User
       description: Create a new user
       requestBody:
         description: To create a new user admin must need to provide valid data
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -911,33 +1237,87 @@ paths:
                     - block
                     - decline
                   example: pending
-              required: [name, email, password]
+              required:
+                - name
+                - email
+                - password
       responses:
         '201':
           description: Successfully created a new user
           content:
-            'application/json':
+            application/json:
               schema:
-                $ref: '#/components/schemas/UserCreateDTO'
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: User created successfully
+                  data:
+                    $ref: '#/paths/~1users~1%7Bid%7D/patch/responses/200/content/application~1json/schema/properties/data'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /users/1
+                      edit:
+                        type: string
+                        format: url
+                        example: /users/1/edit
+                      delete:
+                        type: string
+                        format: url
+                        example: /users/1/delete
+                      view:
+                        type: string
+                        format: url
+                        example: /users/1/view
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 401
+                  error:
+                    type: string
+                    example: Unauthorized!
+                  message:
+                    type: string
+                    example: You don't have the right permissions!
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
   '/users/{id}':
     get:
       security:
         - bearerAuth: []
-      tags: [User]
+      tags:
+        - User
       description: Fetch a single user
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - in: path
+          name: id
+          required: true
+          description: Object ID
+          schema:
+            type: string
+            example: 64d715dd8ef5b49a6953943d
       responses:
         '200':
           description: Single user view
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -950,26 +1330,42 @@ paths:
                     example: Successfully fetch a user
                   data:
                     allOf:
-                      - $ref: '#/components/schemas/User'
+                      - $ref: '#/paths/~1users~1%7Bid%7D/patch/responses/200/content/application~1json/schema/properties/data'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/users/1'
+                        example: /users/1
         '404':
-          $ref: '#/components/responses/404'
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 404
+                  error:
+                    type: string
+                    example: Page Not Found!
+                  message:
+                    type: string
+                    example: Requested resource not found!
     patch:
       security:
         - bearerAuth: []
-      tags: [User]
+      tags:
+        - User
       description: Partially updated a single user
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -982,7 +1378,9 @@ paths:
                   example: ali@gmail.com
                 role:
                   type: string
-                  enum: [user, admin]
+                  enum:
+                    - user
+                    - admin
                   example: user
                 status:
                   type: string
@@ -995,7 +1393,7 @@ paths:
         '200':
           description: User property updated successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -1007,45 +1405,80 @@ paths:
                     type: string
                     example: Successfully updated user property
                   data:
-                    $ref: '#/components/schemas/User'
+                    allOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: integer
+                            format: int32
+                            example: 1
+                          name:
+                            type: string
+                            example: Ali Akkas
+                          email:
+                            type: string
+                            format: email
+                            example: akkas@gmail.com
+                          role:
+                            type: string
+                            enum:
+                              - user
+                              - admin
+                            example: user
+                          status:
+                            type: string
+                            enum:
+                              - pending
+                              - approved
+                              - block
+                              - decline
+                            example: pending
+                        required:
+                          - id
+                          - name
+                          - email
+                          - status
+                      - $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/data/items/allOf/1'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: 'users/1'
+                        example: users/1
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
     delete:
       security:
         - bearerAuth: []
-      tags: [User]
+      tags:
+        - User
       description: Delete a user by id
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
         '204':
           description: User Deleted Successfully!
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
   '/users/{id}/password':
     patch:
       security:
         - bearerAuth: []
-      tags: [User]
+      tags:
+        - User
       description: Change password
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -1057,7 +1490,7 @@ paths:
         '200':
           description: Change the password of the user
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -1074,25 +1507,25 @@ paths:
                       view:
                         type: string
                         format: url
-                        example: '/users/1/view'
+                        example: /users/1/view
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
-
-  '/profiles':
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
+  /profiles:
     get:
       security:
         - bearerAuth: []
-      tags: [Profile]
+      tags:
+        - Profile
       description: Retrieve all user profiles
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/paths/~1users/get/parameters/0'
+        - $ref: '#/paths/~1users/get/parameters/1'
+        - $ref: '#/paths/~1users/get/parameters/2'
+        - $ref: '#/paths/~1users/get/parameters/3'
         - in: query
           name: firstName
           description: First Name of the user profile
@@ -1116,7 +1549,7 @@ paths:
         '200':
           description: Return a list of User Profiles
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -1171,7 +1604,7 @@ paths:
                                 - maintain_fitness
                               example: maintain_fitness
                             user:
-                              $ref: '#/components/schemas/BuilderDTO'
+                              $ref: '#/paths/~1profiles~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/allOf/1/properties/user'
                           required:
                             - id
                             - firstName
@@ -1183,38 +1616,39 @@ paths:
                             - fitnessLevel
                             - goal
                             - user
-                        - $ref: '#/components/schemas/Timestamp'
+                        - $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/data/items/allOf/1'
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/pagination'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/profiles?page=2&limit=10'
+                        example: /profiles?page=2&limit=10
                       next:
                         type: string
                         format: url
-                        example: '/profiles?page=3&limit=10'
+                        example: /profiles?page=3&limit=10
                       prev:
                         type: string
                         format: url
-                        example: '/profiles?page=1&limit=10'
+                        example: /profiles?page=1&limit=10
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
     post:
       operationId: createProfile
       security:
         - bearerAuth: []
-      tags: [Profile]
+      tags:
+        - Profile
       description: Create a new profile
       requestBody:
         description: To create a new user profile user must need to provide valid data
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -1271,28 +1705,58 @@ paths:
         '201':
           description: Successfully created a new Profile
           content:
-            'application/json':
+            application/json:
               schema:
-                $ref: '#/components/schemas/ProfileCreateDTO'
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: User Profile created successfully
+                  data:
+                    $ref: '#/paths/~1profiles~1%7Bid%7D/patch/responses/200/content/application~1json/schema/properties/data'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /profiles/1
+                      edit:
+                        type: string
+                        format: url
+                        example: /profiles/1/edit
+                      delete:
+                        type: string
+                        format: url
+                        example: /profiles/1/delete
+                      view:
+                        type: string
+                        format: url
+                        example: /users/1/view
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/paths/~1users/get/responses/500'
   '/profiles/{id}':
     get:
       security:
         - bearerAuth: []
-      tags: [Profile]
+      tags:
+        - Profile
       description: Fetch a single user profile
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
         '200':
           description: Single profile view
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -1302,23 +1766,35 @@ paths:
                     example: 200
                   data:
                     allOf:
-                      - $ref: '#/components/schemas/Profile'
+                      - $ref: '#/paths/~1profiles~1%7Bid%7D/patch/responses/200/content/application~1json/schema/properties/data'
                       - type: object
                         properties:
                           user:
-                            $ref: '#/components/schemas/BuilderDTO'
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                format: int32
+                                example: 101
+                              name:
+                                type: string
+                                example: Ali Akkas
+                            required:
+                              - id
+                              - name
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
     patch:
       security:
         - bearerAuth: []
-      tags: [Profile]
+      tags:
+        - Profile
       description: Partially updated a user profile
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
@@ -1362,12 +1838,11 @@ paths:
                     - build_muscle
                     - maintain_fitness
                   example: maintain_fitness
-
       responses:
         '200':
           description: User Profile property updated successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -1379,56 +1854,120 @@ paths:
                     type: string
                     example: Successfully updated
                   data:
-                    $ref: '#/components/schemas/Profile'
+                    allOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: integer
+                            format: int32
+                            example: 1
+                          userId:
+                            type: integer
+                            format: int32
+                            example: 101
+                          firstName:
+                            type: string
+                            example: Ali
+                          lastName:
+                            type: string
+                            example: Akkas
+                          email:
+                            type: string
+                            format: email
+                            example: akkas@gmail.com
+                          profilePic:
+                            type: string
+                            format: url
+                            example: 'https://s3.aws.com/my-fitness/img.jpg'
+                          age:
+                            type: integer
+                            format: int32
+                            example: 23
+                          height:
+                            type: integer
+                            format: int32
+                            example: 6
+                          weight:
+                            type: integer
+                            format: int32
+                            example: 60
+                          fitnessLevel:
+                            type: string
+                            enum:
+                              - beginner
+                              - intermmediate
+                              - advanced
+                            example: beginner
+                          goal:
+                            type: string
+                            enum:
+                              - lose_weight
+                              - build_muscle
+                              - maintain_fitness
+                            example: maintain_fitness
+                        required:
+                          - id
+                          - userId
+                          - firstName
+                          - lastName
+                          - email
+                          - age
+                          - height
+                          - weight
+                          - fitnessLevel
+                          - goal
+                      - $ref: '#/paths/~1users/get/responses/200/content/application~1json/schema/properties/data/items/allOf/1'
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: 'users/1'
+                        example: users/1
         '400':
-          $ref: '#/components/responses/400'
+          $ref: '#/paths/~1users/get/responses/400'
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
     delete:
       security:
         - bearerAuth: []
-      tags: [Profile]
+      tags:
+        - Profile
       description: Delete a profile by id
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
         '204':
           description: Profile Deleted Successfully!
         '401':
-          $ref: '#/components/responses/401'
+          $ref: '#/paths/~1users/post/responses/401'
         '404':
-          $ref: '#/components/responses/404'
-
-  '/tokens/refresh':
+          $ref: '#/paths/~1users~1%7Bid%7D/get/responses/404'
+  /tokens/refresh:
     post:
       security:
         - bearerAuth: []
       description: Rotate refresh token
-      tags: [Token]
+      tags:
+        - Token
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
                 token:
                   type: string
-                  example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-              required: [token]
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+              required:
+                - token
       responses:
         '201':
           description: A new Access Token and Refresh Token generated successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -1444,39 +1983,41 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
                       refresh_token:
                         type: string
-                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw7Z'
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw7Z
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: '/tokens/refresh'
+                        example: /tokens/refresh
         '401':
-          $ref: '#/components/responses/401'
-  '/tokens/validate':
+          $ref: '#/paths/~1users/post/responses/401'
+  /tokens/validate:
     post:
       security:
         - bearerAuth: []
       description: Validate refresh token
-      tags: [Token]
+      tags:
+        - Token
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: object
               properties:
                 token:
                   type: string
-                  example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p'
-              required: [token]
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw9p
+              required:
+                - token
       responses:
         '200':
           description: Validate Token
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 properties:
@@ -1492,542 +2033,15 @@ paths:
                     properties:
                       self:
                         type: string
-                        example: '/tokens/validate'
+                        example: /tokens/validate
                       refresh:
                         type: string
-                        example: '/tokens/refresh'
+                        example: /tokens/refresh
         '401':
-          $ref: '#/components/responses/401'
-
+          $ref: '#/paths/~1users/post/responses/401'
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  schemas:
-    Workouts:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: integer
-              format: int32
-              example: 1
-            builderId:
-              type: integer
-              format: int32
-              example: 1
-            name:
-              type: string
-              example: Heavy DT
-            mode:
-              type: string
-              example: 5 Rounds For Time
-            equipment:
-              type: string
-              example:
-                - barbell
-                - rope
-            exercises:
-              type: string
-              example:
-                - 9 deadlifts
-                - 5 hang power cleans
-                - 4 push jerks
-            trainerTips:
-              type: string
-              example:
-                - Aim for unbroken push jerks
-                - The first three rounds might feel terrible, but stick to it
-                - RX Weights - 205lb/145lb
-            photo:
-              type: string
-              format: url
-              example: https://s3.aws.com/my-fitness/img.jpg
-            status:
-              type: string
-              enum: [progress, done]
-              example: progress
-          required:
-            - id
-            - builderId
-            - name
-            - mode
-            - equipment
-            - exercises
-            - trainerTips
-            - status
-        - $ref: '#/components/schemas/Timestamp'
-    User:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: integer
-              format: int32
-              example: 1
-            name:
-              type: string
-              example: Ali Akkas
-            email:
-              type: string
-              format: email
-              example: akkas@gmail.com
-            role:
-              type: string
-              enum:
-                - user
-                - admin
-              example: user
-            status:
-              type: string
-              enum:
-                - pending
-                - approved
-                - block
-                - decline
-              example: pending
-          required: [id, name, email, status]
-        - $ref: '#/components/schemas/Timestamp'
-    Profile:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: integer
-              format: int32
-              example: 1
-            userId:
-              type: integer
-              format: int32
-              example: 101
-            firstName:
-              type: string
-              example: Ali
-            lastName:
-              type: string
-              example: Akkas
-            email:
-              type: string
-              format: email
-              example: akkas@gmail.com
-            profilePic:
-              type: string
-              format: url
-              example: 'https://s3.aws.com/my-fitness/img.jpg'
-            age:
-              type: integer
-              format: int32
-              example: 23
-            height:
-              type: integer
-              format: int32
-              example: 6
-            weight:
-              type: integer
-              format: int32
-              example: 60
-            fitnessLevel:
-              type: string
-              enum:
-                - beginner
-                - intermmediate
-                - advanced
-              example: beginner
-            goal:
-              type: string
-              enum:
-                - lose_weight
-                - build_muscle
-                - maintain_fitness
-              example: maintain_fitness
-          required:
-            - id
-            - userId
-            - firstName
-            - lastName
-            - email
-            - age
-            - height
-            - weight
-            - fitnessLevel
-            - goal
-
-        - $ref: '#/components/schemas/Timestamp'
-    Progress:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: integer
-              format: int32
-              example: 1
-            builderId:
-              type: integer
-              format: int32
-              example: 1
-            workoutId:
-              type: integer
-              format: int32
-              example: 111
-            workoutSession:
-              type: string
-              example: '50 min'
-            trackProgress:
-              type: object
-              properties:
-                newHeight:
-                  type: string
-                  example: '5.8 feet'
-                newWeight:
-                  type: string
-                  example: '60 kg'
-                newFitnessLevel:
-                  type: string
-                  example: intermmediate
-                achievedGoal:
-                  type: string
-                  enum:
-                    - lose_weight
-                    - build_muscle
-                    - maintain_fitness
-                  example: build_muscle
-            performance:
-              type: string
-              example: 'Body Composition coordinated'
-            status:
-              type: string
-              enum: [public, private]
-              example: public
-          required:
-            - id
-            - builderId
-            - workoutId
-            - workoutSession
-            - trackProgress
-            - performance
-            - status
-        - $ref: '#/components/schemas/Timestamp'
-    WorkoutsCreateDTO:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-          example: 201
-        message:
-          type: string
-          example: 'Workout plan created successfully!'
-        data:
-          $ref: '#/components/schemas/Workouts'
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: url
-              example: 'workouts/1'
-            profile:
-              type: string
-              format: url
-              example: 'workouts/1/profile'
-            progress:
-              type: string
-              format: url
-              example: 'workouts/1/progress'
-    WorkoutUpdateDTO:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-          example: 200
-        message:
-          type: string
-          example: Workout plan updated successfully!
-        data:
-          $ref: '#/components/schemas/Workouts'
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: url
-              example: 'workouts/1'
-    UserCreateDTO:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-          example: 201
-        message:
-          type: string
-          example: 'User created successfully'
-        data:
-          $ref: '#/components/schemas/User'
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: url
-              example: '/users/1'
-            edit:
-              type: string
-              format: url
-              example: '/users/1/edit'
-            delete:
-              type: string
-              format: url
-              example: '/users/1/delete'
-            view:
-              type: string
-              format: url
-              example: '/users/1/view'
-    ProfileCreateDTO:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-          example: 201
-        message:
-          type: string
-          example: 'User Profile created successfully'
-        data:
-          $ref: '#/components/schemas/Profile'
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: url
-              example: '/profiles/1'
-            edit:
-              type: string
-              format: url
-              example: '/profiles/1/edit'
-            delete:
-              type: string
-              format: url
-              example: '/profiles/1/delete'
-            view:
-              type: string
-              format: url
-              example: '/users/1/view'
-    ProgressCreateDTO:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-          example: 201
-        message:
-          type: string
-          example: 'Progress created successfully!'
-        data:
-          $ref: '#/components/schemas/Progress'
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: url
-              example: 'progress/1'
-    Timestamp:
-      type: object
-      properties:
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required: [createdAt, updatedAt]
-    BuilderDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-          example: 101
-        name:
-          type: string
-          example: Ali Akkas
-      required: [id, name]
-    WorkoutDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-          example: 101
-        name:
-          type: string
-          example: Push Jerk
-      required: [id, name]
-
-    Pagination:
-      type: object
-      properties:
-        page:
-          type: integer
-          format: int32
-          example: 2
-        limit:
-          type: integer
-          format: int32
-          example: 10
-        next:
-          type: integer
-          format: int32
-          example: 3
-        prev:
-          type: integer
-          format: int32
-          example: 1
-        totalPage:
-          type: integer
-          format: int32
-          example: 5
-        totalItems:
-          type: integer
-          format: int32
-          example: 10
-      required:
-        - page
-        - limit
-        - totalPage
-        - totalItems
-  responses:
-    '500':
-      description: 'Internal Server Error'
-      content:
-        'application/json':
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-                example: 500
-              error:
-                type: string
-                example: Internal Server Error!
-              message:
-                type: string
-                example: We are sorry for the inconvenience. Please try again later...
-    '400':
-      description: 'Bad Request'
-      content:
-        'application/json':
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-                example: 400
-              error:
-                type: string
-                example: Bad Request
-              data:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    field:
-                      type: string
-                      example: input field's value
-                    message:
-                      type: string
-                      example: Invalid field's value
-                    in:
-                      type: string
-                      enum: [query, body]
-                      example: body
-    '401':
-      description: 'Unauthorized'
-      content:
-        'application/json':
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-                example: 401
-              error:
-                type: string
-                example: Unauthorized!
-              message:
-                type: string
-                example: You don't have the right permissions!
-    '404':
-      description: 'Resource Not Found'
-      content:
-        'application/json':
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-                example: 404
-              error:
-                type: string
-                example: Page Not Found!
-              message:
-                type: string
-                example: Requested resource not found!
-  parameters:
-    pageParam:
-      in: query
-      name: page
-      description: current page number
-      required: true
-      schema:
-        type: integer
-        format: int32
-        example: 2
-    limitParam:
-      in: query
-      name: limit
-      description: the number of objects should be returned
-      required: true
-      schema:
-        type: integer
-        format: int32
-        example: 10
-    sortTypeParam:
-      in: query
-      name: sort_type
-      description: type of sort (asc or dsc)
-      schema:
-        type: string
-        enum: [asc, dsc]
-        example: dsc
-    sortByParam:
-      in: query
-      name: sort_by
-      description: sort key
-      schema:
-        type: string
-        example: updatedAt
-    searchParam:
-      in: query
-      name: search
-      description: the search term
-      schema:
-        type: string
-        example: workout name
-    idPathParam:
-      in: path
-      name: id
-      required: true
-      description: Object ID
-      schema:
-        type: string
-        example: 64d715dd8ef5b49a6953943d
