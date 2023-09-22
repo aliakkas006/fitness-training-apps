@@ -29,18 +29,11 @@ privateRouter
     workoutControllers.removeItem
   );
 
-// TODO: Progress route
-privateRouter.get(
-  '/api/v1/progress',
-  [authenticate, authorize(['user', 'admin'])],
-  progressControllers.findAllItems
-);
-
-privateRouter.post(
-  '/api/v1/progress',
-  [authenticate, authorize(['user', 'admin'])],
-  progressControllers.create
-);
+// Progress routes
+privateRouter
+  .route('/api/v1/progress')
+  .get([authenticate, authorize(['user', 'admin'])], profileControllers.findAllItems)
+  .post([authenticate, authorize(['user', 'admin'])], progressControllers.create);
 privateRouter
   .route('/api/v1/progress/:id')
   .patch(

@@ -8,7 +8,7 @@
     "test": "npx jest",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
-    "generate-doc": "swagger-cli bundle docs/v1/swagger.yaml --outfile docs/v1/_build/swagger.yaml --type yaml",
+    "generate-doc": "swagger-cli bundle docs/v1/_index.yaml --outfile docs/v1/_build/swagger.yaml --type yaml",
     "format": "eslint src/**/*.ts --fix",
     "postinstall": "yarn run build"
   },

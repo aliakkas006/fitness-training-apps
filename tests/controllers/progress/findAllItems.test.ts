@@ -39,12 +39,12 @@ describe('Find all progress controller', () => {
         workout: { id: 'workout123' },
       },
       {
-        id: 'progress1',
-        workoutSession: '1 hr',
+        id: 'progress2',
+        workoutSession: '2 hr',
         trackProgress: {
-          newWeight: '6 feet',
+          newWeight: '5 feet',
           newHeight: '60 kg',
-          newFitnessLevel: 'intermmediate',
+          newFitnessLevel: 'Beginner',
           achievedGoal: 'maintain_fitness',
         },
         performance: 'excellent',

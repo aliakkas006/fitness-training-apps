@@ -21,6 +21,7 @@ const ownership =
         break;
 
       default:
+        // Profile
         isOwner = await profileService.checkOwnership({ resourceId, userId });
         break;
     }

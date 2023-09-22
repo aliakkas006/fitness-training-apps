@@ -4,7 +4,7 @@ import login from '../../../src/api/v1/auth/controllers/login';
 import authService from '../../../src/lib/auth';
 import app from '../../../src/app';
 
-describe('Rogin controller', () => {
+describe('Login controller', () => {
   it('should log in a user and return an access token and refresh token with status 200', async () => {
     const requestBody = {
       email: 'test@gmail.com',

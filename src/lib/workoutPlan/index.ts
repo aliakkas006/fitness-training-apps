@@ -28,7 +28,7 @@ class WorkoutPlanService {
       .sort(sortStr)
       .skip((page - 1) * limit)
       .limit(limit);
-      
+
     return workouts.map((workout: any) => ({
       ...workout._doc,
       id: workout.id,

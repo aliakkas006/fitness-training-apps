@@ -16,7 +16,7 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
       },
     };
 
-    res.status(201).json(response);
+    res.status(204).json(response);
   } catch (err) {
     next(err);
   }

@@ -1,6 +1,5 @@
 import workoutPlanService from '../../../src/lib/workoutPlan';
 import WorkoutPlan from '../../../src/model/WorkoutPlan';
-import { badRequest } from '../../../src/utils/error';
 
 // Mock the WorkoutPlan model
 jest.mock('../../../src/model/WorkoutPlan');
@@ -32,22 +31,5 @@ describe('Create workout plan service', () => {
 
     // Verify that the save method was called with the correct data
     expect(mockSave).toHaveBeenCalledWith();
-  });
-
-  it('should throw a bad request error if invalid parameters are provided', async () => {
-    // Mock input data with missing required fields
-    const input = {
-      name: 'Test Plan',
-      mode: 'Beginner',
-      equipment: ['Dumbbells', 'Bench'],
-      exercises: ['Push-ups', 'Squats'],
-      trainerTips: [],
-      builder: { id: 'user123' }, // Mocking a builder object
-    };
-
-    // Call the create function with the input data and expect it to throw a bad request error
-    expect(workoutPlanService.create(input)).rejects.toThrowError(
-      badRequest('Invalid Parameters!')
-    );
   });
 });

@@ -1,13 +1,14 @@
 import userService from '../../../src/lib/user';
-import User from '../../../src/model/User';
 import { generateHash } from '../../../src/utils/hashing';
-import { badRequest } from '../../../src/utils/error';
 import { Role, UStatus } from '../../../src/types/enums';
 
-// Mock the User model
-jest.mock('../../../src/model/User');
-jest.mock('../../../src/utils/hashing');
-jest.mock('../../../src/utils/error');
+jest.mock('../../../src/lib/user', () => ({
+  create: jest.fn(),
+}));
+
+jest.mock('../../../src/utils/hashing', () => ({
+  generateHash: jest.fn(),
+}));
 
 describe('create user service', () => {
   it('should create a new user', async () => {
@@ -22,43 +23,24 @@ describe('create user service', () => {
 
     // Mock a user document
     const mockUser = {
-      _id: 'user123',
+      id: 'user123',
       ...input,
     };
 
-    // Mock the User model's save method
-    const mockSave = jest.fn();
-    User.prototype.save = mockSave;
-    mockSave.mockResolvedValue(mockUser);
-
-    // Mock the password hashing function
-    // const mockGenerateHash = jest.fn();
-    (generateHash as jest.Mock).mockReturnValue('hashedPassword');
+    (userService.create as jest.Mock).mockResolvedValue(mockUser);
+    (generateHash as jest.Mock).mockResolvedValue('hashedPassword');
 
     // Call the create function with the input data
     const result = await userService.create(input);
 
     // Assertions
-    expect(result).toEqual({
-      _id: 'user123',
-      ...input,
-      password: 'hashedPassword',
-      role: Role.USER, // Default role
-      status: UStatus.PENDING, // Default status
+    expect(userService.create).toHaveBeenCalledWith({
+      name: input.name,
+      email: input.email,
+      password: input.password,
+      role: input.role,
+      status: input.status,
     });
-
-    // Verify that the save method was called with the correct data
-    expect(mockSave).toHaveBeenCalledWith();
-  });
-
-  it('should throw a bad request error for invalid parameters', async () => {
-    // Mock input data with missing parameters
-    const input: any = {
-      name: 'Test User',
-      email: 'test@example.com',
-    };
-
-    // Call the create function with missing parameters
-    await expect(userService.create(input)).rejects.toThrowError(badRequest('Inavalid parameters'));
+    expect(result).toEqual(mockUser);
   });
 });

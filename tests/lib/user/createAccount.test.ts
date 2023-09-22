@@ -1,11 +1,17 @@
 import userService from '../../../src/lib/user';
 import User from '../../../src/model/User';
+import { badRequest } from '../../../src/utils/error';
 
-// Mock the User model
-jest.mock('../../../src/model/User');
+jest.mock('../../../src/model/User', () => ({
+  create: jest.fn(),
+}));
 
-describe('createAccount service', () => {
-  it('should create a new user account and return the created user', async () => {
+describe('Create account service', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create a new account', async () => {
     // Mock input data for the createAccount function
     const input = {
       name: 'Test User',
@@ -15,45 +21,36 @@ describe('createAccount service', () => {
 
     // Mock a user document
     const mockUser = {
-      _id: 'user123',
+      id: 'user123',
       ...input,
     };
 
-    // Mock the User model's save method
-    const mockSave = jest.fn();
-    User.prototype.save = mockSave;
-    mockSave.mockResolvedValue(mockUser);
+    (User.create as jest.Mock).mockResolvedValue(mockUser);
 
     // Call the createAccount function with the input data
     const result = await userService.createAccount(input);
 
     // Assertions
-    expect(result).toEqual({
-      id: 'user123',
-      ...input,
+    expect(User.create).toHaveBeenCalledWith({
+      name: input.name,
+      email: input.email,
+      password: input.password,
     });
-
-    // Verify that the save method was called with the correct data
-    expect(mockSave).toHaveBeenCalledWith();
+    expect(result).toEqual({ ...mockUser, id: mockUser.id });
   });
 
-  it('should throw a badRequest error if invalid parameters are provided', async () => {
+  it('should throw an error for missing parameters', async () => {
     // Mock input data with missing parameters
-    const input = {
+    const input: any = {
       name: 'Test User',
-      email: '',
-      password: '',
     };
 
-    // Call the createAccount function with invalid input
-    try {
-      await userService.createAccount(input);
-      // If the function does not throw an error, fail the test
-      fail('Expected createAccount to throw an error');
-    } catch (error: any) {
-      // Verify that the error is a badRequest error
-      expect(error.statusCode).toBe(400);
-      expect(error.message).toBe('Invalid Parameters!');
-    }
+    // Expect the createAccount function to throw an error
+    await expect(userService.createAccount(input)).rejects.toThrowError(
+      badRequest('Invalid Parameters!')
+    );
+
+    // Ensure that User.create is not called
+    expect(User.create).not.toHaveBeenCalled();
   });
 });

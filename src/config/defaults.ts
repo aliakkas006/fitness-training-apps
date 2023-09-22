@@ -8,7 +8,7 @@ const config: Config = {
   sortBy: 'updatedAt',
   search: '',
   algorithm: 'HS256',
-  expiresIn: '1h',
+  expiresIn: '3h',
 };
 
 export default Object.freeze(config);

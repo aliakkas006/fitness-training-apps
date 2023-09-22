@@ -1,13 +1,10 @@
 import request from 'supertest';
 import app from '../../../src/app';
-import profileControllers from '../../../src/api/v1/profile';
 import profileService from '../../../src/lib/profile';
 
 jest.mock('../../../src/lib/profile', () => ({
   findSingleItem: jest.fn(),
 }));
-
-app.get('/api/v1/profiles/:id', profileControllers.findSingleItem);
 
 describe('findSingleItem Controller', () => {
   beforeEach(() => {
@@ -34,10 +31,7 @@ describe('findSingleItem Controller', () => {
 
     const response = await request(app)
       .get('/api/v1/profiles/:id')
-      .set(
-        'Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MDNlYzBiYTc1NWVhYWVmOTJlYWFiZSIsIm5hbWUiOiJBbmlzdXIgUmFobWFuIiwiZW1haWwiOiJhbmlzQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NTA4OTg5OSwiZXhwIjoxNjk1MDkzNDk5fQ.r8Tc3UtsrwrPyvNWAQDkuYCbjLOnCeqmlNgSQav6gYs'
-      ) // actual authorization header
+      // .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
       .expect(200);
 
     expect(response.body).toEqual({

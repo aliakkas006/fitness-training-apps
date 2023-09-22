@@ -52,9 +52,17 @@ describe('Find all profiles Controller', () => {
     (query.getPagination as jest.Mock).mockReturnValue({ totalItems: 2, limit: 10, page: 1 });
     (query.getHATEOASForAllItems as jest.Mock).mockReturnValue({ next: null, prev: null });
 
+    const requestQuery = {
+      page: '1',
+      limit: '10',
+      sort_type: 'dsc',
+      sort_by: 'updatedAt',
+    };
+
     const response = await request(app)
       .get('/api/v1/profiles')
-      .set('Authorization', 'Bearer ACCESS_TOKEN') // actual authorization header
+      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
+      .query(requestQuery)
       .expect(200);
 
     // Assertions

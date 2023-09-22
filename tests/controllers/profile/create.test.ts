@@ -39,7 +39,7 @@ describe('Create Profile Controller', () => {
     // Make a POST request to the controller's route with the request body
     const response = await request(app)
       .post('/api/v1/profiles')
-      .set('Authorization', 'Bearer ACCESS_TOKEN')  // actual authorization header 
+      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
       .send(requestBody)
       .expect(201);
 
