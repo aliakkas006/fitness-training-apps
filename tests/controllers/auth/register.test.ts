@@ -1,11 +1,20 @@
 import request from 'supertest';
 import { Request, Response, NextFunction } from 'express';
+import app from '../../../src/app';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
 import register from '../../../src/api/v1/auth/controllers/register';
 import authService from '../../../src/lib/auth';
 import tokenService from '../../../src/lib/token';
-import app from '../../../src/app';
 
 describe('Register controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should register a new user and return an access token with status 201', async () => {
     const requestBody = {
       name: 'Test User',

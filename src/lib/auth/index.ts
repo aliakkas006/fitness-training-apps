@@ -2,8 +2,6 @@ import userService from '../user';
 import { badRequest } from '../../utils/error';
 import { generateHash, hashMatched } from '../../utils/hashing';
 import tokenService from '../../lib/token';
-// import tokenService from '@lib/token';
-
 import { LoginParam, RegisterParam, RotateRefreshTokenParam } from '../../types/interfaces';
 import User from '../../model/User';
 

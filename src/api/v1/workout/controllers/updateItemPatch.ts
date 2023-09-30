@@ -9,7 +9,7 @@ const updateItemPatch = async (req: Request, res: Response, next: NextFunction) 
 
     const response = {
       code: 200,
-      messgage: 'Workout plan updated successfully',
+      message: 'Workout plan updated successfully',
       data: workoutPlan,
       links: {
         self: req.url,

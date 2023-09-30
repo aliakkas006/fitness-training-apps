@@ -1,8 +1,10 @@
 import request from 'supertest';
 import express from 'express';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
 import findAllItemsController from '../../../src/api/v1/user/controllers/findAllItems';
 import userService from '../../../src/lib/user';
 import query from '../../../src/utils/query';
+import defaults from '../../../src/config/defaults';
 
 // Mock the workoutPlanService and query modules
 jest.mock('../../../src/lib/user', () => ({
@@ -22,8 +24,15 @@ app.use(express.json());
 app.get('/api/v1/users', findAllItemsController);
 
 describe('Find All Users Controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should return a list of users', async () => {
-    // Mock the userService.findAllItems function to return users
     const mockUsers = [
       {
         _id: '125335Id',
@@ -50,7 +59,17 @@ describe('Find All Users Controller', () => {
     (query.getPagination as jest.Mock).mockReturnValue({ totalItems: 2, limit: 10, page: 1 });
     (query.getHATEOASForAllItems as jest.Mock).mockReturnValue({ next: null, prev: null });
 
-    const response = await request(app).get('/api/v1/users').expect(200);
+    const response = await request(app)
+      .get('/api/v1/users')
+      .query({
+        page: defaults.page,
+        limit: defaults.limit,
+        sort_type: defaults.sortType,
+        sort_by: defaults.sortBy,
+        name: '',
+        email: '',
+      })
+      .expect(200);
 
     // Assertions
     expect(response.body).toHaveProperty('data', mockUsers);

@@ -20,7 +20,7 @@ const updateItem = async (req: Request, res: Response, next: NextFunction) => {
 
     const response = {
       code,
-      messgage: code === 200 ? 'Workout plan updated successfully' : 'Workout plan creatd successfully',
+      message: code === 200 ? 'Workout plan updated successfully' : 'Workout plan created successfully',
       data: workoutPlan,
       links: {
         self: req.url,

@@ -1,14 +1,25 @@
+import express from 'express';
 import request from 'supertest';
-import app from '../../../src/app';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
+import findSingleItem from '../../../src/api/v1/profile/controllers/findSingleItem';
 import profileService from '../../../src/lib/profile';
 
 jest.mock('../../../src/lib/profile', () => ({
   findSingleItem: jest.fn(),
 }));
 
-describe('findSingleItem Controller', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+// Create an Express app and use the controller
+const app = express();
+app.use(express.json());
+app.get('/api/v1/profiles/:id', findSingleItem);
+
+describe('Find Single Item Controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
   });
 
   it('should return a profile when it exists', async () => {
@@ -29,10 +40,7 @@ describe('findSingleItem Controller', () => {
     // Mock the profileService to return the profile
     (profileService.findSingleItem as jest.Mock).mockResolvedValue(mockProfile);
 
-    const response = await request(app)
-      .get('/api/v1/profiles/:id')
-      // .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
-      .expect(200);
+    const response = await request(app).get('/api/v1/profiles/:id').expect(200);
 
     expect(response.body).toEqual({
       code: 200,

@@ -20,4 +20,4 @@ const applyMiddleware = (app: Application) => {
 
 export default applyMiddleware;
 
-// const swaggerDoc = YAML.load('./docs/_build/swagger.yaml')
+// const swaggerDoc = YAML.load('./docs/v1/_build/swagger.yaml')

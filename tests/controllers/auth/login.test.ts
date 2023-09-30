@@ -1,10 +1,19 @@
 import request from 'supertest';
 import { Request, Response, NextFunction } from 'express';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
 import login from '../../../src/api/v1/auth/controllers/login';
 import authService from '../../../src/lib/auth';
 import app from '../../../src/app';
 
 describe('Login controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should log in a user and return an access token and refresh token with status 200', async () => {
     const requestBody = {
       email: 'test@gmail.com',

@@ -1,5 +1,7 @@
 import request from 'supertest';
-import app from '../../../src/app';
+import express from 'express';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
+import findAllItems from '../../../src/api/v1/profile/controllers/findAllItems';
 import profileService from '../../../src/lib/profile';
 import query from '../../../src/utils/query';
 
@@ -15,7 +17,20 @@ jest.mock('../../../src/utils/query', () => ({
   getHATEOASForAllItems: jest.fn(),
 }));
 
+// Create an Express app and use the controller
+const app = express();
+app.use(express.json());
+app.get('/api/v1/profiles', findAllItems);
+
 describe('Find all profiles Controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should return a list of all profiles with status 200', async () => {
     const mockProfiles = [
       {
@@ -59,11 +74,7 @@ describe('Find all profiles Controller', () => {
       sort_by: 'updatedAt',
     };
 
-    const response = await request(app)
-      .get('/api/v1/profiles')
-      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
-      .query(requestQuery)
-      .expect(200);
+    const response = await request(app).get('/api/v1/profiles').query(requestQuery).expect(200);
 
     // Assertions
     expect(response.body).toHaveProperty('data', mockProfiles);

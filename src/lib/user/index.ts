@@ -39,8 +39,10 @@ class UserService {
   }) {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
     const filter = {
-      name: { $regex: name, $options: 'i' },
-      email: { $regex: email, $options: 'i' },
+      $and: [
+        { name: { $regex: name, $options: 'i' } },
+        { email: { $regex: email, $options: 'i' } },
+      ],
     };
 
     const users: any = await User.find(filter)
@@ -57,15 +59,23 @@ class UserService {
   // count users based on provided filters
   public async count({ name = '', email = '' }): Promise<number> {
     const filter = {
-      name: { $regex: name, $options: 'i' },
-      email: { $regex: email, $options: 'i' },
+      $and: [
+        { name: { $regex: name, $options: 'i' } },
+        { email: { $regex: email, $options: 'i' } },
+      ],
     };
 
     return User.count(filter);
   }
 
   // create a new user
-  public async create({ name, email, password, role = Role.USER, status = UStatus.PENDING }: IUser) {
+  public async create({
+    name,
+    email,
+    password,
+    role = Role.USER,
+    status = UStatus.PENDING,
+  }: IUser) {
     if (!name || !email || !password) throw badRequest('Invalid parameters!');
 
     password = await generateHash(password);

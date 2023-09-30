@@ -1,5 +1,6 @@
 import request from 'supertest';
 import express, { Request, Response, NextFunction } from 'express';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
 import findAllItems from '../../../src/api/v1/progress/controllers/findAllItems';
 import progressService from '../../../src/lib/progress';
 import query from '../../../src/utils/query';
@@ -22,6 +23,14 @@ app.use(express.json());
 app.get('/api/v1/progress', findAllItems);
 
 describe('Find all progress controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should return a list of progress data with status 200', async () => {
     const mockProgresses = [
       {

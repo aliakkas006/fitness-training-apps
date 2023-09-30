@@ -1,8 +1,10 @@
 import request from 'supertest';
 import express from 'express';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
 import findAllItems from '../../../src/api/v1/workout/controllers/findAllItems';
 import workoutPlanService from '../../../src/lib/workoutPlan';
 import query from '../../../src/utils/query';
+import defaults from '../../../src/config/defaults';
 
 // Mock the workoutPlanService and query modules
 jest.mock('../../../src/lib/workoutPlan', () => ({
@@ -22,8 +24,15 @@ app.use(express.json());
 app.get('/api/v1/workouts', findAllItems);
 
 describe('Find All Workout Plans Controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should return a list of workout plans', async () => {
-    // Mock the workoutPlanService.findAllItems function to return workout plans
     const mockWorkoutPlans = [
       {
         _id: 'workout123',
@@ -50,7 +59,16 @@ describe('Find All Workout Plans Controller', () => {
     (query.getPagination as jest.Mock).mockReturnValue({ totalItems: 2, limit: 10, page: 1 });
     (query.getHATEOASForAllItems as jest.Mock).mockReturnValue({ next: null, prev: null });
 
-    const response = await request(app).get('/api/v1/workouts').expect(200);
+    const response = await request(app)
+      .get('/api/v1/workouts')
+      .query({
+        page: defaults.page,
+        limit: defaults.limit,
+        sort_type: defaults.sortType,
+        sort_by: defaults.sortBy,
+        search: defaults.search,
+      })
+      .expect(200);
 
     // Assertions
     expect(response.body).toHaveProperty('data', mockWorkoutPlans);

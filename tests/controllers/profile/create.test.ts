@@ -1,10 +1,19 @@
 import request from 'supertest';
 import app from '../../../src/app';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
 import profileService from '../../../src/lib/profile';
 
 jest.mock('../../../src/lib/profile');
 
 describe('Create Profile Controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should create a new profile and return it with status 201', async () => {
     const mockProfile = {
       id: 'profile123',
@@ -36,7 +45,7 @@ describe('Create Profile Controller', () => {
       user: 'user123',
     };
 
-    // Make a POST request to the controller's route with the request body
+    // Make a POST request to the create controller's route with the request body
     const response = await request(app)
       .post('/api/v1/profiles')
       .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)

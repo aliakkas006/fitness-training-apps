@@ -45,7 +45,6 @@ describe('Login Service', () => {
     };
 
     const result = await authService.login(validLogin);
-    console.log('result', result);
 
     const aTokenPayload = {
       id: mockUser.id,

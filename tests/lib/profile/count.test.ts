@@ -26,7 +26,7 @@ describe('count service', () => {
 
     // Verify that the count method was called with the correct filter
     expect(Profile.count).toHaveBeenCalledWith({
-      $or: [
+      $and: [
         { firstName: { $regex: input.firstName, $options: 'i' } },
         { lastName: { $regex: input.lastName, $options: 'i' } },
         { email: { $regex: input.email, $options: 'i' } },

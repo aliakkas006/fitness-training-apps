@@ -1,8 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
 import logout from '../../../src/api/v1/auth/controllers/logout';
 import authService from '../../../src/lib/auth';
 
 describe('Logout controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should log out a user with status 204', async () => {
     const requestBody = {
       token: 'validAccessToken',

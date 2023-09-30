@@ -9,6 +9,8 @@ const findSingleItem = async (req: Request, res: Response, next: NextFunction) =
     const workoutPlan = await workoutPlanService.findSingleItem({ id, expand });
 
     const response = {
+      code: 200,
+      message: 'Successfully fetch a workout plan',
       data: workoutPlan,
       links: {
         self: req.url,

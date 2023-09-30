@@ -25,7 +25,6 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction): Pr
       selection: ['id', 'name', 'mode', 'equipment', 'exercises', 'builder'], //my selected properties
       path: '/workouts',
     });
-    console.log('data', data);
     
 
     // pagination

@@ -26,6 +26,12 @@ const workoutPlanSchema = new Schema<Workout>(
       ref: 'User',
       required: true,
     },
+    progresses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Progress'
+      }
+    ]
   },
   { timestamps: true, id: true }
 );

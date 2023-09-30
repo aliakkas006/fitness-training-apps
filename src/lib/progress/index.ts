@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import defaults from '../../config/defaults';
 import Progress from '../../model/Progress';
 import WorkoutPlan from '../../model/WorkoutPlan';
@@ -76,7 +77,18 @@ class ProgressService {
       workout: workoutId,
     });
 
-    await progress.save();
+    const newProgress = await progress.save();
+
+    await WorkoutPlan.updateOne(
+      {
+        _id: workoutId,
+      },
+      {
+        $push: {
+          progresses: newProgress._id,
+        },
+      }
+    );
 
     return {
       ...progress._doc,

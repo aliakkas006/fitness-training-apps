@@ -1,5 +1,7 @@
+import express from 'express';
 import request from 'supertest';
-import app from '../../../src/app';
+import { connectTestDB, disconnectTestDB } from '../../setup-db';
+import createController from '../../../src/api/v1/workout/controllers/create';
 import workoutPlanService from '../../../src/lib/workoutPlan';
 
 // Mock the workoutPlanService
@@ -7,11 +9,24 @@ jest.mock('../../../src/lib/workoutPlan', () => ({
   create: jest.fn(),
 }));
 
-describe('Workout Plan Creation Controller', () => {
+// Create an Express app and use the controller
+const app = express();
+app.use(express.json());
+app.post('/api/v1/workouts', createController);
+
+describe('Create Workout Plan Controller', () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
   it('should create a new workout plan', async () => {
     // Mock the workoutPlanService.create function to return a workout plan object
     const mockWorkoutPlan = {
-      _id: 'someWorkoutPlanId',
+      id: 'someWorkoutPlanId',
       name: 'Sample Workout Plan',
       mode: 'Beginner',
       equipment: ['Dumbbells', 'Bench'],

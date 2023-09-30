@@ -21,8 +21,9 @@ class ProfileService {
     email = '',
   }) {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
+    
     const filter = {
-      $or: [
+      $and: [
         { firstName: { $regex: firstName, $options: 'i' } },
         { lastName: { $regex: lastName, $options: 'i' } },
         { email: { $regex: email, $options: 'i' } },
@@ -42,9 +43,9 @@ class ProfileService {
   }
 
   // Count profiles based on provided filters
-  public async count({ firstName = '', lastName = '', email='' }): Promise<number> {
+  public async count({ firstName = '', lastName = '', email = '' }): Promise<number> {
     const filter = {
-      $or: [
+      $and: [
         { firstName: { $regex: firstName, $options: 'i' } },
         { lastName: { $regex: lastName, $options: 'i' } },
         { email: { $regex: email, $options: 'i' } },

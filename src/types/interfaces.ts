@@ -66,7 +66,7 @@ export interface RotateRefreshTokenParam {
 }
 
 export interface LogoutParam extends RotateRefreshTokenParam {
-  user: any
+  user: any;
 }
 
 export interface CreateAccountParam {
@@ -139,6 +139,7 @@ export interface IUser extends UserUpdateProps {
 // Workout model interface
 export interface Workout extends WorkoutUpdateProps {
   builder: Types.ObjectId;
+  progresses: Array<Types.ObjectId>;
 }
 
 // Query utils interfaces
