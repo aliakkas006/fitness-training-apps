@@ -15,18 +15,18 @@ services:
       - 'my_mongodb_data:/data/db'
 
   # Mongo Express
-#   mongo-express:
-#     image: mongo-express:latest
-#     container_name: mongo-express
-#     restart: always
-#     environment:
-#       ME_CONFIG_MONGODB_ADMINUSERNAME: user
-#       ME_CONFIG_MONGODB_ADMINPASSWORD: password
-#       ME_CONFIG_MONGODB_SERVER: mongodb
-#     ports:
-#       - '8081:8081'
-#     depends_on:
-# - mongodb
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    ports:
+      - '8081:8081'
+    depends_on:
+      - mongodb
 volumes:
   my_mongodb_data:
     driver: local

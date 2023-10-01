@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import defaults from '../../config/defaults';
 import Progress from '../../model/Progress';
 import WorkoutPlan from '../../model/WorkoutPlan';

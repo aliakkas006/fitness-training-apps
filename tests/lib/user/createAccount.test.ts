@@ -21,8 +21,10 @@ describe('Create account service', () => {
 
     // Mock a user document
     const mockUser = {
+      _doc: {
+        ...input,
+      },
       id: 'user123',
-      ...input,
     };
 
     (User.create as jest.Mock).mockResolvedValue(mockUser);

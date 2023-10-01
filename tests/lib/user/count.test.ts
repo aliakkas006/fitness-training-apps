@@ -23,10 +23,14 @@ describe('count service', () => {
     // Assertions
     expect(result).toBe(5);
 
+    const filter = {
+      $and: [
+        { name: { $regex: 'Test', $options: 'i' } },
+        { email: { $regex: 'test@example.com', $options: 'i' } },
+      ],
+    };
+
     // Verify that the count method was called with the correct filters
-    expect(User.count).toHaveBeenCalledWith({
-      name: { $regex: 'Test', $options: 'i' },
-      email: { $regex: 'test@example.com', $options: 'i' },
-    });
+    expect(User.count).toHaveBeenCalledWith(filter);
   });
 });

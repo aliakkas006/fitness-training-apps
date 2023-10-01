@@ -146,7 +146,7 @@ class ProfileService {
     };
   }
 
-  // Remove the profile by id and delete associated user
+  // Remove the profile by id and delete the associated user.
   public async removeItem(id: string): Promise<IProfile | null> {
     const profile = await Profile.findById(id);
     if (!profile) throw notFound();
