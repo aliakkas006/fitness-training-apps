@@ -1,12 +1,12 @@
 import workoutPlanService from '../../../src/lib/workoutPlan';
-import WorkoutPlan from '../../../src/model/WorkoutPlan';
+import { WStatus } from '../../../src/types/enums';
 
-// Mock the WorkoutPlan model
-jest.mock('../../../src/model/WorkoutPlan');
+jest.mock('../../../src/lib/workoutPlan', () => ({
+  create: jest.fn(),
+}));
 
-describe('Create workout plan service', () => {
-  it('should create a new workout plan and return the created plan', async () => {
-    // Mock input data for the create function
+describe('create workout plan service', () => {
+  it('should create workout plan', async () => {
     const input = {
       name: 'Test Plan',
       mode: 'Beginner',
@@ -16,20 +16,22 @@ describe('Create workout plan service', () => {
       builder: { id: 'user123' },
     };
 
-    // Create a mock instance of the WorkoutPlan model
-    const mockSave = jest.fn();
-    const mockWorkoutPlan = new WorkoutPlan(input);
-    mockWorkoutPlan.save = mockSave;
+    const mockWorkoutPlan = {
+      id: 'test',
+      name: 'Test Plan',
+      mode: 'Beginner',
+      equipment: ['Dumbbells', 'Bench'],
+      exercises: ['Push-ups', 'Squats'],
+      trainerTips: ['Start slow and focus on form'],
+      photo: 'test.jpg',
+      status: WStatus.PROGRESS,
+      builder: { id: 'user123' },
+    };
 
-    // Call the create function with the input data
-    const result = await workoutPlanService.create(input);
-    // Assertions
-    expect(result).toEqual({
-      id: expect.any(String),
-      ...input,
-    });
+    (workoutPlanService.create as jest.Mock).mockResolvedValue(mockWorkoutPlan);
 
-    // Verify that the save method was called with the correct data
-    expect(mockSave).toHaveBeenCalledWith();
+    const workoutPlan = await workoutPlanService.create(input);
+
+    expect(workoutPlan).toEqual(mockWorkoutPlan);
   });
 });
