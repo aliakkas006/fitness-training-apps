@@ -1,5 +1,36 @@
-version: '3.8'
+version: '3.9'
+
+networks:
+  elk-stack:
+    name: elk-stack
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.1.1.0/24
+
 services:
+  # Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fitness-training-apps
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongodb
+      - mongo-express
+    environment:
+      - DATABASE_URI=mongodb://mongo:27017/fitness-training-apps
+    networks:
+      - elk-stack
+    command: 'yarn run dev'
+    volumes:
+      - './:/usr/src/app'
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    restart: always
+
   # MongoDB
   mongodb:
     image: mongo:latest
@@ -27,6 +58,35 @@ services:
       - '8081:8081'
     depends_on:
       - mongodb
+
+  # Elastic Search
+  elasticsearch:
+    image: elasticsearch:7.9.2
+    container_name: elasticsearch
+    restart: always
+    networks:
+      - elk-stack
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    environment:
+      - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m'
+      - 'discovery.type=single-node'
+
+  # Kibana
+  kibana:
+    image: kibana:7.9.2
+    container_name: kibana
+    restart: always
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk-stack
+    ports:
+      - '5601:5601'
+    environment:
+      - 'ELASTICSEARCH_URL=http://elasticsearch:9200'
+
 volumes:
   my_mongodb_data:
     driver: local

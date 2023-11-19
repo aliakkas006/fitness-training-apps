@@ -29,6 +29,6 @@ adminRouter.get('/api/v1/profiles', [authenticate, authorize()], profileControll
 // Token routes
 adminRouter
   .post('/api/v1/tokens/refresh', [authenticate, authorize()], tokenControllers.refresh)
-  .post('/api/v1/tokens/validate', [authenticate, authorize()], tokenControllers.validate)
+  .post('/api/v1/tokens/validate', [authenticate, authorize()], tokenControllers.validate);
 
 export default adminRouter;
