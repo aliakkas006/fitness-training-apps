@@ -1573,7 +1573,7 @@ paths:
                               type: string
                               format: email
                               example: ali@gmail.com
-                            profilePic:
+                            avatar:
                               type: string
                               format: url
                               example: 'https://s3.aws.com/my-fitness/img.jpg'
@@ -1662,7 +1662,7 @@ paths:
                   type: string
                   format: email
                   example: akkas@gmail.com
-                profilePic:
+                avatar:
                   type: string
                   format: url
                   example: 'https://s3.aws.com/my-fitness/img.jpg'
@@ -1808,7 +1808,7 @@ paths:
                   type: string
                   format: email
                   example: example@user.com
-                profilePic:
+                avatar:
                   type: string
                   format: url
                   example: 'https://s3.aws.com/my-fitness/img.jpg'
@@ -1875,7 +1875,7 @@ paths:
                             type: string
                             format: email
                             example: akkas@gmail.com
-                          profilePic:
+                          avatar:
                             type: string
                             format: url
                             example: 'https://s3.aws.com/my-fitness/img.jpg'

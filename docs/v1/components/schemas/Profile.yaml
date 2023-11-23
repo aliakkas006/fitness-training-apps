@@ -19,7 +19,7 @@ allOf:
         type: string
         format: email
         example: akkas@gmail.com
-      profilePic:
+      avatar:
         type: string
         format: url
         example: 'https://s3.aws.com/my-fitness/img.jpg'

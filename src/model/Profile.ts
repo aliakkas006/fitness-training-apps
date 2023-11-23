@@ -17,7 +17,7 @@ const profileSchema = new Schema<IProfile>(
       required: [true, 'Email must be required*'],
       unique: true,
     },
-    profilePic: {
+    avatar: {
       type: String,
       validate: {
         validator: (path: string) => /\.(jpg|jpeg|png)$/i.test(path),

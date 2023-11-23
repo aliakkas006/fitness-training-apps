@@ -172,7 +172,7 @@ paths:
           $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
-  
+
   '/workouts':
     get:
       tags: [Workout plan]
@@ -1140,7 +1140,7 @@ paths:
                               type: string
                               format: email
                               example: ali@gmail.com
-                            profilePic:
+                            avatar:
                               type: string
                               format: url
                               example: 'https://s3.aws.com/my-fitness/img.jpg'
@@ -1228,7 +1228,7 @@ paths:
                   type: string
                   format: email
                   example: akkas@gmail.com
-                profilePic:
+                avatar:
                   type: string
                   format: url
                   example: 'https://s3.aws.com/my-fitness/img.jpg'
@@ -1332,7 +1332,7 @@ paths:
                   type: string
                   format: email
                   example: example@user.com
-                profilePic:
+                avatar:
                   type: string
                   format: url
                   example: 'https://s3.aws.com/my-fitness/img.jpg'
@@ -1612,7 +1612,7 @@ components:
               type: string
               format: email
               example: akkas@gmail.com
-            profilePic:
+            avatar:
               type: string
               format: url
               example: 'https://s3.aws.com/my-fitness/img.jpg'

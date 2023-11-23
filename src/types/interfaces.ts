@@ -32,7 +32,7 @@ export interface ProfileUpdateProps {
   firstName: string;
   lastName: string;
   email: string;
-  profilePic: string;
+  avatar: string;
   age: number;
   height: number;
   weight: number;
@@ -178,3 +178,4 @@ export interface TransformedItemsParam {
   selection?: Array<string>;
   path?: string;
 }
+

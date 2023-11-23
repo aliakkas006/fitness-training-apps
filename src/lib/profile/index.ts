@@ -21,7 +21,7 @@ class ProfileService {
     email = '',
   }) {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
-    
+
     const filter = {
       $and: [
         { firstName: { $regex: firstName, $options: 'i' } },
@@ -60,7 +60,7 @@ class ProfileService {
     firstName,
     lastName,
     email,
-    profilePic = '',
+    avatar = '',
     age,
     height,
     weight,
@@ -78,7 +78,7 @@ class ProfileService {
       firstName,
       lastName,
       email,
-      profilePic,
+      avatar,
       age,
       height,
       weight,
@@ -112,7 +112,7 @@ class ProfileService {
       firstName,
       lastName,
       email,
-      profilePic,
+      avatar,
       age,
       height,
       weight,
@@ -127,7 +127,7 @@ class ProfileService {
       firstName,
       lastName,
       email,
-      profilePic,
+      avatar,
       age,
       height,
       weight,

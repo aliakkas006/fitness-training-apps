@@ -2,16 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import profileService from '../../../../lib/profile';
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
-  const { firstName, lastName, email, profilePic, age, height, weight, fitnessLevel, goal } =
-    req.body;
+  const { firstName, lastName, email, avatar, age, height, weight, fitnessLevel, goal } = req.body;
 
   try {
-    
     const profile = await profileService.create({
       firstName,
       lastName,
       email,
-      profilePic,
+      avatar,
       age,
       height,
       weight,

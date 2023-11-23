@@ -49,7 +49,7 @@ patch:
               type: string
               format: email
               example: example@user.com
-            profilePic:
+            avatar:
               type: string
               format: url
               example: 'https://s3.aws.com/my-fitness/img.jpg'

@@ -28,7 +28,7 @@ describe('Find Single Item Controller', () => {
       firstName: 'Anisur',
       lastName: 'Rahman',
       email: 'anis@gmail.com',
-      profilePic: 'profile1.jpg',
+      avatar: 'profile1.jpg',
       age: 23,
       height: 6,
       weight: 60,

@@ -32,7 +32,7 @@ const findAllItems = async (req: Request, res: Response, next: NextFunction) => 
         'firstName',
         'lastName',
         'email',
-        'profilePic',
+        'avatar',
         'age',
         'height',
         'weight',
