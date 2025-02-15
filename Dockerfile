@@ -1,26 +1,17 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16.16.0
+FROM node:18-alpine
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
-COPY package*.json ./
+COPY package.json  yarn.lock ./
 
-# Copy the rest of your application code to the container
+RUN yarn install --frozen-lockfile
+
 COPY . .
 
-# Install application dependencies
-RUN yarn
+RUN npx prisma generate
 
-# Rebuild bcrypt package from source
-RUN yarn rebuild bcrypt --build-from-source
+ENV PORT 8080
 
-# Build your TypeScript code
-RUN yarn run build
+EXPOSE 8080
 
-# Expose the port your application will listen on
-EXPOSE 4000
-
-# Start your application
-CMD ["node", "dist/index.js"]
+CMD ["yarn", "dev"]

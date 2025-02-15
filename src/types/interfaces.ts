@@ -179,3 +179,11 @@ export interface TransformedItemsParam {
   path?: string;
 }
 
+export interface TokenPayload {
+  id: string; 
+  user?: string; 
+  name?: string; 
+  email?: string; 
+  role?: string; 
+  [key: string]: any; 
+}

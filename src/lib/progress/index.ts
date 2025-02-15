@@ -6,53 +6,66 @@ import { CheckOwnershipParam, IProgress, ProgressUpdateProps } from '../../types
 import { badRequest, notFound } from '../../utils/error';
 
 class ProgressService {
-  // Find all progress data
+  /**
+   * Finds all progress data with optional filtering, sorting, and pagination.
+   * @param {Object} params - Query parameters including page, limit, sortType, sortBy, and user.
+   * @returns {Promise<IProgress[]>} - A list of filtered and paginated progress data.
+   * @throws {Error} - Throws an error if no progress data is found.
+   */
   public async findAllItems({
     page = defaults.page,
     limit = defaults.limit,
     sortType = defaults.sortType,
     sortBy = defaults.sortBy,
     user,
-  }: any) {
+  }: {
+    page?: number;
+    limit?: number;
+    sortType?: string;
+    sortBy?: string;
+    user: { id: string; role: string };
+  }): Promise<IProgress[]> {
     const sortStr = `${sortType === 'dsc' ? '-' : ''}${sortBy}`;
-    let progressIds;
 
-    // If the user is admin, fetch all progress Ids. If the user is not an admin, fetch progress IDs for the specific builder (user)
-    if (user.role === 'admin') {
-      progressIds = await Progress.find({}).distinct('_id');
-    } else {
-      progressIds = await Progress.find({ builder: user.id }).distinct('_id');
-    }
+    // Fetch progress IDs based on user role
+    const progressIds = await Progress.find(
+      user.role === 'admin' ? {} : { builder: user.id }
+    ).distinct('_id');
 
-    if (progressIds.length > 0) {
-      const progresses = await Progress.find({ _id: { $in: progressIds } })
-        .populate([
-          { path: 'builder', select: 'name' },
-          { path: 'workout', select: 'name' },
-        ])
-        .sort(sortStr)
-        .skip((page - 1) * limit)
-        .limit(limit);
-
-      return progresses.map((progress: any) => ({
-        ...progress._doc,
-        id: progress.id,
-      }));
-    } else {
+    if (progressIds.length === 0) {
       throw notFound();
     }
+
+    const progresses = await Progress.find({ _id: { $in: progressIds } })
+      .populate([
+        { path: 'builder', select: 'name' },
+        { path: 'workout', select: 'name' },
+      ])
+      .sort(sortStr)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    return progresses.map((progress) => ({
+      ...progress.toObject(),
+      id: progress.id,
+    }));
   }
 
-  // total progress count based on user's role
-  public async count({ user }: any) {
-    if (user.role === 'admin') {
-      return Progress.count({});
-    } else {
-      return Progress.count({ builder: user.id });
-    }
+  /**
+   * Counts the number of progress entries based on the user's role.
+   * @param {Object} params - Parameters including user.
+   * @returns {Promise<number>} - The count of progress entries.
+   */
+  public async count({ user }: { user: { id: string; role: string } }): Promise<number> {
+    return Progress.countDocuments(user.role === 'admin' ? {} : { builder: user.id });
   }
 
-  // create a new workout plan
+  /**
+   * Creates a new progress entry.
+   * @param {Object} params - Progress details including workoutSession, trackProgress, performance, workoutId, status, and builder.
+   * @returns {Promise<IProgress>} - The newly created progress entry.
+   * @throws {Error} - Throws an error if required parameters are missing or if the workout plan is not found.
+   */
   public async create({
     workoutSession,
     trackProgress,
@@ -60,12 +73,22 @@ class ProgressService {
     workoutId,
     status = Status.PUBLIC,
     builder,
-  }: any) {
-    if (!workoutSession || !trackProgress || !performance || !workoutId || !builder)
-      throw badRequest('Invalid Parameters!');
+  }: {
+    workoutSession: string;
+    trackProgress: string;
+    performance: string;
+    workoutId: string;
+    status?: Status;
+    builder: { id: string };
+  }): Promise<IProgress> {
+    if (!workoutSession || !trackProgress || !performance || !workoutId || !builder) {
+      throw badRequest('Invalid parameters!');
+    }
 
     const workoutPlan = await WorkoutPlan.findById(workoutId);
-    if (!workoutPlan) throw notFound();
+    if (!workoutPlan) {
+      throw notFound();
+    }
 
     const progress: any = new Progress({
       workoutSession,
@@ -78,62 +101,74 @@ class ProgressService {
 
     const newProgress = await progress.save();
 
-    await WorkoutPlan.updateOne(
-      {
-        _id: workoutId,
-      },
-      {
-        $push: {
-          progresses: newProgress._id,
-        },
-      }
-    );
+    // Update the associated workout plan with the new progress ID
+    await WorkoutPlan.updateOne({ _id: workoutId }, { $push: { progresses: newProgress._id } });
 
     return {
-      ...progress._doc,
+      ...progress.toObject(),
       id: progress.id,
     };
   }
 
-  // Update the progress properties using PATCH request
-  public async updateProperties(
-    id: string,
-    { workoutSession, trackProgress, performance, status }: ProgressUpdateProps
-  ): Promise<any> {
+  /**
+   * Updates progress properties using a PATCH request.
+   * @param {string} id - The ID of the progress entry to update.
+   * @param {ProgressUpdateProps} updates - The properties to update.
+   * @returns {Promise<IProgress>} - The updated progress entry.
+   * @throws {Error} - Throws an error if the progress entry is not found.
+   */
+  public async updateProperties(id: string, updates: ProgressUpdateProps): Promise<IProgress> {
     const progress: any = await Progress.findById(id);
-    if (!progress) throw notFound();
 
-    const payload: any = { workoutSession, trackProgress, performance, status };
+    if (!progress) {
+      throw notFound();
+    }
 
-    Object.keys(payload).forEach((key) => {
-      progress[key] = payload[key] ?? progress[key];
+    Object.keys(updates).forEach((key) => {
+      if (updates[key] !== undefined) {
+        progress[key] = updates[key];
+      }
     });
 
     await progress.save();
-
     return {
-      ...progress._doc,
+      ...progress.toObject(),
       id: progress.id,
     };
   }
 
-  // Remove the progress by id
+  /**
+   * Removes a progress entry by ID.
+   * @param {string} id - The ID of the progress entry to remove.
+   * @returns {Promise<IProgress | null>} - The deleted progress entry.
+   * @throws {Error} - Throws an error if the progress entry is not found.
+   */
   public async removeItem(id: string): Promise<IProgress | null> {
     const progress = await Progress.findById(id);
-    if (!progress) throw notFound();
+    if (!progress) {
+      throw notFound();
+    }
 
     return Progress.findByIdAndDelete(id);
   }
 
-  // Check ownership of the progress
+  /**
+   * Checks if the user owns the progress entry.
+   * @param {CheckOwnershipParam} params - Parameters including resourceId and userId.
+   * @returns {Promise<boolean>} - True if the user owns the progress entry, otherwise false.
+   * @throws {Error} - Throws an error if the progress entry is not found.
+   */
   public async checkOwnership({ resourceId, userId }: CheckOwnershipParam): Promise<boolean> {
     const progress = await Progress.findById(resourceId);
-    if (!progress) throw notFound();
+    if (!progress) {
+      throw notFound();
+    }
 
-    return progress.builder._id.toString() === userId ? true : false;
+    return progress.builder._id.toString() === userId;
   }
 }
 
+// Create an instance of ProgressService
 const progressService = new ProgressService();
 
 export default progressService;

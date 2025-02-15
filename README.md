@@ -1,110 +1,131 @@
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+# 🏋️‍♂️ Fitness Training Application
 
-# Fitness-Traninig-Apps
+[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-## [Public API Research Docs](https://ali-akkas.notion.site/Research-on-the-public-APIs-of-Twitter-GitHub-and-Google-06f7e7f788964c2392e5b2bf741babee?pvs=4)
+## 📌 Table of Contents
+- [📖 Overview](#-overview)
+- [✨ Features](#-features)
+- [🛠 Technologies Used](#-technologies-used)
+- [📂 Project Structure](#-project-structure)
+- [🚀 Setup & Installation](#-setup--installation)
+- [🧪 Running Tests](#-running-tests)
+- [📚 Resources](#-resources)
+- [🤝 Contributing](#-contributing)
+- [📜 License](#-license)
 
-## [RESTful API Design for Fitness Training Application](https://ali-akkas.notion.site/RESTful-API-Design-for-Fitness-Training-Application-13607d064ab343deb158e9d0f7e1c202?pvs=4)
+---
 
-## [Presentation based on this project](https://kuacbd-my.sharepoint.com/:p:/g/personal/200934_ku_ac_bd/EYQP_vXf7uNPpex-nG1R13MByfg1rZG2ZWaYM9gKC85vxA?e=V62JhQ)
+## 📖 Overview
+The **Fitness Training Application** is a platform that provides personalized workout plans, tracks user progress, and offers training tips to help individuals achieve their fitness goals.
 
-## Overview
-- Develop a fitness training application that provides personalized workout plans.​
-- Tracking progress features to help individuals to achieve their fitness goals.​
-- A trainer can add some important training tips for each workout.​
-- Users must be logged in to their account in order to create personalized workout plans and track their progress over time.​
-- Users can create their own profile and set their initial fitness level and goal.​
-- The goal is to create a comprehensive fitness tool that motivates and guides users through their fitness journey.​
+### 🎯 Key Objectives:
+- ✅ Enable users to create customized workout plans.
+- ✅ Provide tracking features for progress monitoring.
+- ✅ Allow trainers to add training tips for each workout.
+- ✅ Require user authentication for personalized experiences.
+- ✅ Enable profile creation to set initial fitness levels and goals.
 
-## Technologies Used
+---
 
-- [Node.js](https://nodejs.org/en/) - Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
-- [Express.js](https://expressjs.com/) - Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
-- [Typescript](https://www.typescriptlang.org/) - TypeScript extends JavaScript by adding types to the language
-- [MongoDB](https://www.postgresql.org/) - MongoDB is an open-source document database built on a horizontal scale-out architecture that uses a flexible schema for storing data.
-- [Mongoose](https://mongoosejs.com/) - Mongoose is a JavaScript object-oriented programming library that creates a connection between MongoDB and the Node.js JavaScript runtime environment.
-- [Docker](https://www.docker.com/) - Docker is a platform designed to help developers build, share, and run container applications.
-- [Jest](https://jestjs.io/) - Jest is a JavaScript testing framework designed to ensure correctness of any JavaScript codebase.
+## ✨ Features
+🚴 Personalized workout plans  
+📊 User progress tracking  
+💡 Trainer tips for exercises  
+🔒 Secure authentication and authorization  
+👤 Profile management with fitness goal setting  
+🌐 RESTful API architecture  
 
-## Backend File Structure
+---
 
+## 🛠 Technologies Used
+The application is built using modern technologies and best practices:
+
+- ⚡ **[Node.js](https://nodejs.org/):** JavaScript runtime for backend development.
+- 🚀 **[Express.js](https://expressjs.com/):** Fast and minimalist web framework for Node.js.
+- 🏗 **[TypeScript](https://www.typescriptlang.org/):** Enhances JavaScript with static types.
+- 🗄 **[MongoDB](https://www.mongodb.com/):** NoSQL database for flexible data storage.
+- 🔗 **[Mongoose](https://mongoosejs.com/):** ODM library for MongoDB and Node.js.
+- 🐳 **[Docker](https://www.docker.com/):** Containerization for seamless development and deployment.
+- 🧪 **[Jest](https://jestjs.io/):** JavaScript testing framework ensuring code quality.
+
+---
+
+## 📂 Project Structure
 ```
 backend/
-
 ├── package.json
-├── docs/
-├── tests
+├── docs/                 # 📄 Documentation files
+├── tests/                # 🧪 Unit & integration tests
 └── src/
-        ├── index.ts       // boot file
-        ├── app.ts         // express app root file
-        ├── middleware/
-            └── authenticate.ts
-            └── authorize.ts
-            └── ownership.ts
-            └── index.ts
-        ├── routes/
-        │   ├── index.ts
-        │   ├── public.ts
-        │   ├── private.ts
-        │   ├── admin.ts
-        ├── api/
-        │   └── v1/
-        │       ├── auth/
-        │       │   ├── index.ts
-        │       │   ├── controllers.ts
-                ├── workouts/
-        │       │   ├── index.ts
-        │       │   ├── controllers.ts
-                ├── progress/
-        │       │   ├── index.ts
-        │       │   ├── controllers.ts
-                ├── profile/
-        │       │   ├── index.ts
-        │       │   ├── controllers.ts
-                ├── user/
-        │       │   ├── index.ts
-        │       │   ├── controllers.ts
-                ├── token/
-        │       │   ├── index.ts
-        │       │   ├── controllers.ts
-        ├── lib/
-        │   ├── auth/
-        │   │   ├── index.ts
-        │   └── workout/
-        │       ├── index.ts
-        │       ├── progress/
-        │       │   ├── index.ts
-        │       ├── profile/
-        │       │   ├── index.ts
-        │       ├── user/
-        │       │   ├── index.ts
-        │       ├── token/
-        │       │   ├── index.ts
-        ├── model/
-        │   ├── WorkoutPlan.ts
-        │   ├── Progress.ts
-            ├── Profile.ts
-            ├── User.ts
-            ├── Token.ts
-        └── utils
+    ├── index.ts          # 🚀 Application entry point
+    ├── app.ts            # ⚙️ Express app configuration
+    ├── middleware/       # 🔐 Middleware functions
+    │   ├── authenticate.ts
+    │   ├── authorize.ts
+    │   ├── ownership.ts
+    │   ├── index.ts
+    ├── routes/           # 🌍 API route handlers
+    │   ├── index.ts
+    │   ├── public.ts
+    │   ├── private.ts
+    │   ├── admin.ts
+    ├── api/
+    │   └── v1/
+    │       ├── auth/
+    │       ├── workouts/
+    │       ├── progress/
+    │       ├── profile/
+    │       ├── user/
+    │       ├── token/
+    ├── lib/              # 🔧 Core business logic
+    ├── models/           # 🗂 Mongoose models
+    ├── utils/            # 🔨 Utility functions
 ```
 
-## Setup
-follow .env.example file for setup environment variables
+---
 
-### Run the `MongoDB server` with `Mongo-express`
+## 🚀 Setup & Installation
+### 1️⃣ Clone the repository
 ```bash
-docker-compose up -d
+git clone https://github.com/yourusername/Fitness-Training-App.git
+cd Fitness-Training-App
 ```
 
-### Run the `application server`
+### 2️⃣ Install dependencies
 ```bash
-yarn run dev
+yarn install
 ```
 
-### Run the `Tests`
-```
-yarn run test .\tests\**\**\*
+### 3️⃣ Configure environment variables
+Copy `.env.example` to `.env` and update the required values.
+
+### 4️⃣ Run the application using Docker
+```bash
+docker-compose up
 ```
 
+---
+
+## 🧪 Running Tests
+Run unit and integration tests using Jest:
+```bash
+yarn test
+```
+
+---
+
+## 📚 Resources
+- 📄 **[Public API Research Docs](https://ali-akkas.notion.site/Research-on-the-public-APIs-of-Twitter-GitHub-and-Google-06f7e7f788964c2392e5b2bf741babee?pvs=4)**
+- 📄 **[RESTful API Design Documentation](https://ali-akkas.notion.site/RESTful-API-Design-for-Fitness-Training-Application-13607d064ab343deb158e9d0f7e1c202?pvs=4)**
+- 🎥 **[Project Presentation](https://kuacbd-my.sharepoint.com/:p:/g/personal/200934_ku_ac_bd/EYQP_vXf7uNPpex-nG1R13MByfg1rZG2ZWaYM9gKC85vxA?e=V62JhQ)**
+
+---
+
+## 🤝 Contributing
+Contributions are welcome! If you'd like to contribute, please fork the repository and submit a pull request.
+
+---
+
+## 📜 License
+This project is licensed under the [MIT License](LICENSE).
 

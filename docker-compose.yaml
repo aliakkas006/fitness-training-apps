@@ -1,12 +1,12 @@
 version: '3.9'
 
 networks:
-  elk-stack:
-    name: elk-stack
+  fitness-training-apps-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.1.1.0/24
+
+volumes:
+  mongodb_data:
+  elasticsearch-data:
 
 services:
   # Application
@@ -14,27 +14,30 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fitness-training-apps
     ports:
-      - 4000:4000
+      - '4000:8080'
+    environment:
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CONNECTION_URL=${DB_CONNECTION_URL}
+      - DB_NAME=${DB_NAME}
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - ACCESS_KEY=${ACCESS_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - REGION=${REGION}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - ENDPOINT=${ENDPOINT}
+    volumes:
+      - '.:/app'
+    networks:
+      - fitness-training-apps-network
     depends_on:
       - mongodb
-      - mongo-express
-    environment:
-      - DATABASE_URI=mongodb://mongo:27017/fitness-training-apps
-    networks:
-      - elk-stack
-    command: 'yarn run dev'
-    volumes:
-      - './:/usr/src/app'
-      - /usr/src/app/node_modules
-    working_dir: /usr/src/app
-    restart: always
 
   # MongoDB
   mongodb:
     image: mongo:latest
-    container_name: mongodb
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
@@ -42,13 +45,14 @@ services:
       AUTH: admin
     ports:
       - '27017:27017'
+    networks:
+      - fitness-training-apps-network
     volumes:
-      - 'my_mongodb_data:/data/db'
+      - mongodb_data:/data/db
 
   # Mongo Express
   mongo-express:
     image: mongo-express:latest
-    container_name: mongo-express
     restart: always
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: user
@@ -56,37 +60,33 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongodb
     ports:
       - '8081:8081'
+    networks:
+      - fitness-training-apps-network
     depends_on:
       - mongodb
 
   # Elastic Search
   elasticsearch:
     image: elasticsearch:7.9.2
-    container_name: elasticsearch
-    restart: always
-    networks:
-      - elk-stack
-    ports:
-      - '9200:9200'
-      - '9300:9300'
     environment:
-      - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m'
-      - 'discovery.type=single-node'
+      - discovery.type=single-node
+      - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m' # 1GB of memory allocated to JVM  heap size
+    ports:
+      - '9200:9200' # Expose Elasticsearch HTTP port
+      - '9300:9300' # Expose Elasticsearch TCP transport port
+    networks:
+      - fitness-training-apps-network
+    volumes:
+      - elasticsearch-data:/var/lib/elasticsearch
 
   # Kibana
   kibana:
     image: kibana:7.9.2
-    container_name: kibana
-    restart: always
-    depends_on:
-      - elasticsearch
-    networks:
-      - elk-stack
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     ports:
       - '5601:5601'
-    environment:
-      - 'ELASTICSEARCH_URL=http://elasticsearch:9200'
-
-volumes:
-  my_mongodb_data:
-    driver: local
+    networks:
+      - fitness-training-apps-network
+    depends_on:
+      - elasticsearch

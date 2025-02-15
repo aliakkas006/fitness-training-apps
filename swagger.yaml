@@ -1868,7 +1868,6 @@ components:
           type: string
           example: Push Jerk
       required: [id, name]
-
     Pagination:
       type: object
       properties:
